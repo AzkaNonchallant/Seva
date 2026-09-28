@@ -1,0 +1,575 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-error":"#ffffff","on-background":"#191c1d","on-secondary-fixed":"#321200","tertiary-fixed-dim":"#bfc8d0","outline-variant":"#c1c6d7","surface":"#f8f9fa","error-container":"#ffdad6","tertiary":"#545d65","secondary":"#994700","on-surface":"#191c1d","inverse-surface":"#2e3132","primary-fixed":"#d8e2ff","surface-container-low":"#f3f4f5","on-tertiary":"#ffffff","surface-container-high":"#e7e8e9","inverse-primary":"#adc7ff","tertiary-container":"#6d767e","secondary-container":"#fb7800","on-tertiary-fixed":"#141d23","on-primary":"#ffffff","secondary-fixed":"#ffdbc8","inverse-on-surface":"#f0f1f2","on-tertiary-container":"#fcfcff","on-primary-fixed":"#001a41","on-surface-variant":"#414754","on-primary-container":"#fefcff","on-secondary":"#ffffff","on-error-container":"#93000a","on-secondary-container":"#592600","surface-container-highest":"#e1e3e4","tertiary-fixed":"#dbe4ed","surface-container":"#edeeef","primary":"#0059bb","primary-container":"#0070ea","surface-container-lowest":"#ffffff","primary-fixed-dim":"#adc7ff","surface-dim":"#d9dadb","surface-bright":"#f8f9fa","background":"#f8f9fa","on-tertiary-fixed-variant":"#3f484f","on-secondary-fixed-variant":"#753400","surface-tint":"#005bc0","on-primary-fixed-variant":"#004493","surface-variant":"#e1e3e4","error":"#ba1a1a","outline":"#717786","secondary-fixed-dim":"#ffb68b"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{xl:"80px","margin-mobile":"16px",lg:"48px",sm:"12px",gutter:"24px",base:"8px",md:"24px",xs:"4px","margin-desktop":"64px"},fontFamily:{"body-lg":["Inter"],caption:["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"headline-lg-mobile":["Inter"],"display-lg":["Inter"],"headline-md":["Inter"]},fontSize:{"body-lg":["18px",{lineHeight:"1.6",fontWeight:"400"}],caption:["12px",{lineHeight:"1.4",fontWeight:"400"}],"headline-lg":["40px",{lineHeight:"1.2",letterSpacing:"-0.01em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"1.4",letterSpacing:"0.05em",fontWeight:"500"}],"body-md":["16px",{lineHeight:"1.6",fontWeight:"400"}],"headline-lg-mobile":["32px",{lineHeight:"1.2",fontWeight:"600"}],"display-lg":["64px",{lineHeight:"1.1",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-md":["24px",{lineHeight:"1.3",fontWeight:"600"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-md flex items-center justify-between gap-md"><div class="flex items-center gap-md"><div class="flex items-center gap-xs cursor-pointer select-none"><div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[20px]">flight_takeoff</span></div><div class="flex flex-col"><span class="font-headline-md text-[15px] font-semibold leading-tight text-on-surface tracking-tight">Horizon Odyssey</span><span class="font-caption text-caption text-tertiary font-medium tracking-wide">Business Travel • PT Andrea</span></div></div><div class="h-6 w-px bg-surface-container-high hidden lg:block"></div><nav class="hidden xl:flex items-center gap-xs" data-active-classes="bg-primary-container text-on-primary-container font-semibold"><a class="px-sm py-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="dashboard" href="#">Dashboard</a><a aria-current="page" class="px-sm py-xs rounded-lg transition-all bg-primary-container text-on-primary-container font-semibold" data-path="travel-requests" href="#">Travel Requests</a><a class="px-sm py-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="my-trips" href="#">My Trips</a><a class="px-sm py-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="expenses" href="#">Expenses</a><a class="px-sm py-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="approvals" href="#">Approvals</a></nav></div><div class="flex items-center gap-sm"><div class="relative hidden sm:flex items-center"><span class="material-symbols-outlined absolute left-sm text-outline text-[18px] pointer-events-none">search</span><input class="w-64 pl-lg pr-xl py-xs bg-surface-container-low rounded-lg font-body-md text-label-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="Search trips, bookings, policies..." type="text"><span class="absolute right-xs px-xs py-0.5 rounded bg-surface-container text-tertiary font-caption text-[10px] font-semibold select-none border border-outline-variant/30">⌘K</span></div><div class="flex items-center gap-xs"><button class="relative p-base rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container"></span></button><button class="p-base rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">help_outline</span></button></div><div class="h-6 w-px bg-surface-container-high"></div><div class="flex items-center gap-sm cursor-pointer p-xs rounded-lg hover:bg-surface-container-low transition-colors"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden md:flex flex-col text-left"><span class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Alex Walker</span><span class="font-caption text-caption text-tertiary leading-none">Tech &amp; Product</span></div><span class="material-symbols-outlined text-outline text-[16px] hidden md:block">expand_more</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="w-full px-md py-base"><div class="flex items-center gap-xs font-caption text-caption text-tertiary"><a class="hover:text-primary transition-colors" data-path="dashboard" href="#">Horizon Odyssey</a><span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span><span class="text-on-surface font-medium capitalize">Corporate Travel Desk</span></div></div><div class="w-full px-md pb-xl"><div class="flex flex-col w-full">
+<!-- Interactive Feedback Toast (Hidden by default) -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-sm px-md py-sm bg-inverse-surface text-inverse-on-surface rounded-xl shadow-xl" id="toast-banner">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">check_circle</span>
+<span class="font-label-md text-label-md" id="toast-message">Action successful</span>
+</div>
+<!-- Stepper Bar Section -->
+<section class="w-full bg-surface-container-lowest rounded-xl p-md shadow-sm mb-lg">
+<div class="max-w-4xl mx-auto">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-base relative">
+<!-- Step 1 -->
+<div class="flex flex-col gap-xs relative group">
+<div class="flex items-center gap-xs">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-primary transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="h-1 flex-1 bg-primary rounded-full"></div>
+</div>
+<span class="font-caption text-caption text-tertiary">Step 01</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Travel Info</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col gap-xs relative group">
+<div class="flex items-center gap-xs">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-primary transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="h-1 flex-1 bg-primary rounded-full"></div>
+</div>
+<span class="font-caption text-caption text-tertiary">Step 02</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Flight &amp; Hotel</span>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col gap-xs relative group">
+<div class="flex items-center gap-xs">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-primary transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="h-1 flex-1 bg-primary rounded-full"></div>
+</div>
+<span class="font-caption text-caption text-tertiary">Step 03</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cost &amp; Budget</span>
+</div>
+<!-- Step 4 (Active) -->
+<div class="flex flex-col gap-xs relative group">
+<div class="flex items-center gap-xs">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-caption font-bold shadow-md shadow-primary/25">
+              4
+            </div>
+<div class="h-1 flex-1 bg-primary-fixed-dim rounded-full"></div>
+</div>
+<span class="font-caption text-caption text-primary font-medium">Final Step</span>
+<span class="font-label-md text-label-md text-primary font-bold">Review &amp; Submit</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Page Header Title Group -->
+<header class="mb-md flex flex-col md:flex-row md:items-end justify-between gap-base">
+<div>
+<div class="inline-flex items-center gap-xs px-sm py-0.5 rounded-full bg-primary-fixed/60 text-primary font-caption text-caption font-medium mb-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        TR-2024-892 • Pre-Submission Verification
+      </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Review &amp; Finalize Booking</h1>
+<p class="font-body-md text-body-md text-tertiary max-w-2xl">
+        Carefully verify all travel parameters, employee details, policy compliance, and cost allocations prior to workflow routing.
+      </p>
+</div>
+<div class="flex items-center gap-sm">
+<button class="px-md py-xs rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center gap-xs" onclick="triggerToast('Saved request draft #TR-2024-892')" type="button">
+<span class="material-symbols-outlined text-[18px]">bookmark_border</span>
+        Save Draft
+      </button>
+<button class="px-md py-xs rounded-lg bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant font-label-md text-label-md shadow-sm transition-colors flex items-center gap-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+        Export Summary
+      </button>
+</div>
+</header>
+<!-- Two-Column Asymmetric Layout (68% / 32%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- LEFT MAIN COLUMN: 68% (lg:col-span-8) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Section 1: Travel Summary & Purpose -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden group hover:shadow-md transition-shadow">
+<div class="relative h-36 bg-surface-container-high overflow-hidden">
+<div class="bg-cover bg-center w-full h-full transform group-hover:scale-105 transition-transform duration-700" data-alt="Panoramic aerial view of vibrant Tokyo skyline and iconic modern architecture during a serene twilight sunset, soft corporate blue undertones and warm amber city glow reflecting high-end travel aesthetics." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBcGISk2Mqmf2fQ3H4PVjGDgAvLz-yioG4AsXQOrOnn26adBs_fx9NBY2ctoDsVQOuuS6lf48ZiCLUKgxQiHJlXfhb_Wze05CN7ohT3oHVAfdxQzB7RGMq9260cY7LKcb5idfhh8EEIPc1VlvMbgVHyydZ_fhCzFq9LPIldNRVVuYNTth6T9MLiNQOxRThzkG82JtYM1jeZUOLcZTNxPGxH721LGYcNKt6HyTsr10LxTPKyw5pnR4zlzg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/40 to-transparent"></div>
+<div class="absolute bottom-base left-md right-md flex items-end justify-between text-on-primary">
+<div>
+<span class="px-xs py-0.5 rounded bg-primary text-on-primary font-caption text-[11px] font-semibold uppercase tracking-wider">Summit Delegation</span>
+<h2 class="font-headline-md text-headline-md text-on-primary font-semibold">Tokyo, Japan (HND)</h2>
+<p class="font-caption text-caption text-primary-fixed-dim">Tech Innovation Summit 2024 • APAC Market Expansion</p>
+</div>
+<button class="px-sm py-xs rounded-lg bg-surface-container-lowest/20 backdrop-blur-md hover:bg-surface-container-lowest/30 text-on-primary font-label-md text-label-md flex items-center gap-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+              Edit Purpose
+            </button>
+</div>
+</div>
+<div class="p-md flex flex-col gap-md">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-base bg-surface-container-low p-sm rounded-xl">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-tertiary uppercase tracking-wide font-medium">Travel Window</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Nov 12 – Nov 17, 2024</span>
+<span class="font-caption text-caption text-tertiary">6 Days, 5 Nights</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-tertiary uppercase tracking-wide font-medium">Cost Center</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">CC-8041</span>
+<span class="font-caption text-caption text-tertiary truncate">Product &amp; Engineering Core</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-tertiary uppercase tracking-wide font-medium">Project Allocation</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">PRJ-APAC-EXP</span>
+<span class="font-caption text-caption text-tertiary">Strategic Alliances FY24</span>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-caption text-caption text-tertiary uppercase font-medium">Business Purpose &amp; Justification</span>
+<p class="font-body-md text-body-md text-on-surface-variant bg-surface-container-lowest p-sm rounded-lg">
+              Keynote presentation at Global Product Design &amp; Engineering Summit 2024, vendor partnership alignments with APAC supply partners, and on-site executive sprint sessions for next-gen telemetry modules.
+            </p>
+</div>
+</div>
+</section>
+<!-- Section 2: Traveler Information -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm">
+<div class="flex items-center justify-between pb-sm mb-sm bg-gradient-to-r from-surface-container-low to-transparent p-sm rounded-lg">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-body-lg">
+              AW
+            </div>
+<div>
+<div class="flex items-center gap-xs">
+<h3 class="font-headline-md text-label-md font-bold text-on-surface">Alex Walker</h3>
+<span class="px-xs py-0.5 rounded-full bg-surface-container-high text-tertiary font-caption text-[11px] font-semibold">EMP-04921</span>
+</div>
+<p class="font-caption text-caption text-tertiary">Lead Product Designer • Technology &amp; Product Design</p>
+</div>
+</div>
+<button class="px-sm py-xs rounded-lg text-primary hover:bg-primary-fixed/40 font-label-md text-label-md flex items-center gap-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+            Modify
+          </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-base">
+<div class="flex flex-col p-xs">
+<span class="font-caption text-caption text-tertiary">Corporate Email</span>
+<span class="font-label-md text-label-md text-on-surface truncate">alex.walker@andrea-corp.com</span>
+</div>
+<div class="flex flex-col p-xs">
+<span class="font-caption text-caption text-tertiary">Mobile Contact</span>
+<span class="font-label-md text-label-md text-on-surface">+1 (555) 382-9014</span>
+</div>
+<div class="flex flex-col p-xs">
+<span class="font-caption text-caption text-tertiary">Passport Status</span>
+<div class="flex items-center gap-xs text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>Verified (Exp: 2029)</span>
+</div>
+</div>
+<div class="flex flex-col p-xs">
+<span class="font-caption text-caption text-tertiary">Emergency Contact</span>
+<span class="font-label-md text-label-md text-on-surface">Sarah Walker</span>
+<span class="font-caption text-caption text-tertiary">+1 555-902-1142</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Booking Details & Itinerary -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">airplane_ticket</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Itinerary Breakdown</h3>
+</div>
+<button class="px-sm py-xs rounded-lg text-primary hover:bg-primary-fixed/40 font-label-md text-label-md flex items-center gap-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+            Change Itinerary
+          </button>
+</div>
+<!-- Flights Container -->
+<div class="flex flex-col gap-sm">
+<span class="font-caption text-caption font-semibold uppercase tracking-wider text-tertiary">Flights (Roundtrip)</span>
+<!-- Outbound Flight -->
+<div class="p-base rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-base">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">flight_takeoff</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">All Nippon Airways (NH 105)</span>
+<span class="px-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-caption text-[11px] font-semibold">Premium Economy</span>
+</div>
+<div class="flex items-center gap-base mt-xs">
+<div>
+<span class="font-label-md text-label-md font-semibold text-on-surface">09:30 AM</span>
+<span class="font-caption text-caption text-tertiary block">Nov 12 • SFO</span>
+</div>
+<div class="flex flex-col items-center px-xs">
+<span class="font-caption text-[11px] text-tertiary">11h 15m nonstop</span>
+<div class="w-20 h-0.5 bg-tertiary-fixed-dim relative my-1">
+<span class="absolute -top-1 left-1/2 -translate-x-1/2 material-symbols-outlined text-[12px] text-tertiary">flight</span>
+</div>
+</div>
+<div>
+<span class="font-label-md text-label-md font-semibold text-on-surface">02:45 PM <sup class="text-tertiary font-normal">+1</sup></span>
+<span class="font-caption text-caption text-tertiary block">Nov 13 • HND</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex md:flex-col items-end justify-between md:justify-center">
+<span class="px-xs py-0.5 rounded bg-surface-container text-tertiary font-caption text-[11px]">Seat 14A (Window)</span>
+<span class="font-caption text-caption text-primary font-medium mt-1">Policy Level 2 Compliant</span>
+</div>
+</div>
+<!-- Return Flight -->
+<div class="p-base rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-base">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">flight_land</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">All Nippon Airways (NH 106)</span>
+<span class="px-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-caption text-[11px] font-semibold">Premium Economy</span>
+</div>
+<div class="flex items-center gap-base mt-xs">
+<div>
+<span class="font-label-md text-label-md font-semibold text-on-surface">05:20 PM</span>
+<span class="font-caption text-caption text-tertiary block">Nov 17 • HND</span>
+</div>
+<div class="flex flex-col items-center px-xs">
+<span class="font-caption text-[11px] text-tertiary">9h 25m nonstop</span>
+<div class="w-20 h-0.5 bg-tertiary-fixed-dim relative my-1">
+<span class="absolute -top-1 left-1/2 -translate-x-1/2 material-symbols-outlined text-[12px] text-tertiary">flight</span>
+</div>
+</div>
+<div>
+<span class="font-label-md text-label-md font-semibold text-on-surface">10:45 AM</span>
+<span class="font-caption text-caption text-tertiary block">Nov 17 • SFO</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex md:flex-col items-end justify-between md:justify-center">
+<span class="px-xs py-0.5 rounded bg-surface-container text-tertiary font-caption text-[11px]">Seat 12C (Aisle)</span>
+<span class="font-caption text-caption text-primary font-medium mt-1">Confirmed Hold</span>
+</div>
+</div>
+</div>
+<!-- Hotel Section -->
+<div class="flex flex-col gap-sm">
+<span class="font-caption text-caption font-semibold uppercase tracking-wider text-tertiary">Hotel Accommodation</span>
+<div class="p-base rounded-xl bg-surface-container-low flex flex-col sm:flex-row gap-md items-start">
+<div class="bg-cover bg-center w-full sm:w-36 h-28 rounded-lg shrink-0" data-alt="Refined hotel room interior in a luxury Tokyo skyscraper with floor to ceiling glass windows displaying metropolitan high-rises, king size bed with crisp white linens, contemporary wooden accents, and warm ambient architectural lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCbnipQDqYzsyYVtvx253mkhd3QOty_d3M-2O-cx3zKDhHLld_DDPROx_-X__sz1nE54siG1xtK5xgA5FM9EFKgIrkw_M5z7dlgkX-QWmxp5yTGpEVbWqcsPHw4KDsjTvk5qoyQ7LG4T374mobkmomeeF03ynwaOwl4f3bOG2kl6-vWbZaW2GWTVp2C1jR-WikZP0WfMTTCU4i-c2gaD89f4JUitkrLAASyJIQVve-gyp38Ow0iHK4cKg')"></div>
+<div class="flex-1 flex flex-col justify-between h-full">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Cerulean Tower Tokyu Hotel</h4>
+<p class="font-caption text-caption text-tertiary">26-1 Sakuragaokacho, Shibuya-ku, Tokyo</p>
+</div>
+<span class="px-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-caption text-[11px] font-semibold">Under Cap</span>
+</div>
+<div class="grid grid-cols-2 gap-xs mt-base font-caption text-caption text-on-surface-variant">
+<span>• Deluxe King Single Room</span>
+<span>• Check-in: Nov 13, 3:00 PM</span>
+<span>• 4 Nights ($210/night)</span>
+<span>• Check-out: Nov 17, 11:00 AM</span>
+</div>
+</div>
+<div class="mt-xs pt-xs font-caption text-caption text-tertiary flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">policy</span>
+<span>Corporate limit: $250.00/night (Saved $160 over stay)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cancellation Notice Box -->
+<div class="bg-surface-container-high/60 rounded-lg p-sm flex items-start gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-tertiary mt-0.5">info</span>
+<p class="font-caption text-caption leading-relaxed">
+<strong class="font-semibold text-on-surface">Policy &amp; Cancellation Terms:</strong> Free hotel cancellation until 48 hours prior to check-in (Nov 11, 3:00 PM JST). Airline tickets non-refundable after ticket issuance by Andrea Travel Desk.
+          </p>
+</div>
+</section>
+<!-- Section 4: Attached Documents & Validation -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex flex-col gap-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Attached Documentation</h3>
+<p class="font-caption text-caption text-tertiary">All travel mandates require verified proof of participation.</p>
+</div>
+<button class="px-sm py-xs rounded-lg text-primary hover:bg-primary-fixed/40 font-label-md text-label-md flex items-center gap-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+            Attach More
+          </button>
+</div>
+<div class="flex flex-col gap-xs">
+<!-- Document 1 -->
+<div class="p-sm bg-surface-container-low rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Tech_Summit_Invitation_Letter.pdf</span>
+<span class="font-caption text-caption text-tertiary">1.4 MB • Uploaded Nov 04</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="px-xs py-0.5 rounded-full bg-surface-container-highest text-primary font-caption text-[11px] font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Validated
+              </span>
+<button class="text-tertiary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Document 2 -->
+<div class="p-sm bg-surface-container-low rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Conference_Registration_Receipt.pdf</span>
+<span class="font-caption text-caption text-tertiary">850 KB • Uploaded Nov 04</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="px-xs py-0.5 rounded-full bg-surface-container-highest text-primary font-caption text-[11px] font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Validated
+              </span>
+<button class="text-tertiary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Document 3 -->
+<div class="p-sm bg-surface-container-low rounded-lg flex items-center justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Travel_Risk_Assessment_Form.pdf</span>
+<span class="font-caption text-caption text-tertiary">420 KB • Corporate Safety Desk</span>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="px-xs py-0.5 rounded-full bg-surface-container-highest text-primary font-caption text-[11px] font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Pre-approved
+              </span>
+<button class="text-tertiary hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Drag & Drop Interactive Upload Box -->
+<div class="rounded-xl p-base bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-xs" id="drop-zone">
+<span class="material-symbols-outlined text-[24px] text-tertiary">cloud_upload</span>
+<p class="font-label-md text-label-md text-on-surface font-medium">Drag and drop additional documents or <span class="text-primary font-semibold underline">browse</span></p>
+<span class="font-caption text-caption text-tertiary">PDF, PNG, JPG up to 25MB</span>
+<input class="hidden" id="file-input" multiple="" type="file">
+</div>
+</section>
+<!-- Section 5: Policy Compliance & Terms -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex flex-col gap-base">
+<!-- Callout Banner -->
+<div class="bg-primary-fixed/30 rounded-xl p-base flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary text-[24px] shrink-0" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-primary-fixed">Policy Compliant – Expedited Workflow</span>
+<p class="font-caption text-caption text-on-surface-variant mt-0.5">
+              All booking items are within department tier limits. Automatic 1-step manager approval enabled. No executive escalation required.
+            </p>
+</div>
+</div>
+<!-- Certification Agreement -->
+<label class="flex items-start gap-sm cursor-pointer select-none p-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<input checked="" class="w-4 h-4 mt-1 rounded bg-surface-container text-primary focus:ring-primary/30" id="compliance-check" type="checkbox">
+<span class="font-caption text-caption text-on-surface-variant leading-relaxed">
+            I certify that this travel is required for legitimate company business, adheres strictly to <strong class="font-semibold text-on-surface">PT Andrea Travel Policy v4.2</strong>, and estimated costs are allocated to the correct cost center. I understand any unapproved personal deviation will not be reimbursed.
+          </span>
+</label>
+</section>
+</div>
+<!-- RIGHT STICKY SIDEBAR: 32% (lg:col-span-4) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter lg:sticky lg:top-20">
+<!-- Expense & Budget Summary Card -->
+<aside class="bg-surface-container-lowest rounded-xl p-md shadow-md flex flex-col gap-md relative overflow-hidden">
+<div class="flex items-center justify-between pb-xs">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance_wallet</span>
+<h3 class="font-headline-md text-label-md font-bold text-on-surface uppercase tracking-wider">Cost Breakdown</h3>
+</div>
+<span class="px-xs py-0.5 rounded bg-surface-container text-tertiary font-caption text-[11px] font-semibold">USD Currency</span>
+</div>
+<!-- Itemized List -->
+<div class="flex flex-col gap-sm font-label-md text-label-md text-on-surface-variant">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">flight</span>
+<span>Flight Transportation</span>
+</div>
+<span class="font-semibold text-on-surface">$1,420.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">hotel</span>
+<span>Hotel Stay <span class="font-caption text-caption text-tertiary">(4 nights)</span></span>
+</div>
+<span class="font-semibold text-on-surface">$840.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">restaurant</span>
+<span>Per-Diem Meals <span class="font-caption text-caption text-tertiary">(6 days @ $65)</span></span>
+</div>
+<span class="font-semibold text-on-surface">$390.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">directions_subway</span>
+<span>Local Transit &amp; Rail</span>
+</div>
+<span class="font-semibold text-on-surface">$110.00</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">receipt_long</span>
+<span>Taxes, Fees &amp; Surcharges</span>
+</div>
+<span class="font-semibold text-on-surface">$185.00</span>
+</div>
+<!-- Divider -->
+<div class="h-px bg-surface-container-high my-xs"></div>
+<!-- Total Calculation -->
+<div class="flex justify-between items-baseline pt-xs">
+<div>
+<span class="font-headline-md text-label-md font-bold text-on-surface block">Total Estimated Cost</span>
+<span class="font-caption text-caption text-tertiary">Authorized company expenditure</span>
+</div>
+<span class="font-display-lg text-headline-lg font-bold text-primary tracking-tight">$2,945.00</span>
+</div>
+</div>
+<!-- Department Budget Health Graphic -->
+<div class="p-sm rounded-xl bg-surface-container-low flex flex-col gap-xs">
+<div class="flex items-center justify-between text-on-surface">
+<span class="font-label-md text-label-md font-semibold">Q4 Department Budget Health</span>
+<span class="font-caption text-caption text-tertiary">CC-8041</span>
+</div>
+<div class="flex items-center justify-between font-caption text-caption text-tertiary mt-1">
+<span>Budget: $45,000.00</span>
+<span class="font-semibold text-on-surface">Remaining: $18,450.00</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden mt-xs">
+<div class="h-full bg-primary rounded-full transition-all duration-1000" style="width: 58%;"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] text-tertiary font-caption mt-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>58% committed • Ample headroom for Q4</span>
+</div>
+</div>
+<!-- Payment Method -->
+<div class="flex items-center gap-sm p-sm bg-surface-container-high/40 rounded-lg">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[18px]">credit_card</span>
+</div>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-tertiary uppercase font-medium">Payment Mode</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Corporate Direct Bill (Central Admin)</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-xs pt-xs">
+<button class="w-full py-sm px-md rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-md text-label-md font-bold transition-all shadow-md shadow-secondary-container/20 flex items-center justify-center gap-xs group" id="btn-submit" onclick="handleSubmit()" type="button">
+<span>Confirm &amp; Submit Request</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">send</span>
+</button>
+<div class="grid grid-cols-2 gap-xs">
+<button class="w-full py-xs px-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors text-center" onclick="triggerToast('Request saved to draft cache')" type="button">
+              Save as Draft
+            </button>
+<button class="w-full py-xs px-sm rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors text-center" type="button">
+              Back to Itinerary
+            </button>
+</div>
+</div>
+<!-- Help Support Callout -->
+<div class="pt-base text-center">
+<p class="font-caption text-caption text-tertiary leading-normal">
+            Need urgent assistance or itinerary exceptions?<br>
+<a class="text-primary hover:underline font-medium inline-flex items-center gap-0.5" href="#">
+<span class="material-symbols-outlined text-[14px]">support_agent</span>
+              Contact Corporate Travel Desk (ext 4402)
+            </a>
+</p>
+</div>
+</aside>
+<!-- Mini Audit Trail Pill Container -->
+<div class="p-sm bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-xs">
+<span class="font-caption text-caption uppercase font-semibold text-tertiary tracking-wider">Approval Routing Route</span>
+<div class="flex items-center gap-xs font-caption text-caption text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Alex Walker (Employee)</span>
+<span class="material-symbols-outlined text-[12px] text-tertiary">arrow_forward</span>
+<span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
+<span>Elena Rostova (Design VP)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+    function triggerToast(message) {
+      const toast = document.getElementById('toast-banner');
+      const text = document.getElementById('toast-message');
+      text.innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3200);
+    }
+
+    function handleSubmit() {
+      const checkbox = document.getElementById('compliance-check');
+      if (!checkbox.checked) {
+        triggerToast('Please certify policy compliance terms prior to submission.');
+        checkbox.focus();
+        return;
+      }
+      const submitBtn = document.getElementById('btn-submit');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+        <span>Routing to Manager...</span>
+      `;
+      setTimeout(() => {
+        submitBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[18px]">done_all</span>
+          <span>Submitted Successfully!</span>
+        `;
+        submitBtn.classList.remove('bg-secondary-container', 'hover:bg-secondary');
+        submitBtn.classList.add('bg-primary');
+        triggerToast('Travel Request #TR-2024-892 submitted to Elena Rostova');
+      }, 1200);
+    }
+
+    // Dropzone interaction
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        triggerToast(`Uploaded ${e.target.files.length} document(s) successfully.`);
+      }
+    });
+  </script>
+</div></div></main><footer class="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.02)] py-base"><div class="w-full px-md flex flex-col sm:flex-row items-center justify-between gap-sm text-tertiary font-caption text-caption"><div>© 2024 Horizon Odyssey | Managed by PT Andrea Enterprise Systems</div><div class="flex items-center gap-md"><a class="hover:text-on-surface transition-colors" href="#">Corporate Policy</a><a class="hover:text-on-surface transition-colors" href="#">Duty of Care</a><a class="hover:text-on-surface transition-colors" href="#">24/7 Concierge Support</a></div></div></footer></body></html>

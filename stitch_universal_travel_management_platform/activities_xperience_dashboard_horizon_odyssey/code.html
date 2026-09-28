@@ -1,0 +1,303 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Activities &amp; Experiences Dashboard - Horizon Odyssey</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "tertiary-fixed": "#dbe4ed",
+                        "on-primary-container": "#fefcff",
+                        "primary": "#0059bb",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#592600",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-bright": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#005bc0",
+                        "on-primary-fixed-variant": "#004493",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#bfc8d0",
+                        "on-primary-fixed": "#001a41",
+                        "background": "#f8f9fa",
+                        "secondary-fixed-dim": "#ffb68b",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-container": "#fb7800",
+                        "on-secondary-fixed-variant": "#753400",
+                        "secondary-fixed": "#ffdbc8",
+                        "on-surface": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#545d65",
+                        "secondary": "#994700",
+                        "primary-fixed-dim": "#adc7ff",
+                        "inverse-primary": "#adc7ff",
+                        "on-error": "#ffffff",
+                        "primary-container": "#0070ea",
+                        "surface-variant": "#e1e3e4",
+                        "outline-variant": "#c1c6d7",
+                        "on-secondary-fixed": "#321200",
+                        "inverse-surface": "#2e3132",
+                        "surface-container": "#edeeef",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "outline": "#717786",
+                        "tertiary-container": "#6d767e",
+                        "on-tertiary-fixed": "#141d23",
+                        "on-background": "#191c1d",
+                        "on-tertiary-fixed-variant": "#3f484f",
+                        "primary-fixed": "#d8e2ff",
+                        "on-tertiary-container": "#fcfcff",
+                        "on-surface-variant": "#414754"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "lg": "48px",
+                        "xs": "4px",
+                        "margin-desktop": "64px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .text-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm z-50">
+<div class="flex justify-between items-center px-margin-desktop py-4 w-full">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
+                Horizon Odyssey
+            </div>
+<nav class="hidden md:flex space-x-gutter">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary font-label-md text-label-md hover:bg-surface-container-low/50 transition-colors px-3 py-2 rounded-md" href="#">Explore</a>
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 font-label-md text-label-md hover:bg-surface-container-low/50 transition-colors px-3 py-2 rounded-md" href="#">My Trips</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary font-label-md text-label-md hover:bg-surface-container-low/50 transition-colors px-3 py-2 rounded-md" href="#">Packages</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary font-label-md text-label-md hover:bg-surface-container-low/50 transition-colors px-3 py-2 rounded-md" href="#">Guides</a>
+</nav>
+<div class="flex items-center space-x-sm">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low/50 rounded-full transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low/50 rounded-full transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full object-cover ml-2" data-alt="A small, circular profile picture of a young professional smiling against a bright, airy background, fitting a modern travel app UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhs54ySZUDfeY2UzUUFLvKwDslan2ZwbCkjvrWkRt1kRWt9imnffmwb1M0-Pbro1i7U5-U6b9DM2Cd2Pw0QrJNDaB8p922lXM6u8vZh_vejbB0dWE8HINQ2bBkbCVJEDwiseXINvbJ07GHJamdKMrks4aBwT79T2jyrZIR2qapPxa-yChqMrQQvp4xmxX6uG6Yyz0sS48lrO_VjNlXiejlQjHesrusnP0bR4_usge7b66Dlcdu75RQDw">
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-24 px-margin-mobile md:px-margin-desktop pb-xl max-w-7xl mx-auto w-full">
+<div class="mb-lg">
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">Activities &amp; Experiences</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your booked tours and discover new adventures.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Booked & Reviews -->
+<div class="lg:col-span-8 flex flex-col gap-lg">
+<!-- Booked Experiences -->
+<section>
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Booked Experiences</h2>
+</div>
+<div class="flex flex-col gap-md">
+<!-- Booked Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 flex flex-col md:flex-row overflow-hidden hover:shadow-md transition-shadow">
+<div class="w-full md:w-1/3 h-48 md:h-auto relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A wide angle photograph of a hot air balloon floating over a rugged desert landscape at sunrise, soft golden lighting, premium travel aesthetic, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWvcxa8F6hArVixD6gETRxXVeh1KxI49_bk7RWWJKOSeRr7soZWqGSKoA2RwY0i7tDgsbkiC13YP-mDETsEJaiJM3Q9xhl8fX-Qu-XSNCU_HzwyJsHzZ9zyx4qOh67_4aybb3pky8WGMbn0OkZqDbLMw9zfwxSnxbsZJcBml7pkkEKRx7Kxc94-_Dp1u3KmcBmnqBo-o_9-yldy9EySO2mLbg92mkHsdOOk7c78hxzZWs2EpKRiSiVSg">
+<div class="absolute top-sm left-sm bg-primary-container text-on-primary-container font-caption text-caption px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">event</span> Tomorrow
+                                </div>
+</div>
+<div class="p-md flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">Sunrise Balloon Safari</h3>
+<button class="text-primary hover:bg-primary-container/20 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center gap-md mb-sm font-body-md text-body-md text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">schedule</span> 05:30 AM
+                                        </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">group</span> 2 Guests
+                                        </div>
+</div>
+</div>
+<div class="flex gap-sm mt-md">
+<button class="bg-primary text-on-primary font-label-md text-label-md py-2 px-4 rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex-1 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">qr_code_scanner</span> View Voucher
+                                    </button>
+<button class="border border-primary text-primary font-label-md text-label-md py-2 px-4 rounded-lg hover:bg-primary-container/10 transition-colors flex-1">
+                                        Details
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Booked Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 flex flex-col md:flex-row overflow-hidden hover:shadow-md transition-shadow">
+<div class="w-full md:w-1/3 h-48 md:h-auto relative">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A close up photograph of colorful tropical fish and coral reef underwater, bright turquoise water, sunlight filtering through, premium travel aesthetic, high resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRHKZ7TLGa-XdS4SrvS2UOfKg-k8rIHpZ4CUQgcZ70Hfb4EB8tJ01aHAYY_Dlf8NsG2xVvWP5Ol7wwqvJuDZ0X57oekgFtVnilv0GNo1AhooHQq5YeviqOIUctsKhL_7hWPracQUH71N3RppbkOqdqJP2TPliqDLy-RrBFi6PdlJcC2NdXwCsDLrp1BzhA3KyWVK3daPEFeF2mMx_7XRar69UJPeSVTXZB7jaCAJitMEalXzGRT4-Zfw">
+<div class="absolute top-sm left-sm bg-surface-container-high text-on-surface font-caption text-caption px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">event</span> Oct 15
+                                </div>
+</div>
+<div class="p-md flex-grow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface">Reef Snorkeling Adventure</h3>
+<button class="text-primary hover:bg-primary-container/20 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center gap-md mb-sm font-body-md text-body-md text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">schedule</span> 10:00 AM
+                                        </div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">group</span> 2 Guests
+                                        </div>
+</div>
+</div>
+<div class="flex gap-sm mt-md">
+<button class="bg-primary text-on-primary font-label-md text-label-md py-2 px-4 rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex-1 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">qr_code_scanner</span> View Voucher
+                                    </button>
+<button class="border border-primary text-primary font-label-md text-label-md py-2 px-4 rounded-lg hover:bg-primary-container/10 transition-colors flex-1">
+                                        Details
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Write a Review Section -->
+<section class="bg-surface-container-low rounded-xl p-md border border-outline-variant/30">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm">Recent Activities</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">Share your experience to help other travelers.</p>
+<div class="flex items-center justify-between bg-surface-container-lowest p-sm rounded-lg shadow-sm">
+<div class="flex items-center gap-md">
+<img class="w-12 h-12 rounded-lg object-cover" data-alt="A small thumbnail photograph of a historic city center with cobblestone streets and old architecture, sunny day, travel aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBItYyXGS1ufeV0gRKjV2gbO58krFk1YglUzlxZRBH6jVb4BUYOGvRPP9j1Z0HE6EYX8cY3e7Xt0rJM_ZEFUE-v5ExaGJsp22MMFqiQ4RyiiErfg18egV2J_7eoXy2spMC3zmFQ8OcBulcaVO1fqQQ8_sUww5wttGRoBUvZnC5yTsGyWHNQq0X2TTdiCOe7ZppKb4RM6owsGU9vewPuhNJjPVbUiQbgVzf4idgM285mltbH7l2smLFzvw">
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Old Town Walking Tour</h4>
+<p class="font-caption text-caption text-on-surface-variant">Completed on Sep 28</p>
+</div>
+</div>
+<button class="text-primary font-label-md text-label-md hover:bg-primary-container/10 px-4 py-2 rounded-lg transition-colors">
+                            Write Review
+                        </button>
+</div>
+</section>
+</div>
+<!-- Right Column: Recommended -->
+<div class="lg:col-span-4">
+<div class="sticky top-24">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-md">Recommended for You</h2>
+<div class="flex flex-col gap-md">
+<!-- Rec Card 1 -->
+<div class="relative rounded-xl overflow-hidden group h-64 shadow-sm hover:shadow-md transition-all cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A stunning photograph of a person kayaking in a calm, misty alpine lake surrounded by steep forested mountains, cool tones, premium travel aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnMj0EfQJ5zaHBjqMUprFgaw3fTDxEwfY5VWXIJIyRGW2PekigYlAFdISNAWg7fbeabzXxVJKIxKqJ9NTOYFcs_91zCQMwr6o6ByclQpzx0IIAu6zCmGC0owD-Bjj1HPQ72RQYzzqX6t_LemtBxNh4RR4LdcX3o9tL0kGXlUk6Lr2A8hrM1OldmQnkeMOekRpXrPbvJaZWhbY872ASsJ0dNUA5FAuQpPJ21m2Wj_YOUGBpWwjVlEoZCg">
+<div class="absolute inset-0 text-gradient flex flex-col justify-end p-sm">
+<div class="glass-panel absolute top-sm right-sm px-2 py-1 rounded-full flex items-center gap-1 font-caption text-caption text-on-primary">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed-dim">star</span> 4.9
+                                </div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-primary mb-xs">Alpine Kayaking</h3>
+<p class="font-body-md text-body-md text-surface-variant line-clamp-2 mb-sm">Explore serene glacial lakes with a guided kayaking tour.</p>
+<button class="bg-secondary-container text-on-secondary-container font-label-md text-label-md py-2 px-4 rounded-lg w-full hover:bg-secondary transition-colors">
+                                        Book Now
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Rec Card 2 -->
+<div class="relative rounded-xl overflow-hidden group h-64 shadow-sm hover:shadow-md transition-all cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A photograph of a bustling night market scene with colorful lanterns, food stalls, and blurred people moving, warm vibrant lighting, travel photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmaZuz0iHOuucXfh4ckdfQlCcGDvz4dykD7GaH1NNyV4I0ma2Aqhqz8289DBQzDTUVPA4xpoNBbS_-xNwoQleo-T3d6F-SWWzrbhIEk5wACjvumY-Hx6ibQc4BAB3o702mzYWvd61dq4C4SIHS9yliEFl9g2noJ_GjCm33VHydCJ9Lx5l-Cg55sU-gboHLGqEGlV8XZ_-K9hlgzNOUvyuEdpchG3yr8H3DhOiqUx-c3R9d3KVRTcC0yA">
+<div class="absolute inset-0 text-gradient flex flex-col justify-end p-sm">
+<div class="glass-panel absolute top-sm right-sm px-2 py-1 rounded-full flex items-center gap-1 font-caption text-caption text-on-primary">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed-dim">star</span> 4.7
+                                </div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-primary mb-xs">Night Market Tour</h3>
+<p class="font-body-md text-body-md text-surface-variant line-clamp-2 mb-sm">Taste local street food and discover hidden gems.</p>
+<button class="bg-secondary-container text-on-secondary-container font-label-md text-label-md py-2 px-4 rounded-lg w-full hover:bg-secondary transition-colors">
+                                        Book Now
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop py-lg w-full">
+<div class="font-headline-md text-headline-md text-primary mb-4 md:mb-0">
+                Horizon Odyssey
+            </div>
+<div class="flex space-x-gutter mb-4 md:mb-0">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary font-caption text-caption hover:underline decoration-primary transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary font-caption text-caption hover:underline decoration-primary transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary font-caption text-caption hover:underline decoration-primary transition-opacity duration-200" href="#">Cookies</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary font-caption text-caption hover:underline decoration-primary transition-opacity duration-200" href="#">Contact Us</a>
+</div>
+<div class="text-on-surface-variant dark:text-inverse-on-surface font-caption text-caption">
+                © 2024 Horizon Odyssey. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

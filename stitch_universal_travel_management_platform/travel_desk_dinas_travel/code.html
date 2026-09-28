@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinas Travel — Horizon Odyssey | PT Andrea</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #c1c6d7; border-radius: 9999px; border: 3px solid #f8f9fa; }
+  ::-webkit-scrollbar-thumb:hover { background: #717786; }
+  .shadow-ambient { box-shadow: 0 4px 20px rgba(0, 21, 41, 0.05); }
+  .shadow-float { box-shadow: 0 12px 40px rgba(0, 21, 41, 0.12); }
+  .glass { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .scrim { background: rgba(25, 28, 29, 0.45); backdrop-filter: blur(4px); }
+</style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#0059bb",
+          "on-primary": "#ffffff",
+          "primary-container": "#0070ea",
+          "on-primary-container": "#fefcff",
+          "primary-fixed": "#d8e2ff",
+          "primary-fixed-dim": "#adc7ff",
+          "on-primary-fixed": "#001a41",
+          "on-primary-fixed-variant": "#004493",
+          "inverse-primary": "#adc7ff",
+          "secondary": "#994700",
+          "on-secondary": "#ffffff",
+          "secondary-container": "#fb7800",
+          "on-secondary-container": "#592600",
+          "secondary-fixed": "#ffdbc8",
+          "secondary-fixed-dim": "#ffb68b",
+          "on-secondary-fixed": "#321200",
+          "on-secondary-fixed-variant": "#753400",
+          "tertiary": "#545d65",
+          "on-tertiary": "#ffffff",
+          "tertiary-container": "#6d767e",
+          "on-tertiary-container": "#fcfcff",
+          "tertiary-fixed": "#dbe4ed",
+          "tertiary-fixed-dim": "#bfc8d0",
+          "on-tertiary-fixed": "#141d23",
+          "on-tertiary-fixed-variant": "#3f484f",
+          "error": "#ba1a1a",
+          "on-error": "#ffffff",
+          "error-container": "#ffdad6",
+          "on-error-container": "#93000a",
+          "background": "#f8f9fa",
+          "on-background": "#191c1d",
+          "surface": "#f8f9fa",
+          "surface-bright": "#f8f9fa",
+          "surface-dim": "#d9dadb",
+          "surface-variant": "#e1e3e4",
+          "surface-container-lowest": "#ffffff",
+          "surface-container-low": "#f3f4f5",
+          "surface-container": "#edeeef",
+          "surface-container-high": "#e7e8e9",
+          "surface-container-highest": "#e1e3e4",
+          "on-surface": "#191c1d",
+          "on-surface-variant": "#414754",
+          "inverse-surface": "#2e3132",
+          "inverse-on-surface": "#f0f1f2",
+          "outline": "#717786",
+          "outline-variant": "#c1c6d7",
+          "surface-tint": "#005bc0",
+          "success": "#1e7e34",
+          "success-container": "#e6f4ea",
+          "warning": "#856404",
+          "warning-container": "#fff3cd"
+        },
+        borderRadius: {
+          "DEFAULT": "0.25rem",
+          "sm": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "2xl": "1rem",
+          "3xl": "1.5rem",
+          "full": "9999px"
+        },
+        spacing: {
+          "base": "8px",
+          "xs": "4px",
+          "sm": "12px",
+          "md": "24px",
+          "lg": "48px",
+          "xl": "80px",
+          "gutter": "24px",
+          "margin-mobile": "16px",
+          "margin-desktop": "64px"
+        },
+        fontFamily: {
+          "display-lg": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"],
+          "headline-md": ["Inter"], "body-lg": ["Inter"], "body-md": ["Inter"],
+          "label-md": ["Inter"], "caption": ["Inter"]
+        },
+        fontSize: {
+          "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+          "headline-lg": ["40px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "600" }],
+          "headline-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "600" }],
+          "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "label-md": ["14px", { lineHeight: "1.4", letterSpacing: "0.05em", fontWeight: "500" }],
+          "caption": ["12px", { lineHeight: "1.4", fontWeight: "400" }]
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased overflow-x-hidden min-h-screen flex">
+
+<!-- ══════════════ Sidebar ══════════════ -->
+<nav class="bg-surface-container-lowest border-r border-outline-variant/25 shadow-ambient h-screen w-72 flex-col hidden lg:flex fixed left-0 top-0 bottom-0 z-40">
+  <div class="px-6 pt-6 pb-5 flex items-center gap-sm border-b border-outline-variant/20">
+    <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
+      <span class="material-symbols-outlined text-on-primary text-[22px]">flight_takeoff</span>
+    </div>
+    <div class="leading-tight min-w-0">
+      <p class="font-headline-md text-[15px] font-bold text-on-surface tracking-tight truncate">Horizon Odyssey</p>
+      <p class="font-caption text-caption text-tertiary font-medium">Dinas Travel • PT Andrea</p>
+    </div>
+  </div>
+
+  <div class="px-6 py-md flex items-center gap-sm">
+    <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md shrink-0">ER</div>
+    <div class="min-w-0 leading-tight">
+      <p class="font-label-md text-label-md font-semibold text-on-surface truncate">Elena Rostova</p>
+      <p class="font-caption text-caption text-tertiary truncate">Admin Travel</p>
+    </div>
+    <span class="ml-auto px-xs py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-caption text-[10px] font-bold tracking-wide">ADMIN</span>
+  </div>
+
+  <div class="flex-1 px-4 space-y-1 overflow-y-auto pb-md">
+    <p class="px-4 pt-2 pb-1 font-caption text-[10px] font-bold uppercase tracking-widest text-outline">Operasional</p>
+    <a href="#" class="flex items-center gap-sm px-4 py-2.5 bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm">
+      <span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings:'FILL' 1;">dashboard</span>
+      <span class="font-label-md text-label-md">Dashboard</span>
+    </a>
+    <a href="#antrean" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">pending_actions</span>
+      <span class="font-label-md text-label-md">Antrean Booking</span>
+      <span class="ml-auto px-1.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-caption text-[10px] font-bold" id="navBadge">0</span>
+    </a>
+    <a href="#booking" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">confirmation_number</span>
+      <span class="font-label-md text-label-md">Kelola Booking</span>
+    </a>
+    <a href="#keberangkatan" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">flight</span>
+      <span class="font-label-md text-label-md">Keberangkatan</span>
+    </a>
+
+    <p class="px-4 pt-4 pb-1 font-caption text-[10px] font-bold uppercase tracking-widest text-outline">Pendampingan</p>
+    <a href="#" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">policy</span>
+      <span class="font-label-md text-label-md">Travel Policy</span>
+    </a>
+    <a href="#" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="font-label-md text-label-md">Reimbursement</span>
+    </a>
+    <a href="#" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">analytics</span>
+      <span class="font-label-md text-label-md">Laporan Biaya</span>
+    </a>
+    <a href="#" class="flex items-center gap-sm px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined">group</span>
+      <span class="font-label-md text-label-md">Karyawan</span>
+    </a>
+  </div>
+
+  <div class="px-4 pb-md space-y-1 border-t border-outline-variant/20 pt-sm">
+    <a href="#" class="flex items-center gap-sm px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-[20px]">help</span>
+      <span class="font-caption text-caption">Pusat Bantuan</span>
+    </a>
+    <a href="#" class="flex items-center gap-sm px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-[20px]">logout</span>
+      <span class="font-caption text-caption">Keluar</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ══════════════ Mobile Drawer ══════════════ -->
+<nav id="mobileDrawer" class="lg:hidden fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 scrim" data-close-drawer></div>
+  <div class="relative h-full w-72 bg-surface-container-lowest shadow-float flex flex-col">
+    <div class="px-6 py-md flex items-center gap-sm border-b border-outline-variant/20">
+      <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-on-primary text-[20px]">flight_takeoff</span>
+      </div>
+      <p class="font-semibold text-on-surface truncate">Dinas Travel</p>
+      <button data-close-drawer class="ml-auto p-1 rounded-lg text-on-surface-variant hover:bg-surface-container-low" aria-label="Tutup menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="flex-1 px-4 py-md space-y-1 overflow-y-auto">
+      <a href="#antrean" class="flex items-center gap-sm px-4 py-2.5 rounded-lg bg-primary-container text-on-primary-container font-semibold">
+        <span class="material-symbols-outlined">pending_actions</span><span class="font-label-md text-label-md">Dashboard</span>
+      </a>
+      <a href="#antrean" class="flex items-center gap-sm px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low">
+        <span class="material-symbols-outlined">confirmation_number</span><span class="font-label-md text-label-md">Antrean Booking</span>
+      </a>
+      <a href="#booking" class="flex items-center gap-sm px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low">
+        <span class="material-symbols-outlined">flight</span><span class="font-label-md text-label-md">Keberangkatan</span>
+      </a>
+      <a href="#" class="flex items-center gap-sm px-4 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low">
+        <span class="material-symbols-outlined">analytics</span><span class="font-label-md text-label-md">Laporan Biaya</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ Main ══════════════ -->
+<main class="flex-1 lg:ml-72 min-h-screen flex flex-col">
+
+  <!-- Top Bar -->
+  <header class="sticky top-0 z-30 glass border-b border-outline-variant/20">
+    <div class="h-16 px-margin-mobile md:px-md flex items-center justify-between gap-md">
+      <div class="flex items-center gap-sm min-w-0">
+        <button id="openDrawer" class="lg:hidden p-2 -ml-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low" aria-label="Buka menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <nav class="hidden items-center gap-xs font-caption text-caption text-tertiary md:flex" aria-label="Breadcrumb">
+          <span class="hover:text-primary transition-colors cursor-pointer">Horizon Odyssey</span>
+          <span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+          <span class="text-on-surface font-medium">Dinas Travel</span>
+        </nav>
+      </div>
+
+      <div class="relative hidden md:flex items-center flex-1 max-w-sm">
+        <span class="material-symbols-outlined absolute left-sm text-outline text-[18px] pointer-events-none">search</span>
+        <input id="globalSearch" type="text" placeholder="Cari pengajuan, karyawan, kota..."
+               class="w-full pl-lg pr-md py-xs bg-surface-container-low rounded-lg font-body-md text-label-md text-on-surface placeholder:text-outline border border-transparent focus:border-primary focus:ring-0 focus:shadow-[0_0_0_3px_rgba(0,89,187,0.15)] transition-all">
+      </div>
+
+      <div class="flex items-center gap-xs shrink-0">
+        <button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" aria-label="Notifikasi">
+          <span class="material-symbols-outlined text-[20px]">notifications</span>
+          <span id="notifDot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface-container-lowest"></span>
+        </button>
+        <button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" aria-label="Bantuan">
+          <span class="material-symbols-outlined text-[20px]">help_outline</span>
+        </button>
+        <div class="h-6 w-px bg-surface-container-high mx-1"></div>
+        <div class="flex items-center gap-sm p-xs rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+          <div class="hidden md:flex flex-col text-left leading-tight">
+            <span class="font-label-md text-label-md font-semibold text-on-surface">Elena Rostova</span>
+            <span class="font-caption text-caption text-tertiary">Admin Travel</span>
+          </div>
+          <span class="material-symbols-outlined text-outline text-[16px] hidden md:block">expand_more</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="px-margin-mobile md:px-md py-md flex flex-col gap-md flex-1">
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-sm">
+      <div>
+        <h1 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface tracking-tight">Dinas Travel</h1>
+        <p class="text-body-md text-on-surface-variant mt-1">Antrean penugasan booking untuk pengajuan yang telah disetujui, dan pemantauan keberangkatan karyawan.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-xs">
+        <button id="exportBtn" class="px-md py-2.5 rounded-lg border border-primary text-primary font-label-md text-label-md font-medium hover:bg-primary-fixed/30 transition-colors flex items-center gap-xs">
+          <span class="material-symbols-outlined text-[18px]">download</span> Ekspor Rekap
+        </button>
+        <button id="newBookingBtn" class="px-md py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-colors flex items-center gap-xs shadow-ambient">
+          <span class="material-symbols-outlined text-[18px]">add</span> Buat Booking
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-md" aria-label="Ringkasan operasional">
+      <!-- Menunggu booking -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-md border border-outline-variant/15 flex flex-col">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-2 bg-secondary-fixed/60 rounded-lg">
+            <span class="material-symbols-outlined text-secondary text-[20px]">pending_actions</span>
+          </div>
+          <span class="font-caption text-caption font-semibold px-2 py-0.5 rounded-full bg-error-container text-on-error-container">Butuh tindakan</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Menunggu Booking</p>
+        <p class="text-headline-md font-headline-md text-on-surface font-bold mt-1" id="kpiPending">0</p>
+        <p class="font-caption text-caption text-tertiary mt-xs">Pengajuan APPROVED tanpa booking</p>
+      </div>
+      <!-- Terkonfirmasi -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-md border border-outline-variant/15 flex flex-col">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-2 bg-primary-fixed/50 rounded-lg">
+            <span class="material-symbols-outlined text-primary text-[20px]">task_alt</span>
+          </div>
+          <span class="font-caption text-caption font-semibold px-2 py-0.5 rounded-full bg-success-container text-success">Aktif</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Booking Terkonfirmasi</p>
+        <p class="text-headline-md font-headline-md text-on-surface font-bold mt-1" id="kpiConfirmed">0</p>
+        <p class="font-caption text-caption text-tertiary mt-xs">Tiket &amp; hotel sudah terbit</p>
+      </div>
+      <!-- Dalam_revision -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-md border border-outline-variant/15 flex flex-col">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-2 bg-tertiary-fixed/60 rounded-lg">
+            <span class="material-symbols-outlined text-tertiary text-[20px]">travel_explore</span>
+          </div>
+          <span class="font-caption text-caption font-semibold px-2 py-0.5 rounded-full bg-warning-container text-warning">7 hari ke depan</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Keberangkatan Mendatang</p>
+        <p class="text-headline-md font-headline-md text-on-surface font-bold mt-1" id="kpiUpcoming">0</p>
+        <p class="font-caption text-caption text-tertiary mt-xs">Siapkan dokumen perjalanan &amp; e-ticket</p>
+      </div>
+      <!-- Biaya -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-ambient p-md border border-outline-variant/15 flex flex-col">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-2 bg-primary-container/20 rounded-lg">
+            <span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+          </div>
+          <span class="font-caption text-caption font-semibold px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed">Per bulan ini</span>
+        </div>
+        <p class="font-label-md text-label-md text-on-surface-variant">Realisasi Booking</p>
+        <p class="text-headline-md font-headline-md text-on-surface font-bold mt-1" id="kpiSpend">Rp 0</p>
+        <p class="font-caption text-caption text-tertiary mt-xs">Total nilai tiket &amp; hotel terbit</p>
+      </div>
+    </section>
+
+    <!-- Antrean + Ringkasan -->
+    <section id="antrean" class="grid grid-cols-1 xl:grid-cols-3 gap-md items-start">
+      <!-- Antrean -->
+      <div class="xl:col-span-2 bg-surface-container-lowest rounded-2xl shadow-ambient border border-outline-variant/15 overflow-hidden">
+        <div class="p-md border-b border-outline-variant/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-sm">
+          <div>
+            <h2 class="text-body-lg font-semibold text-on-surface">Antrean Penugasan Booking</h2>
+            <p class="font-caption text-caption text-on-surface-variant mt-0.5">Pengajuan berstatus APPROVED yang belum memiliki satu pun booking.</p>
+          </div>
+          <span class="font-caption text-caption font-semibold px-2 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed shrink-0" id="queueCount">0 antrean</span>
+        </div>
+        <div id="queueList" class="divide-y divide-outline-variant/15"></div>
+        <div id="queueEmpty" class="hidden px-md py-xl text-center">
+          <span class="material-symbols-outlined text-outline-variant text-[40px]">task_alt</span>
+          <p class="font-label-md text-label-md font-semibold text-on-surface mt-2">Antrean bersih</p>
+          <p class="font-caption text-caption text-on-surface-variant mt-1">Semua pengajuan yang disetujui sudah ditugaskan.</p>
+        </div>
+      </div>
+
+      <!-- Kolom kanan -->
+      <div class="flex flex-col gap-md">
+        <!-- Sebaran status -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-ambient border border-outline-variant/15 p-md">
+          <h2 class="text-body-lg font-semibold text-on-surface">Sebaran Status Booking</h2>
+          <div class="mt-md space-y-sm" id="statusBars"></div>
+        </div>
+
+        <!-- SLA -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-ambient border border-outline-variant/15 p-md">
+          <div class="flex items-start gap-sm">
+            <div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-on-secondary-fixed text-[22px]">timer</span>
+            </div>
+            <div>
+              <h3 class="font-label-md text-label-md font-bold text-on-surface">Target Penyelesaian</h3>
+              <p class="font-caption text-caption text-on-surface-variant mt-xs leading-relaxed">
+                Tiket domestically harus terbit maksimal <strong class="text-on-surface">2×24 jam</strong> sejak pengajuan masuk antrean, hotel di luar Jawa <strong class="text-on-surface">3×24 jam</strong>.
+              </p>
+            </div>
+          </div>
+          <div class="mt-md rounded-lg bg-surface-container-low p-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-caption text-caption text-on-surface-variant">Rata-rata waktu terbit</span>
+              <span class="font-label-md text-label-md font-bold text-primary" id="avgEta">18 jam</span>
+            </div>
+            <div class="h-1.5 w-full rounded-full bg-surface-container-highest mt-sm overflow-hidden">
+              <div class="h-full rounded-full bg-primary transition-all duration-500" id="avgBar" style="width:62%"></div>
+            </div>
+            <p class="font-caption text-[11px] text-tertiary mt-xs">Target internal 24 jam • 12 kota dalam korridor utama</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kelola booking -->
+    <section id="booking" class="bg-surface-container-lowest rounded-2xl shadow-ambient border border-outline-variant/15 overflow-hidden">
+      <div class="p-md border-b border-outline-variant/20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-sm">
+        <div>
+          <h2 class="text-body-lg font-semibold text-on-surface">Kelola Booking</h2>
+          <p class="font-caption text-caption text-on-surface-variant mt-0.5">Ubah status booking, batalkan, atau cetak itinerary karyawan.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-xs w-full lg:w-auto">
+          <div class="relative flex-1 lg:flex-none">
+            <span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">search</span>
+            <input id="tableSearch" type="text" placeholder="Cari kode, nama, tujuan..."
+                   class="w-full lg:w-64 pl-lg pr-sm py-2 bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-label-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+          </div>
+          <div class="flex items-center gap-1 p-1 rounded-lg bg-surface-container-low" role="tablist" aria-label="Filter status booking" id="filterTabs">
+            <button data-filter="ALL" class="px-sm py-1.5 rounded-md font-label-md text-caption font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-colors">Semua</button>
+            <button data-filter="PENDING" class="px-sm py-1.5 rounded-md font-label-md text-caption font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Pending</button>
+            <button data-filter="CONFIRMED" class="px-sm py-1.5 rounded-md font-label-md text-caption font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Confirmed</button>
+            <button data-filter="CANCELLED" class="px-sm py-1.5 rounded-md font-label-md text-caption font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Dibatalkan</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[920px]">
+          <thead>
+            <tr class="bg-surface-container-lowest border-b border-outline-variant/20">
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant">Kode Booking</th>
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant">Karyawan</th>
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant">Tujuan &amp; Tanggal</th>
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant">Jenis</th>
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant">Status</th>
+              <th scope="col" class="p-4 text-label-md font-medium text-on-surface-variant text-right">Nilai</th>
+              <th scope="col" class="p-4"><span class="sr-only">Aksi</span></th>
+            </tr>
+          </thead>
+          <tbody id="bookingTableBody" class="divide-y divide-outline-variant/10"></tbody>
+        </table>
+      </div>
+
+      <div class="p-4 border-t border-outline-variant/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <span class="font-caption text-caption text-on-surface-variant" id="tableSummary">Menampilkan 0 data</span>
+        <div class="flex items-center gap-2">
+          <button id="prevPage" class="px-3 py-1 border border-outline-variant/50 rounded text-caption font-caption hover:bg-surface-container disabled:opacity-40" disabled>Sebelumnya</button>
+          <button id="nextPage" class="px-3 py-1 border border-outline-variant/50 rounded text-caption font-caption hover:bg-surface-container disabled:opacity-40" disabled>Berikutnya</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-sm pb-md text-center">
+      <p class="font-caption text-caption text-tertiary">© 2026 Horizon Odyssey — Dinas Travel PT Andrea • Data transaksi disegarkan dari sistem GDS setiap 15 menit.</p>
+    </footer>
+  </div>
+</main>
+
+<!-- ══════════════ Modal: Buat Booking ══════════════ -->
+<div id="bookingModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 scrim" data-close-modal></div>
+  <div class="relative min-h-full flex items-end sm:items-center justify-center p-0 sm:p-md">
+    <div class="w-full sm:max-w-2xl bg-surface-container-lowest rounded-t-2xl sm:rounded-2xl shadow-float max-h-[92vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="p-md border-b border-outline-variant/20 flex items-start justify-between gap-sm shrink-0">
+        <div>
+          <h2 id="modalTitle" class="text-headline-md text-[20px] font-semibold text-on-surface">Buat Booking Perjalanan</h2>
+          <p class="font-caption text-caption text-on-surface-variant mt-0.5">Booking hanya dapat dibuat untuk pengajuan berstatus <strong>APPROVED</strong>.</p>
+        </div>
+        <button data-close-modal class="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" aria-label="Tutup">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="bookingForm" class="p-md overflow-y-auto flex flex-col gap-md" novalidate>
+        <div id="formError" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-xs font-caption text-caption font-medium"></div>
+
+        <div class="flex flex-col gap-xs">
+          <label for="fTravel" class="font-label-md text-label-md font-medium text-on-surface">Pengajuan Travel</label>
+          <select id="fTravel" class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all"></select>
+          <p class="font-caption text-caption text-tertiary" id="travelHint">—</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+          <div class="flex flex-col gap-xs">
+            <label for="fType" class="font-label-md text-label-md font-medium text-on-surface">Jenis Booking</label>
+            <select id="fType" class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+              <option value="FLIGHT">Penerbangan</option>
+              <option value="HOTEL">Hotel</option>
+              <option value="TRAIN">Kereta Api</option>
+              <option value="TRANSPORT">Transportasi Darat</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-xs">
+            <label for="fProvider" class="font-label-md text-label-md font-medium text-on-surface">Mitra / Penyedia</label>
+            <input id="fProvider" type="text" placeholder="Garuda Indonesia, Aston Hotel..." class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+          <div class="flex flex-col gap-xs">
+            <label for="fRef" class="font-label-md text-label-md font-medium text-on-surface">No. Referensi / PNR</label>
+            <input id="fRef" type="text" placeholder="ABC123" class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+          </div>
+          <div class="flex flex-col gap-xs">
+            <label for="fDate" class="font-label-md text-label-md font-medium text-on-surface">Tanggal Keberangkatan</label>
+            <input id="fDate" type="date" class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+          </div>
+          <div class="flex flex-col gap-xs">
+            <label for="fAmount" class="font-label-md text-label-md font-medium text-on-surface">Nilai Booking (Rp)</label>
+            <input id="fAmount" type="number" min="0" step="1000" placeholder="4500000" class="w-full bg-[#F1F3F5] border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-0 focus:shadow-[0_0_0_2px_rgba(0,89,187,0.2)] transition-all">
+          </div>
+        </div>
+
+        <div class="flex items-start gap-sm rounded-lg bg-primary-fixed/30 p-sm">
+          <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">info</span>
+          <p class="font-caption text-caption text-on-surface-variant leading-relaxed">
+            Nilai booking akan dibandingkan dengan <span class="font-medium text-on-surface">estimatedCost</span> pada pengajuan. Selisih lebih dari 10% memerlukan justifikasi saat verifikasi reimbursement.
+          </p>
+        </div>
+
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-xs pt-xs shrink-0">
+          <button type="button" data-close-modal class="px-md py-2.5 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-highest transition-colors">Batal</button>
+          <button type="submit" class="px-md py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-xs shadow-ambient">
+            <span class="material-symbols-outlined text-[18px]">check</span> Simpan Booking
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ Toast ══════════════ -->
+<div id="toastHost" class="fixed bottom-md right-md z-[60] flex flex-col gap-2 items-end" aria-live="polite"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   Mock data — mencerminkan shape response /api/travel/bookings/*
+   Ganti fetch() ke API_SPEC.md saat backend siap.
+   ═══════════════════════════════════════════════════════════ */
+
+// GET /api/travel/bookings/pending — travel APPROVED tanpa booking
+const pendingQueue = [
+  { travelId: 41, ref: '#TR-2026-041', employee: 'Azka Pratama', position: 'Sales Executive', dept: 'Sales', destination: 'Surabaya', start: '2026-10-01', end: '2026-10-03', days: 3, estimatedCost: 4500000, purpose: 'Kunjungan klien & training tim sales', waitedHours: 6 },
+  { travelId: 44, ref: '#TR-2026-044', employee: 'Sinta Halim', position: 'HR Specialist', dept: 'Human Resource', destination: 'Bandung', start: '2026-10-02', end: '2026-10-04', days: 3, estimatedCost: 3200000, purpose: 'Pelatihan labor relations', waitedHours: 19 },
+  { travelId: 47, ref: '#TR-2026-047', employee: 'Bagas Wicaksono', position: 'Field Engineer', dept: 'Engineering', destination: 'Balikpapan', start: '2026-10-05', end: '2026-10-09', days: 5, estimatedCost: 9800000, purpose: 'Instalasi equipment klien', waitedHours: 31 },
+  { travelId: 52, ref: '#TR-2026-052', employee: 'Maya Kusuma', position: 'Product Manager', dept: 'Product', destination: 'Singapura', start: '2026-10-06', end: '2026-10-09', days: 4, estimatedCost: 18500000, purpose: 'Apsacon Asia Summit', waitedHours: 44 }
+];
+
+// GET /api/travel/:travelId/bookings
+let bookings = [
+  { id: 9001, ref: 'BKG-26-9001', travelRef: '#TR-2026-038', employee: 'Rizky Ramadhan', dept: 'Engineering', destination: 'Yogyakarta', date: '2026-09-28', type: 'FLIGHT', provider: 'Garuda Indonesia', status: 'CONFIRMED', amount: 2450000 },
+  { id: 9002, ref: 'BKG-26-9002', travelRef: '#TR-2026-038', employee: 'Rizky Ramadhan', dept: 'Engineering', destination: 'Yogyakarta', date: '2026-09-28', type: 'HOTEL', provider: 'Aston Yogyakarta', status: 'CONFIRMED', amount: 1800000 },
+  { id: 9003, ref: 'BKG-26-9003', travelRef: '#TR-2026-039', employee: 'Nadia Puspita', dept: 'Marketing', destination: 'Bali', date: '2026-09-29', type: 'FLIGHT', provider: 'Lion Air', status: 'CONFIRMED', amount: 1980000 },
+  { id: 9004, ref: 'BKG-26-9004', travelRef: '#TR-2026-039', employee: 'Nadia Puspita', dept: 'Marketing', destination: 'Bali', date: '2026-09-30', type: 'HOTEL', provider: 'Hotel Ubud Palace', status: 'PENDING', amount: 3600000 },
+  { id: 9005, ref: 'BKG-26-9005', travelRef: '#TR-2026-040', employee: 'Doni Saputra', dept: 'Operations', destination: 'Medan', date: '2026-09-26', type: 'TRAIN', provider: 'KAI', status: 'CANCELLED', amount: 620000 },
+  { id: 9006, ref: 'BKG-26-9006', travelRef: '#TR-2026-043', employee: 'Ayu Lestari', dept: 'Finance', destination: 'Jakarta', date: '2026-09-25', type: 'FLIGHT', provider: 'Citilink', status: 'CONFIRMED', amount: 1450000 }
+];
+
+const state = { filter: 'ALL', search: '', page: 1, perPage: 5 };
+
+/* ═══════════════════════════════════════════════════════════
+   Helpers
+   ═══════════════════════════════════════════════════════════ */
+const idr = n => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n || 0);
+const shortIdr = n => n >= 1e6 ? 'Rp ' + (n / 1e6).toFixed(1).replace('.', ',') + ' jt' : idr(n);
+const fmtDate = iso => new Date(iso + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+const daysUntil = iso => Math.ceil((new Date(iso + 'T00:00:00') - new Date()) / 86400000);
+
+const TYPE_META = {
+  FLIGHT:   { icon: 'flight',           label: 'Penerbangan',    chip: 'bg-primary-fixed text-on-primary-fixed' },
+  HOTEL:    { icon: 'hotel',            label: 'Hotel',         chip: 'bg-tertiary-fixed text-on-tertiary-fixed' },
+  TRAIN:    { icon: 'train',            label: 'Kereta Api',    chip: 'bg-surface-container-high text-on-surface-variant' },
+  TRANSPORT:{ icon: 'local_taxi',        label: 'Darat',         chip: 'bg-surface-container-high text-on-surface-variant' }
+};
+
+const STATUS_META = {
+  PENDING:   { label: 'Pending',   cls: 'bg-warning-container text-warning', dot: 'bg-warning' },
+  CONFIRMED: { label: 'Confirmed', cls: 'bg-success-container text-success', dot: 'bg-success' },
+  CANCELLED: { label: 'Dibatalkan',cls: 'bg-error-container text-on-error-container', dot: 'bg-error' }
+};
+
+const statusPill = s => {
+  const m = STATUS_META[s];
+  return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${m.cls} font-caption text-caption font-medium"><span class="w-1.5 h-1.5 rounded-full ${m.dot}"></span>${m.label}</span>`;
+};
+
+function toast(message, variant = 'ok') {
+  const tone = variant === 'ok'
+    ? 'bg-primary text-on-primary'
+    : variant === 'warn'
+      ? 'bg-secondary text-on-secondary'
+      : 'bg-error text-on-error';
+  const icon = variant === 'ok' ? 'check_circle' : variant === 'warn' ? 'warning' : 'error';
+  const el = document.createElement('div');
+  el.className = `flex items-center gap-sm ${tone} px-md py-sm rounded-xl shadow-float text-label-md font-medium animate-[fadeUp_.25s_ease-out]`;
+  el.innerHTML = `<span class="material-symbols-outlined text-[20px]">${icon}</span><span>${message}</span>`;
+  document.getElementById('toastHost').appendChild(el);
+  setTimeout(() => el.remove(), 3600);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   KPI + status bars
+   ═══════════════════════════════════════════════════════════ */
+function renderKpi() {
+  const confirmed = bookings.filter(b => b.status === 'CONFIRMED');
+  const upcoming = confirmed.filter(b => { const d = daysUntil(b.date); return d >= 0 && d <= 7; }).length;
+  const spend = confirmed.reduce((s, b) => s + b.amount, 0);
+
+  document.getElementById('kpiPending').textContent = pendingQueue.length;
+  document.getElementById('kpiConfirmed').textContent = confirmed.length;
+  document.getElementById('kpiUpcoming').textContent = upcoming;
+  document.getElementById('kpiSpend').textContent = shortIdr(spend);
+  document.getElementById('navBadge').textContent = pendingQueue.length;
+  document.getElementById('notifDot').classList.toggle('hidden', pendingQueue.length === 0);
+
+  const counts = {
+    PENDING: bookings.filter(b => b.status === 'PENDING').length,
+    CONFIRMED: bookings.filter(b => b.status === 'CONFIRMED').length,
+    CANCELLED: bookings.filter(b => b.status === 'CANCELLED').length
+  };
+  const total = bookings.length || 1;
+  document.getElementById('statusBars').innerHTML = Object.entries(counts).map(([key, n]) => {
+    const pct = Math.round((n / total) * 100);
+    const barColor = { PENDING: 'bg-warning', CONFIRMED: 'bg-primary', CANCELLED: 'bg-error' }[key];
+    return `
+      <div>
+        <div class="flex items-center justify-between mb-xs">
+          <span class="font-caption text-caption text-on-surface-variant">${STATUS_META[key].label}</span>
+          <span class="font-label-md text-label-md font-bold text-on-surface">${n} <span class="font-caption text-caption font-normal text-tertiary">(${pct}%)</span></span>
+        </div>
+        <div class="h-2 w-full rounded-full bg-surface-container-highest overflow-hidden">
+          <div class="h-full rounded-full ${barColor} transition-all duration-500" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Antrean booking
+   ═══════════════════════════════════════════════════════════ */
+function renderQueue() {
+  const host = document.getElementById('queueList');
+  const empty = document.getElementById('queueEmpty');
+  document.getElementById('queueCount').textContent = `${pendingQueue.length} antrean`;
+
+  if (!pendingQueue.length) { host.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  host.innerHTML = pendingQueue.map(t => {
+    const d = daysUntil(t.start);
+    const urgency = t.waitedHours > 24
+      ? 'bg-error-container text-on-error-container'
+      : t.waitedHours > 12 ? 'bg-warning-container text-warning' : 'bg-surface-container-high text-on-surface-variant';
+    return `
+    <div class="p-md hover:bg-surface-container-lowest/60 transition-colors flex flex-col lg:flex-row lg:items-center gap-md">
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-xs mb-xs">
+          <span class="font-mono font-label-md text-label-md font-bold text-primary">${t.ref}</span>
+          <span class="px-xs py-0.5 rounded-full ${urgency} font-caption text-caption font-semibold">Menunggu ${t.waitedHours} jam</span>
+          <span class="px-xs py-0.5 rounded-full bg-success-container text-success font-caption text-caption font-semibold">Disetujui</span>
+        </div>
+        <p class="text-body-md font-semibold text-on-surface">${t.destination} <span class="text-on-surface-variant font-normal">— ${t.days} hari</span></p>
+        <p class="font-caption text-caption text-on-surface-variant mt-0.5">${t.purpose}</p>
+        <div class="flex flex-wrap items-center gap-md mt-sm">
+          <div class="flex items-center gap-xs">
+            <div class="w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-[10px]">${t.employee.split(' ').map(w => w[0]).join('').slice(0, 2)}</div>
+            <span class="font-caption text-caption text-on-surface"><span class="text-tertiary">${t.position}</span> · ${t.dept}</span>
+          </div>
+          <span class="flex items-center gap-1 font-caption text-caption text-tertiary">
+            <span class="material-symbols-outlined text-[14px]">event</span>${fmtDate(t.start)} — ${fmtDate(t.end)}
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center justify-between lg:justify-end gap-md shrink-0">
+        <div class="text-left lg:text-right">
+          <p class="font-caption text-caption text-tertiary">Estimasi</p>
+          <p class="font-label-md text-label-md font-bold text-on-surface">${idr(t.estimatedCost)}</p>
+          <p class="font-caption text-[11px] ${d <= 7 ? 'text-error font-semibold' : 'text-tertiary'}">${d >= 0 ? `${d} hari lagi` : `berakhir ${Math.abs(d)} hari lalu`}</p>
+        </div>
+        <button data-book="${t.travelId}" class="px-md py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold hover:opacity-90 transition-opacity flex items-center gap-xs shadow-ambient shrink-0">
+          <span class="material-symbols-outlined text-[18px]">add</span> Task Booking
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  host.querySelectorAll('[data-book]').forEach(btn =>
+    btn.addEventListener('click', () => openModal(Number(btn.dataset.book))));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Tabel booking
+   ═══════════════════════════════════════════════════════════ */
+function filteredBookings() {
+  const q = state.search.trim().toLowerCase();
+  return bookings.filter(b => {
+    const okStatus = state.filter === 'ALL' || b.status === state.filter;
+    const okSearch = !q || [b.ref, b.employee, b.destination, b.provider, b.travelRef]
+      .some(v => String(v).toLowerCase().includes(q));
+    return okStatus && okSearch;
+  });
+}
+
+function renderTable() {
+  const rows = filteredBookings();
+  const start = (state.page - 1) * state.perPage;
+  const pageRows = rows.slice(start, start + state.perPage);
+  const tbody = document.getElementById('bookingTableBody');
+
+  if (!pageRows.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-xl text-center">
+      <span class="material-symbols-outlined text-outline-variant text-[36px] block">search_off</span>
+      <p class="font-label-md text-label-md font-semibold text-on-surface mt-2">Tidak ada data</p>
+      <p class="font-caption text-caption text-on-surface-variant">Ubah kata kunci atau filter status.</p>
+    </td></tr>`;
+  } else {
+    tbody.innerHTML = pageRows.map(b => {
+      const meta = TYPE_META[b.type];
+      const d = daysUntil(b.date);
+      return `
+      <tr class="hover:bg-surface-container-lowest/60 transition-colors">
+        <td class="p-4">
+          <span class="font-mono font-body-md text-body-md text-primary font-semibold">${b.ref}</span>
+          <span class="block font-caption text-caption text-tertiary">${b.travelRef}</span>
+        </td>
+        <td class="p-4">
+          <div class="flex items-center gap-sm">
+            <div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-caption shrink-0">${b.employee.split(' ').map(w => w[0]).join('').slice(0, 2)}</div>
+            <div class="leading-tight">
+              <span class="block text-body-md text-on-surface">${b.employee}</span>
+              <span class="block font-caption text-caption text-tertiary">${b.dept}</span>
+            </div>
+          </div>
+        </td>
+        <td class="p-4">
+          <span class="block text-body-md text-on-surface">${b.destination}</span>
+          <span class="block font-caption text-caption ${d >= 0 && d <= 3 ? 'text-error font-semibold' : 'text-tertiary'}">${fmtDate(b.date)}${b.status !== 'CANCELLED' && d >= 0 ? ` · ${d} hari lagi` : ''}</span>
+        </td>
+        <td class="p-4">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${meta.chip} font-caption text-caption font-medium">
+            <span class="material-symbols-outlined text-[14px]">${meta.icon}</span>${meta.label}
+          </span>
+          <span class="block font-caption text-caption text-tertiary mt-1 truncate max-w-[160px]">${b.provider}</span>
+        </td>
+        <td class="p-4">${statusPill(b.status)}</td>
+        <td class="p-4 text-right">
+          <span class="text-body-md text-on-surface font-medium">${idr(b.amount)}</span>
+        </td>
+        <td class="p-4 text-right">
+          <div class="inline-flex items-center gap-1">
+            ${b.status === 'PENDING' ? `<button data-confirm="${b.id}" class="p-1.5 rounded-lg text-primary hover:bg-primary-fixed/40 transition-colors" title="Konfirmasi"><span class="material-symbols-outlined text-[18px]">check_circle</span></button>` : ''}
+            ${b.status !== 'CANCELLED' ? `<button data-cancel="${b.id}" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/50 transition-colors" title="Batalkan"><span class="material-symbols-outlined text-[18px]">cancel</span></button>` : ''}
+            <button class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition-colors" title="Itinerary"><span class="material-symbols-outlined text-[18px]">print</span></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  const end = Math.min(start + state.perPage, rows.length);
+  document.getElementById('tableSummary').textContent = rows.length
+    ? `Menampilkan ${start + 1}–${end} dari ${rows.length} booking`
+    : 'Tidak ada booking untuk filter ini';
+  document.getElementById('prevPage').disabled = state.page === 1;
+  document.getElementById('nextPage').disabled = end >= rows.length;
+}
+
+function setStatus(id, status, message) {
+  // PATCH /api/travel/bookings/:id/status
+  bookings = bookings.map(b => b.id === id ? { ...b, status } : b);
+  renderKpi(); renderTable();
+  toast(message, status === 'CANCELLED' ? 'warn' : 'ok');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Modal
+   ═══════════════════════════════════════════════════════════ */
+const modal = document.getElementById('bookingModal');
+let selectedTravel = null;
+
+function openModal(travelId) {
+  const form = document.getElementById('bookingForm');
+  form.reset();
+  document.getElementById('formError').classList.add('hidden');
+  selectedTravel = travelId ?? null;
+
+  const select = document.getElementById('fTravel');
+  select.innerHTML = pendingQueue.length
+    ? pendingQueue.map(t => `<option value="${t.travelId}">${t.ref} — ${t.employee} → ${t.destination}</option>`).join('')
+    : '<option value="">Tidak ada pengajuan menunggu</option>';
+
+  if (pendingQueue.length) {
+    const pick = pendingQueue.find(t => t.travelId === selectedTravel) || pendingQueue[0];
+    select.value = String(pick.travelId);
+    fillHint(pick);
+    document.getElementById('fDate').value = pick.start;
+    document.getElementById('fAmount').value = pick.estimatedCost;
+  }
+
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => select.focus(), 50);
+}
+
+function fillHint(t) {
+  document.getElementById('travelHint').textContent =
+    `${t.employee} · ${t.dept} · ${fmtDate(t.start)}–${fmtDate(t.end)} · estimasi ${idr(t.estimatedCost)}`;
+}
+
+function closeModal() {
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('newBookingBtn').addEventListener('click', () => openModal(null));
+modal.querySelectorAll('[data-close-modal]').forEach(el => el.addEventListener('click', closeModal));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+document.getElementById('fTravel').addEventListener('change', e => {
+  const pick = pendingQueue.find(t => t.travelId === Number(e.target.value));
+  if (pick) { fillHint(pick); document.getElementById('fDate').value = pick.start; }
+});
+
+document.getElementById('bookingForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = document.getElementById('formError');
+  const travelId = Number(document.getElementById('fTravel').value);
+  const provider = document.getElementById('fProvider').value.trim();
+  const ref = document.getElementById('fRef').value.trim();
+  const date = document.getElementById('fDate').value;
+  const amount = Number(document.getElementById('fAmount').value);
+  const type = document.getElementById('fType').value;
+
+  if (!travelId) return fail('Pilih pengajuan travel yang telah disetujui.');
+  if (!provider) return fail('Mitra atau penyedia wajib diisi.');
+  if (!date) return fail('Tanggal keberangkatan wajib diisi.');
+  if (!amount || amount <= 0) return fail('Nilai booking harus lebih dari 0.');
+
+  const t = pendingQueue.find(x => x.travelId === travelId);
+  // POST /api/travel/:travelId/bookings
+  bookings.unshift({
+    id: Date.now(),
+    ref: ref || `BKG-26-${Math.floor(9000 + Math.random() * 999)}`,
+    travelRef: t.ref,
+    employee: t.employee,
+    dept: t.dept,
+    destination: t.destination,
+    date,
+    type,
+    provider,
+    status: 'PENDING',
+    amount
+  });
+  pendingQueue.splice(pendingQueue.findIndex(x => x.travelId === travelId), 1);
+  state.page = 1;
+
+  renderKpi(); renderQueue(); renderTable(); closeModal();
+  toast(`Booking ${TYPE_META[type].label.toLowerCase()} untuk ${t.employee} dibuat`);
+
+  function fail(msg) { err.textContent = msg; err.classList.remove('hidden'); }
+});
+
+/* ═══════════════════════════════════════════════════════════
+   Wiring
+   ═══════════════════════════════════════════════════════════ */
+document.getElementById('bookingTableBody').addEventListener('click', e => {
+  const ok = e.target.closest('[data-confirm]');
+  const cancel = e.target.closest('[data-cancel]');
+  if (ok) setStatus(Number(ok.dataset.confirm), 'CONFIRMED', 'Booking dikonfirmasi, tiket telah diterbitkan ke karyawan.');
+  if (cancel && confirm('Batalkan booking ini? Tindakan tidak dapat dibatalkan.')) setStatus(Number(cancel.dataset.cancel), 'CANCELLED', 'Booking dibatalkan.');
+});
+
+document.getElementById('filterTabs').addEventListener('click', e => {
+  const btn = e.target.closest('[data-filter]');
+  if (!btn) return;
+  state.filter = btn.dataset.filter;
+  state.page = 1;
+  document.querySelectorAll('#filterTabs button').forEach(b => {
+    const on = b === btn;
+    b.className = `px-sm py-1.5 rounded-md font-label-md text-caption font-semibold transition-colors ${
+      on ? 'bg-surface-container-lowest text-on-surface shadow-sm' : 'text-on-surface-variant hover:text-on-surface'}`;
+  });
+  renderTable();
+});
+
+['tableSearch', 'globalSearch'].forEach(id => {
+  document.getElementById(id).addEventListener('input', e => {
+    state.search = e.target.value;
+    state.page = 1;
+    if (id === 'tableSearch') document.getElementById('globalSearch').value = state.search;
+    else document.getElementById('tableSearch').value = state.search;
+    renderTable();
+  });
+});
+
+document.getElementById('prevPage').addEventListener('click', () => { state.page = Math.max(1, state.page - 1); renderTable(); });
+document.getElementById('nextPage').addEventListener('click', () => { state.page++; renderTable(); });
+document.getElementById('exportBtn').addEventListener('click', () => toast('Rekap booking sedang disiapkan (GET /api/reports/export).'));
+
+const drawer = document.getElementById('mobileDrawer');
+document.getElementById('openDrawer').addEventListener('click', () => drawer.classList.remove('hidden'));
+drawer.querySelectorAll('[data-close-drawer]').forEach(el => el.addEventListener('click', () => drawer.classList.add('hidden')));
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.add('hidden')));
+
+document.getElementById('globalSearch').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+renderKpi();
+renderQueue();
+renderTable();
+</script>
+</body>
+</html>
