@@ -34,7 +34,9 @@ export function LoginForm({ mockMode }: { mockMode: boolean }) {
 
   return (
     <div className="w-full max-w-md">
-      <div className="mb-lg flex items-center gap-3">
+      {/* Brand lockup. Hidden from lg up, where the split screen's left panel
+          already carries the wordmark, so the brand is never stated twice. */}
+      <div className="mb-lg flex items-center gap-3 lg:hidden">
         <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-on-primary">
           <span className="material-symbols-outlined" style={{ fontSize: 24 }}>
             flight_takeoff

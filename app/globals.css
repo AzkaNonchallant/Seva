@@ -112,7 +112,16 @@
   --text-caption: 12px;
   --text-caption--line-height: 1.4;
 
-  /* 8px linear scale */
+  /* 8px linear scale.
+     These names intentionally power the padding, margin and gap utilities
+     (p-md = 24px, mb-lg = 48px), so they are load-bearing across the app.
+     CAUTION: --spacing-md ALSO backs the named sizing utilities. v4's stock
+     container scale only covers the numeric names (2xl/3xl/4xl/7xl), so the
+     sm/md/lg/xl tokens above are captured and `.max-w-md` resolved to
+     var(--spacing-md) = 24px while `.max-w-lg` resolved to 48px. That
+     collapsed the login card and every PlaceholderPage into a
+     one-word-per-line column. The named widths are re-pinned in the
+     @layer utilities block at the bottom of this file. */
   --spacing-xs: 4px;
   --spacing-sm: 12px;
   --spacing-md: 24px;
@@ -170,6 +179,25 @@
 }
 
 @layer utilities {
+  /* Re-pin the named max-widths that the --spacing block above captures.
+     Emitted after Tailwind's generated utilities inside the same layer, so
+     these win on equal specificity. Values are v4's stock container scale.
+     Without this, `.max-w-md` = 24px and `.max-w-lg` = 48px, which squeezed
+     the login card and every placeholder screen into a one-word-per-line
+     column. Keep this list in sync with any new --spacing-<name> token. */
+  .max-w-sm {
+    max-width: 24rem;
+  }
+  .max-w-md {
+    max-width: 28rem;
+  }
+  .max-w-lg {
+    max-width: 32rem;
+  }
+  .max-w-xl {
+    max-width: 36rem;
+  }
+
   /* Level 2 elevation from DESIGN.md: blur 20px at 80% with a hairline edge */
   .glass {
     background: rgb(255 255 255 / 0.8);

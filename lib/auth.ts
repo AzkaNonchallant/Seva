@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { AUTH_COOKIE, getSessionUser, getToken } from "@/lib/api/api";
 import { canManageBooking, ROLE_HOME } from "@/lib/permissions";
 
-import type { User } from "./api/types";
+import type { Role, User } from "./api/types";
 
 /** A mock JWT is opaque to the app; the user snapshot is stored beside it. */
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
@@ -55,5 +55,16 @@ export async function requireSession(): Promise<User> {
 export async function requireBookingManager(): Promise<User> {
   const user = await requireSession();
   if (!canManageBooking(user.role)) redirect(ROLE_HOME[user.role] ?? "/login");
+  return user;
+}
+
+/**
+ * Gate for a role segment's layout. A signed-in user holding a role outside
+ * the allowlist is sent to their own landing route instead of a screen they
+ * are not cleared for, so a session is never enough on its own.
+ */
+export async function requireRole(allowed: Role[]): Promise<User> {
+  const user = await requireSession();
+  if (!allowed.includes(user.role)) redirect(ROLE_HOME[user.role] ?? "/login");
   return user;
 }
