@@ -1,0 +1,956 @@
+import type {
+  Approval,
+  Booking,
+  Delegation,
+  Department,
+  Notification,
+  Position,
+  Reimbursement,
+  ReimbursementItem,
+  TravelPolicy,
+  TravelRequest,
+  User,
+} from "../api/types";
+
+/**
+ * In-memory dataset backing the mock transport.
+ *
+ * Dates are generated relative to "now" so the departure monitor always has
+ * something inside its 7-day window no matter when the app is started.
+ */
+
+function atDayOffset(days: number, hour = 9) {
+  const date = new Date();
+  date.setHours(hour, 0, 0, 0);
+  date.setDate(date.getDate() + days);
+  return date.toISOString();
+}
+
+function isoDay(days: number) {
+  return atDayOffset(days).slice(0, 10);
+}
+
+export const mockUsers: Array<User & { password: string }> = [
+  {
+    id: 1,
+    name: "Elena Rostova",
+    email: "elena.rostova@andrea.co.id",
+    password: "andrea2026",
+    role: "ADMIN",
+    departmentId: 6,
+    departmentName: "Travel & Facility",
+    positionId: 9,
+    positionName: "Admin Travel",
+    isActive: true,
+  },
+  {
+    id: 2,
+    name: "Andra Wijaya",
+    email: "andra.wijaya@andrea.co.id",
+    password: "andrea2026",
+    role: "SUPER_ADMIN",
+    departmentId: 1,
+    departmentName: "Direksi",
+    positionId: 1,
+    positionName: "Direktur Utama",
+    isActive: true,
+  },
+  {
+    id: 3,
+    name: "Azka Pratama",
+    email: "azka.pratama@andrea.co.id",
+    password: "andrea2026",
+    role: "EMPLOYEE",
+    departmentId: 2,
+    departmentName: "Sales",
+    positionId: 2,
+    positionName: "Sales Executive",
+    isActive: true,
+  },
+  {
+    id: 4,
+    name: "Nadia Puspita",
+    email: "nadia.puspita@andrea.co.id",
+    password: "andrea2026",
+    role: "MANAGER",
+    departmentId: 3,
+    departmentName: "Marketing",
+    positionId: 3,
+    positionName: "Marketing Manager",
+    isActive: true,
+  },
+  {
+    id: 5,
+    name: "Bagas Wicaksono",
+    email: "bagas.w@andrea.co.id",
+    password: "andrea2026",
+    role: "EMPLOYEE",
+    departmentId: 4,
+    departmentName: "Engineering",
+    positionId: 4,
+    positionName: "Field Engineer",
+    isActive: true,
+  },
+  {
+    id: 6,
+    name: "Maya Kusuma",
+    email: "maya.kusuma@andrea.co.id",
+    password: "andrea2026",
+    role: "DEPARTMENT_HEAD",
+    departmentId: 5,
+    departmentName: "Product",
+    positionId: 5,
+    positionName: "Head of Product",
+    isActive: true,
+  },
+  {
+    id: 7,
+    name: "Doni Saputra",
+    email: "doni.saputra@andrea.co.id",
+    password: "andrea2026",
+    role: "EMPLOYEE",
+    departmentId: 7,
+    departmentName: "Operations",
+    positionId: 6,
+    positionName: "Operations Staff",
+    isActive: true,
+  },
+  {
+    id: 8,
+    name: "Ayu Lestari",
+    email: "ayu.lestari@andrea.co.id",
+    password: "andrea2026",
+    role: "FINANCE",
+    departmentId: 8,
+    departmentName: "Finance",
+    positionId: 7,
+    positionName: "Finance Analyst",
+    isActive: true,
+  },
+];
+
+/**
+ * Row shape of `GET /api/travel/bookings/pending` — the spec names the
+ * endpoint "dashboard: travel APPROVED yang belum ada booking" and does not
+ * publish a body, so the mock returns a denormalised view. `GET /api/travel/`
+ * stays narrow on purpose, which is what makes the distinction visible.
+ */
+export interface PendingBookingTravel {
+  id: number;
+  ref: string;
+  employeeId: number;
+  employeeName: string;
+  positionName?: string;
+  departmentId?: number;
+  departmentName?: string;
+  destination: string;
+  destinationTier: string;
+  purpose: string;
+  startDate: string;
+  endDate: string;
+  estimatedCost: number;
+  policyId?: number;
+  policyName?: string;
+  status: "APPROVED";
+  approvedAt: string;
+  /** Hours the request has sat in the queue — drives the urgency badge. */
+  waitingHours: number;
+}
+
+export const mockPendingTravels: PendingBookingTravel[] = [
+  {
+    id: 41,
+    ref: "TR-2026-041",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    positionName: "Sales Executive",
+    departmentId: 2,
+    departmentName: "Sales",
+    destination: "Surabaya",
+    destinationTier: "TIER_2",
+    purpose: "Kunjungan klien & training tim sales region timur",
+    startDate: isoDay(4),
+    endDate: isoDay(6),
+    estimatedCost: 4_500_000,
+    policyId: 2,
+    policyName: "Dinas Domestik — Jabodetabek Tier 2",
+    status: "APPROVED",
+    approvedAt: atDayOffset(-1, 14),
+    waitingHours: 6,
+  },
+  {
+    id: 44,
+    ref: "TR-2026-044",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    positionName: "Field Engineer",
+    departmentId: 4,
+    departmentName: "Engineering",
+    destination: "Balikpapan",
+    destinationTier: "TIER_3",
+    purpose: "Instalasi equipment klien PT Pertamina Hulu",
+    startDate: isoDay(9),
+    endDate: isoDay(13),
+    estimatedCost: 9_800_000,
+    policyId: 3,
+    policyName: "Dinas Domestik — Tier 3 (Kaltim)",
+    status: "APPROVED",
+    approvedAt: atDayOffset(-2, 9),
+    waitingHours: 19,
+  },
+  {
+    id: 47,
+    ref: "TR-2026-047",
+    employeeId: 6,
+    employeeName: "Maya Kusuma",
+    positionName: "Head of Product",
+    departmentId: 5,
+    departmentName: "Product",
+    destination: "Singapura",
+    destinationTier: "INTERNATIONAL",
+    purpose: "Apsacon Asia Summit — keynote & product roadmap",
+    startDate: isoDay(16),
+    endDate: isoDay(19),
+    estimatedCost: 18_500_000,
+    policyId: 5,
+    policyName: "Dinas Internasional — Pejabat Level 2",
+    status: "APPROVED",
+    approvedAt: atDayOffset(-1, 17),
+    waitingHours: 31,
+  },
+  {
+    id: 52,
+    ref: "TR-2026-052",
+    employeeId: 7,
+    employeeName: "Doni Saputra",
+    positionName: "Operations Staff",
+    departmentId: 7,
+    departmentName: "Operations",
+    destination: "Medan",
+    destinationTier: "TIER_2",
+    purpose: "Audit gudang region sumatera & replenishishing",
+    startDate: isoDay(21),
+    endDate: isoDay(24),
+    estimatedCost: 6_200_000,
+    policyId: 2,
+    policyName: "Dinas Domestik — Jabodetabek Tier 2",
+    status: "APPROVED",
+    approvedAt: atDayOffset(-2, 11),
+    waitingHours: 44,
+  },
+  {
+    id: 55,
+    ref: "TR-2026-055",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    positionName: "Field Engineer",
+    departmentId: 4,
+    departmentName: "Engineering",
+    destination: "Kupang",
+    destinationTier: "TIER_3",
+    purpose: "Commissioning panel listrikodio remote site",
+    startDate: isoDay(27),
+    endDate: isoDay(30),
+    estimatedCost: 7_400_000,
+    policyId: 3,
+    policyName: "Dinas Domestik — Tier 3 (Ntt)",
+    status: "APPROVED",
+    approvedAt: atDayOffset(-3, 16),
+    waitingHours: 72,
+  },
+];
+
+export const mockTravels: TravelRequest[] = [
+  ...mockPendingTravels.map(
+    (p): TravelRequest => ({
+      id: p.id,
+      ref: p.ref,
+      employeeId: p.employeeId,
+      employeeName: p.employeeName,
+      positionName: p.positionName,
+      departmentId: p.departmentId,
+      departmentName: p.departmentName,
+      destination: p.destination,
+      destinationTier: p.destinationTier,
+      purpose: p.purpose,
+      startDate: p.startDate,
+      endDate: p.endDate,
+      estimatedCost: p.estimatedCost,
+      policyId: p.policyId,
+      policyName: p.policyName,
+      status: "APPROVED",
+      createdAt: atDayOffset(-4, 10),
+      submittedAt: atDayOffset(-3, 10),
+    }),
+  ),
+  {
+    id: 38,
+    ref: "TR-2026-038",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    positionName: "Field Engineer",
+    departmentId: 4,
+    departmentName: "Engineering",
+    destination: "Yogyakarta",
+    destinationTier: "TIER_1",
+    purpose: "Pelatihan sertifikasi kelistrikan",
+    startDate: isoDay(1),
+    endDate: isoDay(3),
+    estimatedCost: 4_250_000,
+    policyId: 1,
+    policyName: "Dinas Domestik — Jabodetabek Tier 1",
+    status: "APPROVED",
+    createdAt: atDayOffset(-8, 9),
+    submittedAt: atDayOffset(-7, 9),
+  },
+  {
+    id: 39,
+    ref: "TR-2026-039",
+    employeeId: 4,
+    employeeName: "Nadia Puspita",
+    positionName: "Marketing Manager",
+    departmentId: 3,
+    departmentName: "Marketing",
+    destination: "Bali",
+    destinationTier: "TIER_1",
+    purpose: "Co-branding workshop dengan partner agency",
+    startDate: isoDay(2),
+    endDate: isoDay(5),
+    estimatedCost: 7_900_000,
+    policyId: 1,
+    policyName: "Dinas Domestik — Jabodetabek Tier 1",
+    status: "APPROVED",
+    createdAt: atDayOffset(-9, 13),
+    submittedAt: atDayOffset(-8, 15),
+  },
+  {
+    id: 40,
+    ref: "TR-2026-040",
+    employeeId: 7,
+    employeeName: "Doni Saputra",
+    positionName: "Operations Staff",
+    departmentId: 7,
+    departmentName: "Operations",
+    destination: "Medan",
+    destinationTier: "TIER_2",
+    purpose: "Routine audit gudang dan HVAC",
+    startDate: isoDay(-1),
+    endDate: isoDay(1),
+    estimatedCost: 5_100_000,
+    policyId: 2,
+    policyName: "Dinas Domestik — Jabodetabek Tier 2",
+    status: "APPROVED",
+    createdAt: atDayOffset(-12, 8),
+    submittedAt: atDayOffset(-11, 8),
+  },
+  {
+    id: 36,
+    ref: "TR-2026-036",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    positionName: "Sales Executive",
+    departmentId: 2,
+    departmentName: "Sales",
+    destination: "Surabaya",
+    destinationTier: "TIER_2",
+    purpose: "Kunjungan potential klien prospect",
+    startDate: isoDay(-14),
+    endDate: isoDay(-12),
+    estimatedCost: 3_800_000,
+    policyId: 2,
+    policyName: "Dinas Domestik — Jabodetabek Tier 2",
+    status: "COMPLETED",
+    createdAt: atDayOffset(-20, 10),
+    submittedAt: atDayOffset(-19, 10),
+  },
+  {
+    id: 35,
+    ref: "TR-2026-035",
+    employeeId: 6,
+    employeeName: "Maya Kusuma",
+    positionName: "Head of Product",
+    departmentId: 5,
+    departmentName: "Product",
+    destination: "Jakarta",
+    destinationTier: "TIER_1",
+    purpose: "Rapat koordinasi produk mingguan",
+    startDate: isoDay(-10),
+    endDate: isoDay(-10),
+    estimatedCost: 850_000,
+    policyId: 1,
+    policyName: "Dinas Domestik — Jabodetabek Tier 1",
+    status: "COMPLETED",
+    createdAt: atDayOffset(-15, 9),
+    submittedAt: atDayOffset(-14, 9),
+  },
+  {
+    id: 34,
+    ref: "TR-2026-034",
+    employeeId: 4,
+    employeeName: "Nadia Puspita",
+    positionName: "Marketing Manager",
+    departmentId: 3,
+    departmentName: "Marketing",
+    destination: "Bandung",
+    destinationTier: "TIER_1",
+    purpose: "Festival brand activation",
+    startDate: isoDay(-6),
+    endDate: isoDay(-5),
+    estimatedCost: 2_400_000,
+    policyId: 1,
+    policyName: "Dinas Domestik — Jabodetabek Tier 1",
+    status: "REJECTED",
+    createdAt: atDayOffset(-13, 14),
+    submittedAt: atDayOffset(-12, 14),
+  },
+  {
+    id: 33,
+    ref: "TR-2026-033",
+    employeeId: 7,
+    employeeName: "Doni Saputra",
+    positionName: "Operations Staff",
+    departmentId: 7,
+    departmentName: "Operations",
+    destination: "Semarang",
+    destinationTier: "TIER_1",
+    purpose: "Kunjungan pemasok Theta Amal",
+    startDate: isoDay(-2),
+    endDate: isoDay(-1),
+    estimatedCost: 1_900_000,
+    policyId: 1,
+    policyName: "Dinas Domestik — Jabodetabek Tier 1",
+    status: "CANCELLED",
+    createdAt: atDayOffset(-8, 11),
+    submittedAt: atDayOffset(-7, 11),
+    cancelledAt: atDayOffset(-6, 16),
+  },
+  {
+    id: 32,
+    ref: "TR-2026-032",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    positionName: "Field Engineer",
+    departmentId: 4,
+    departmentName: "Engineering",
+    destination: "Makassar",
+    destinationTier: "TIER_3",
+    purpose: "Maintenance rutin gardu",
+    startDate: isoDay(38),
+    endDate: isoDay(41),
+    estimatedCost: 6_700_000,
+    policyId: 3,
+    policyName: "Dinas Domestik — Tier 3 (Sulawesi)",
+    status: "SUBMITTED",
+    createdAt: atDayOffset(-1, 10),
+    submittedAt: atDayOffset(-1, 10),
+  },
+];
+
+export const mockBookings: Booking[] = [
+  {
+    id: 9001,
+    travelId: 38,
+    travelRef: "TR-2026-038",
+    type: "FLIGHT",
+    provider: "Garuda Indonesia",
+    referenceNumber: "GA-7KQ2M1",
+    origin: "CGK",
+    destination: "YIA",
+    departureDate: isoDay(1),
+    returnDate: isoDay(3),
+    amount: 2_450_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-2, 15),
+    updatedAt: atDayOffset(-1, 10),
+    notes: "Dinas, bagasi 20kg.",
+  },
+  {
+    id: 9002,
+    travelId: 38,
+    travelRef: "TR-2026-038",
+    type: "HOTEL",
+    provider: "Aston Yogyakarta",
+    referenceNumber: "AST-4471",
+    origin: "Yogyakarta",
+    destination: "Yogyakarta",
+    checkInDate: isoDay(1),
+    checkOutDate: isoDay(3),
+    amount: 1_800_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-2, 15),
+    updatedAt: atDayOffset(-1, 10),
+  },
+  {
+    id: 9003,
+    travelId: 39,
+    travelRef: "TR-2026-039",
+    type: "FLIGHT",
+    provider: "Lion Air",
+    referenceNumber: "LN-9931AB",
+    origin: "CGK",
+    destination: "DPS",
+    departureDate: isoDay(2),
+    returnDate: isoDay(5),
+    amount: 1_980_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-3, 9),
+    updatedAt: atDayOffset(-2, 11),
+  },
+  {
+    id: 9004,
+    travelId: 39,
+    travelRef: "TR-2026-039",
+    type: "HOTEL",
+    provider: "Hotel Ubud Palace",
+    referenceNumber: "UBP-2210",
+    origin: "Ubud",
+    destination: "Ubud",
+    checkInDate: isoDay(2),
+    checkOutDate: isoDay(5),
+    amount: 3_600_000,
+    status: "PENDING",
+    createdAt: atDayOffset(-1, 16),
+    notes: "Menunggu konfirmasi transfer corporate.",
+  },
+  {
+    id: 9005,
+    travelId: 33,
+    travelRef: "TR-2026-033",
+    type: "TRAIN",
+    provider: "KAI",
+    referenceNumber: "KAI-112-884",
+    origin: "GMR",
+    destination: "SMC",
+    departureDate: isoDay(-2),
+    returnDate: isoDay(-1),
+    amount: 620_000,
+    status: "CANCELLED",
+    createdAt: atDayOffset(-6, 10),
+    updatedAt: atDayOffset(-6, 14),
+  },
+  {
+    id: 9006,
+    travelId: 40,
+    travelRef: "TR-2026-040",
+    type: "FLIGHT",
+    provider: "Citilink",
+    referenceNumber: "QG-5502",
+    origin: "CGK",
+    destination: "KNO",
+    departureDate: isoDay(-1),
+    returnDate: isoDay(1),
+    amount: 1_450_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-5, 11),
+    updatedAt: atDayOffset(-4, 9),
+  },
+  {
+    id: 9007,
+    travelId: 40,
+    travelRef: "TR-2026-040",
+    type: "HOTEL",
+    provider: "Hotel Tiara",
+    referenceNumber: "TT-8890",
+    origin: "Medan",
+    destination: "Medan",
+    checkInDate: isoDay(-1),
+    checkOutDate: isoDay(1),
+    amount: 1_150_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-5, 11),
+    updatedAt: atDayOffset(-4, 9),
+  },
+  {
+    id: 9008,
+    travelId: 36,
+    travelRef: "TR-2026-036",
+    type: "FLIGHT",
+    provider: "Garuda Indonesia",
+    referenceNumber: "GA-3TR7P",
+    origin: "CGK",
+    destination: "SUB",
+    departureDate: isoDay(-14),
+    returnDate: isoDay(-12),
+    amount: 1_980_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-18, 10),
+    updatedAt: atDayOffset(-17, 9),
+  },
+  {
+    id: 9009,
+    travelId: 36,
+    travelRef: "TR-2026-036",
+    type: "HOTEL",
+    provider: "Hotel Premiere Surabaya",
+    referenceNumber: "HPS-3310",
+    origin: "Surabaya",
+    destination: "Surabaya",
+    checkInDate: isoDay(-14),
+    checkOutDate: isoDay(-12),
+    amount: 1_240_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-18, 10),
+    updatedAt: atDayOffset(-17, 9),
+  },
+  {
+    id: 9010,
+    travelId: 35,
+    travelRef: "TR-2026-035",
+    type: "TRANSPORT",
+    provider: "Bluebird Travel",
+    referenceNumber: "BBT-0091",
+    origin: "Kantor Sudirman",
+    destination: "Kantor Sudirman",
+    departureDate: isoDay(-10),
+    returnDate: isoDay(-10),
+    amount: 850_000,
+    status: "CONFIRMED",
+    createdAt: atDayOffset(-13, 9),
+    updatedAt: atDayOffset(-13, 9),
+  },
+];
+
+/** Seeded so a detail page never renders an empty timeline. */
+export const mockApprovals: Record<number, Approval[]> = Object.fromEntries(
+  mockTravels.map((travel) => [
+    travel.id,
+    buildApprovals(travel),
+  ]),
+);
+
+function buildApprovals(travel: TravelRequest): Approval[] {
+  const submitted = travel.submittedAt ?? travel.createdAt;
+  const decided =
+    travel.status === "SUBMITTED" ? undefined : atDayOffset(-2, 14);
+
+  return [
+    {
+      id: travel.id * 10 + 1,
+      travelId: travel.id,
+      level: 1,
+      approverRole: "MANAGER",
+      approverName: "Rina Kusuma",
+      status:
+        travel.status === "SUBMITTED"
+          ? "PENDING"
+          : travel.status === "REJECTED"
+            ? "REJECTED"
+            : "APPROVED",
+      note:
+        travel.status === "REJECTED"
+          ? "Anggaran event melebihi pagu Q3, dana dialihkan ke Q4."
+          : "Sesuai rencana kerja department.",
+      decidedAt: travel.status === "SUBMITTED" ? undefined : decided,
+      createdAt: submitted,
+    },
+    {
+      id: travel.id * 10 + 2,
+      travelId: travel.id,
+      level: 2,
+      approverRole: "DEPARTMENT_HEAD",
+      approverName: "Bagus Prawira",
+      status:
+        travel.status === "SUBMITTED"
+          ? "PENDING"
+          : travel.status === "REJECTED"
+            ? "REJECTED"
+            : "APPROVED",
+      note: travel.status === "REJECTED" ? undefined : "Disetujui, budget tersedia.",
+      decidedAt: travel.status === "SUBMITTED" ? undefined : decided,
+      createdAt: submitted,
+    },
+    {
+      id: travel.id * 10 + 3,
+      travelId: travel.id,
+      level: 3,
+      approverRole: "HRD",
+      approverName: "Fitri Handayani",
+      delegatedToName: travel.id === 52 ? "Andra Wijaya" : undefined,
+      status:
+        travel.status === "SUBMITTED"
+          ? "PENDING"
+          : travel.status === "REJECTED"
+            ? "REJECTED"
+            : "APPROVED",
+      decidedAt:
+        travel.status === "SUBMITTED" || travel.status === "REJECTED"
+          ? undefined
+          : decided,
+      createdAt: submitted,
+    },
+  ];
+}
+
+/**
+ * Master data (§2). The spec exposes these lists to every logged-in role and
+ * reserves the mutations for SUPER_ADMIN, so they are seeded here and the
+ * mock handlers mutate them in place for the lifetime of the dev server.
+ */
+export const mockDepartments: Department[] = [
+  { id: 1, name: "Direksi" },
+  { id: 2, name: "Sales" },
+  { id: 3, name: "Marketing" },
+  { id: 4, name: "Engineering" },
+  { id: 5, name: "Product" },
+  { id: 6, name: "Travel & Facility" },
+  { id: 7, name: "Operations" },
+  { id: 8, name: "Finance" },
+];
+
+export const mockPositions: Position[] = [
+  { id: 1, name: "Direktur Utama" },
+  { id: 2, name: "Sales Executive" },
+  { id: 3, name: "Marketing Manager" },
+  { id: 4, name: "Field Engineer" },
+  { id: 5, name: "Head of Product" },
+  { id: 6, name: "Operations Staff" },
+  { id: 7, name: "Finance Analyst" },
+  { id: 8, name: "Product Designer" },
+  { id: 9, name: "Admin Travel" },
+];
+
+export const mockPolicies: TravelPolicy[] = [
+  {
+    id: 1,
+    name: "Dinas Domestik — Jabodetabek Tier 1",
+    description:
+      "Untuk perjalanan Jabodetabek dengan estimasi di bawah Rp 5.000.000. Tiket ekonomi, hotel maksimal Rp 1.200.000 per malam.",
+    positionId: null,
+    positionName: "Semua jabatan",
+    destinationTier: "TIER_1",
+    maxEstimatedCost: 5_000_000,
+    requiresDocuments: false,
+    isActive: true,
+  },
+  {
+    id: 2,
+    name: "Dinas Domestik — Jabodetabek Tier 2",
+    description:
+      "Kota tier 2 (Surabaya, Bandung, Semarang, Medan). Hotel maksimal Rp 1.500.000 per malam, wajib lampirkan undangan resmi.",
+    positionId: null,
+    positionName: "Semua jabatan",
+    destinationTier: "TIER_2",
+    maxEstimatedCost: 10_000_000,
+    requiresDocuments: true,
+    isActive: true,
+  },
+  {
+    id: 3,
+    name: "Dinas Domestik — Tier 3 (Kaltim/NTT/Sulawesi)",
+    description:
+      "Wilayah tier 3 dengan ketersediaan maskapai terbatas. Wajib dokumen pendukung dan persetujuan tambahan HRD.",
+    positionId: null,
+    positionName: "Semua jabatan",
+    destinationTier: "TIER_3",
+    maxEstimatedCost: 15_000_000,
+    requiresDocuments: true,
+    isActive: true,
+  },
+  {
+    id: 4,
+    name: "Dinas Internasional — Level 1",
+    description:
+      "Perjalanan luar negeri untuk staf. Kelas ekonomi, maksimal 5 hari.",
+    positionId: null,
+    positionName: "Staf & Supervisor",
+    destinationTier: "INTERNATIONAL",
+    maxEstimatedCost: 25_000_000,
+    requiresDocuments: true,
+    isActive: true,
+  },
+  {
+    id: 5,
+    name: "Dinas Internasional — Pejabat Level 2",
+    description:
+      "Untuk kepala departemen dan pejabat level 2 ke atas. Kelas bisnis untuk penerbangan, suite hotel, dan wajib menyertakan agenda presentasi.",
+    positionId: 5,
+    positionName: "Head of Product",
+    destinationTier: "INTERNATIONAL",
+    maxEstimatedCost: 60_000_000,
+    requiresDocuments: true,
+    isActive: true,
+  },
+  {
+    id: 6,
+    name: "Dinas Darurat / Evakuasi",
+    description:
+      "Penerbangan darurat operasional. Tidak memerlukan dokumen, verifikasi Security Office dilakukan setelah Facts.",
+    positionId: null,
+    positionName: "Semua jabatan",
+    destinationTier: "ANY",
+    maxEstimatedCost: null,
+    requiresDocuments: false,
+    isActive: false,
+  },
+];
+
+/**
+ * §5 reimbursement fixture. Rows carry `employeeId` so `GET
+ * /api/reimbursements` can honour the Employee-vs-Finance split, and the
+ * per-row status set gives the employee dashboard real branches to render:
+ * an open draft, a row awaiting Finance, and a settled one.
+ */
+export const mockReimbursements: Array<Reimbursement & { items: ReimbursementItem[] }> = [
+  {
+    id: 501,
+    travelId: 3,
+    travelRef: "TR-2026-003",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    departmentName: "Sales",
+    totalAmount: 2_450_000,
+    advanceAmount: 1_000_000,
+    approvedAmount: 2_450_000,
+    differenceAmount: 1_450_000,
+    status: "APPROVED",
+    items: [
+      {
+        id: 9001,
+        category: "HOTEL",
+        description: "Hotel Aston Surabaya, 2 malam",
+        amount: 1_700_000,
+        transactionDate: isoDay(-9),
+        receiptPath: "uploads/receipts/aston-2-malam.jpg",
+      },
+      {
+        id: 9002,
+        category: "TRANSPORT",
+        description: "Taksi airport - kantor pelanggan",
+        amount: 450_000,
+        transactionDate: isoDay(-9),
+      },
+      {
+        id: 9003,
+        category: "MEAL",
+        description: "Konsumsi tim 3 orang",
+        amount: 300_000,
+        transactionDate: isoDay(-8),
+      },
+    ],
+  },
+  {
+    id: 502,
+    travelId: 4,
+    travelRef: "TR-2026-004",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    departmentName: "Sales",
+    totalAmount: 1_180_000,
+    advanceAmount: 0,
+    approvedAmount: 0,
+    differenceAmount: 0,
+    status: "SUBMITTED",
+    submittedAt: new Date().toISOString(),
+    items: [
+      {
+        id: 9004,
+        category: "TICKET",
+        description: "Tiket kereta Surabaya–Solo",
+        amount: 780_000,
+        transactionDate: isoDay(-4),
+      },
+      {
+        id: 9005,
+        category: "MEAL",
+        description: "Makan siang 2 hari",
+        amount: 400_000,
+        transactionDate: isoDay(-3),
+      },
+    ],
+  },
+  {
+    id: 503,
+    travelId: 5,
+    travelRef: "TR-2026-005",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    departmentName: "Engineering",
+    totalAmount: 3_900_000,
+    advanceAmount: 1_500_000,
+    approvedAmount: 3_650_000,
+    differenceAmount: 2_150_000,
+    status: "PAID",
+    submittedAt: new Date(Date.now() - 6 * 86_400_000).toISOString(),
+    paidAt: new Date(Date.now() - 2 * 86_400_000).toISOString(),
+    externalJournalRef: "JRN-2026-0412",
+    items: [
+      {
+        id: 9006,
+        category: "HOTEL",
+        description: "Hotel Chapters Bandung, 3 malam",
+        amount: 3_900_000,
+        transactionDate: isoDay(-12),
+      },
+    ],
+  },
+];
+
+/**
+ * §4 delegation fixture — Nadia (Marketing Manager) delegates to Doni for one
+ * window, which is what puts MANAGER-level rows into another account's queue.
+ */
+export const mockDelegations: Array<Delegation & { delegatorId: number }> = [
+  {
+    id: 801,
+    delegatorId: 4,
+    delegatorName: "Nadia Puspita",
+    delegateId: 7,
+    delegateName: "Doni Saputra",
+    startDate: isoDay(-1),
+    endDate: isoDay(6),
+    reason: "Cuti tahunan",
+    isActive: true,
+  },
+];
+
+export const mockNotifications: Notification[] = [
+  {
+    id: 501,
+    title: "Pengajuan disetujui dan siap dibooking",
+    message:
+      "TR-2026-041 (Azka Pratama → Surabaya) telah disetujui level 3. Mohon buat booking tiket dan hotel.",
+    type: "BOOKING",
+    link: "/travel-admin/bookings/queue",
+    isRead: false,
+    createdAt: atDayOffset(-1, 14),
+  },
+  {
+    id: 502,
+    title: "Peringatan SLA antrean",
+    message:
+      "TR-2026-055 sudah menunggu 72 jam tanpa booking. Target internal 24 jam.",
+    type: "SYSTEM",
+    link: "/travel-admin/bookings/queue",
+    isRead: false,
+    createdAt: atDayOffset(0, 8),
+  },
+  {
+    id: 503,
+    title: "Konfirmasi hotel diterima",
+    message: "Aston Yogyakarta membalas booking TR-2026-038: 2 malam, 1.800.000.",
+    type: "BOOKING",
+    link: "/travel-admin/bookings?focus=9002",
+    isRead: false,
+    createdAt: atDayOffset(-1, 11),
+  },
+  {
+    id: 504,
+    title: "Reimbursement perlu verifikasi",
+    message:
+      "Pengajuan reimbursement dari Ayu Lestari menunggu verifikasi finance (CC-8041).",
+    type: "REIMBURSEMENT",
+    link: "/travel-admin/reports",
+    isRead: true,
+    createdAt: atDayOffset(-2, 16),
+  },
+  {
+    id: 505,
+    title: "Kebijakan perjalanan diperbarui",
+    message:
+      "Policy Dinas Internasional Level 2 diperbarui — batas estimasi naik menjadi Rp 60.000.000.",
+    type: "SYSTEM",
+    link: "/travel-admin/policy",
+    isRead: true,
+    createdAt: atDayOffset(-3, 10),
+  },
+];
