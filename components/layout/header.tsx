@@ -9,9 +9,14 @@ import { cn } from "@/lib/utils";
 export function Header({
   breadcrumb,
   unreadCount,
+  notificationsHref = "/travel-admin/notifications",
+  profileHref = "/travel-admin/profile",
 }: {
   breadcrumb: Array<{ label: string; href?: string }>;
   unreadCount: number;
+  /** Role-specific destinations, so the icon row does not lead into another role's area. */
+  notificationsHref?: string;
+  profileHref?: string;
 }) {
   return (
     <header className="glass sticky top-0 z-30 border-b border-outline-variant/20">
@@ -47,7 +52,7 @@ export function Header({
 
         <div className="flex shrink-0 items-center gap-1">
           <Link
-            href="/travel-admin/notifications"
+            href={notificationsHref}
             aria-label={`Notifikasi, ${unreadCount} belum dibaca`}
             className="relative rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
           >
@@ -64,7 +69,7 @@ export function Header({
             ) : null}
           </Link>
           <Link
-            href="/travel-admin/profile"
+            href={profileHref}
             aria-label="Profil saya"
             className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
           >

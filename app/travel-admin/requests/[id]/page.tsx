@@ -57,7 +57,7 @@ export default async function TravelRequestDetailPage({
           <div className="h-1.5 w-full bg-gradient-to-r from-primary via-primary-container to-secondary-container" />
           <div className="flex flex-col gap-md p-md lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0">
-              <div className="mb-2 flex flex-wrap items-center gap-2">
+              <div className="mb-2 flex min-w-0 flex-wrap items-center gap-2">
                 <span className="font-mono text-caption text-tertiary">
                   {travel.ref}
                 </span>

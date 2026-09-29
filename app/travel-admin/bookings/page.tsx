@@ -111,8 +111,8 @@ export default async function BookingsPage({
           />
         </section>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <FilterTabs<StatusFilter>
               ariaLabel="Saring menurut status booking"
               paramName="status"

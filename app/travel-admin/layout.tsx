@@ -1,14 +1,15 @@
-import { Sidebar } from "@/components/layout/sidebar";
-import { ToastHost } from "@/components/ui/toast-host";
-import { logoutAction } from "@/app/actions/auth-actions";
+import { RoleShell } from "@/components/layout/role-shell";
 import { listPendingBookings } from "@/lib/api/booking";
 import { requireBookingManager } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/permissions";
-import { initials } from "@/lib/utils";
 
 /**
  * Shell for the Admin Travel area. API_SPEC names this role `ADMIN`; the
  * sidebar says "Admin Travel" purely as the UI label for it.
+ *
+ * The chrome itself lives in `RoleShell`, shared with the Super Admin and
+ * Employee areas; this file only declares who may enter and what the
+ * navigation contains.
  */
 export default async function TravelAdminLayout({
   children,
@@ -41,33 +42,20 @@ export default async function TravelAdminLayout({
   ];
 
   return (
-    <div className="min-h-screen">
-      <Sidebar
-        items={items}
-        userName={user.name}
-        userRole={ROLE_LABEL[user.role]}
-        userInitials={initials(user.name)}
-      />
-
-      <div className="lg:pl-72">
-        <div className="flex items-center justify-end border-b border-outline-variant/20 bg-surface-container-lowest px-margin-mobile py-2 lg:hidden">
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-caption font-medium text-on-surface-variant transition-colors hover:bg-surface-container-low"
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
-                logout
-              </span>
-              Keluar
-            </button>
-          </form>
-        </div>
-
-        {children}
-      </div>
-
-      <ToastHost />
-    </div>
+    <RoleShell
+      user={user}
+      roleLabel={ROLE_LABEL[user.role]}
+      items={items}
+      roleCaption="Role ADMIN • Booking & keberangkatan"
+      operationalPaths={[
+        "/travel-admin/dashboard",
+        "/travel-admin/bookings/queue",
+        "/travel-admin/bookings",
+        "/travel-admin/departures",
+      ]}
+      homePath="/travel-admin/dashboard"
+    >
+      {children}
+    </RoleShell>
   );
 }

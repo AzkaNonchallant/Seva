@@ -104,7 +104,7 @@ function TravelSummary({
     <Card className="p-md">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="mb-1.5 flex flex-wrap items-center gap-2">
+          <div className="mb-1.5 flex min-w-0 flex-wrap items-center gap-2">
             <h1 className="font-mono text-headline-md font-bold text-primary">
               {travel.ref}
             </h1>

@@ -1,15 +1,50 @@
-import { requireRole } from "@/lib/auth";
+import { RoleShell } from "@/components/layout/role-shell";
+import { requireSuperAdmin } from "@/lib/auth";
+import { ROLE_LABEL } from "@/lib/permissions";
 
 /**
- * Auth gate for the Super Admin segment. API_SPEC section 8 gives SUPER_ADMIN
- * master data (users, departments, positions, policy), so this group is
- * closed to every other role including ADMIN, whose area is /travel-admin.
+ * Super Admin shell.
+ *
+ * The gate runs here, so every route under /admin requires a SUPER_ADMIN
+ * session before any page renders. Navigation is master data only: booking
+ * operations stay in the Admin Travel area even though the spec's §8 lets
+ * SUPER_ADMIN read all data.
  */
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await requireRole(["SUPER_ADMIN"]);
-  return children;
+  const user = await requireSuperAdmin();
+
+  const items = [
+    { href: "/admin/dashboard", label: "Dashboard", icon: "dashboard" },
+    { href: "/admin/users", label: "Pengguna", icon: "group" },
+    {
+      href: "/admin/roles-permissions",
+      label: "Role & Izin",
+      icon: "admin_panel_settings",
+    },
+    { href: "/admin/departments", label: "Departemen", icon: "corporate_fare" },
+    { href: "/admin/positions", label: "Jabatan", icon: "badge" },
+    { href: "/admin/travel-policy", label: "Travel Policy", icon: "policy" },
+    {
+      href: "/admin/notifications",
+      label: "Notifikasi",
+      icon: "notifications",
+    },
+    { href: "/admin/profile", label: "Profil", icon: "account_circle" },
+  ];
+
+  return (
+    <RoleShell
+      user={user}
+      roleLabel={ROLE_LABEL[user.role]}
+      items={items}
+      roleCaption={`Role ${user.role} • Master data & konfigurasi`}
+      homePath="/admin/dashboard"
+    >
+      {children}
+    </RoleShell>
+  );
 }

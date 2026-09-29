@@ -6,16 +6,25 @@ export function EmptyState({
   title,
   description,
   action,
+  compact = false,
   className,
 }: {
   icon?: string;
   title: string;
   description?: string;
   action?: React.ReactNode;
+  /** Tighter padding, for an empty state nested inside an already-padded card. */
+  compact?: boolean;
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center px-md py-xl text-center", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center px-md text-center",
+        compact ? "py-sm" : "py-xl",
+        className,
+      )}
+    >
       <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-surface-container text-outline">
         <span className="material-symbols-outlined text-[28px]">{icon}</span>
       </span>

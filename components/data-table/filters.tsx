@@ -42,11 +42,19 @@ export function FilterTabs<T extends string>({
   }
 
   return (
+    /*
+     * `min-w-0` plus `overflow-x-auto` is load-bearing: a segmented control is
+     * a single non-wrapping flex row, and with eight or more options (the
+     * Super Admin user filter) it grows to several thousand pixels. Without a
+     * scroll container of its own it pushes the whole document wide instead of
+     * scrolling inside the toolbar.
+     */
     <div
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "flex items-center gap-1 rounded-lg bg-surface-container-low p-1",
+        "flex min-w-0 max-w-full items-center gap-1 overflow-x-auto rounded-lg bg-surface-container-low p-1",
+        "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         isPending && "opacity-70",
         className,
       )}
@@ -61,7 +69,7 @@ export function FilterTabs<T extends string>({
             aria-selected={active}
             onClick={() => select(option.value)}
             className={cn(
-              "flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-caption font-semibold transition-colors",
+              "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-caption font-semibold transition-colors",
               active
                 ? "bg-surface-container-lowest text-on-surface shadow-sm"
                 : "text-on-surface-variant hover:text-on-surface",

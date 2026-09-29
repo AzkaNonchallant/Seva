@@ -1,7 +1,12 @@
 import type {
   Approval,
   Booking,
+  Delegation,
+  Department,
   Notification,
+  Position,
+  Reimbursement,
+  ReimbursementItem,
   TravelPolicy,
   TravelRequest,
   User,
@@ -676,6 +681,34 @@ function buildApprovals(travel: TravelRequest): Approval[] {
   ];
 }
 
+/**
+ * Master data (§2). The spec exposes these lists to every logged-in role and
+ * reserves the mutations for SUPER_ADMIN, so they are seeded here and the
+ * mock handlers mutate them in place for the lifetime of the dev server.
+ */
+export const mockDepartments: Department[] = [
+  { id: 1, name: "Direksi" },
+  { id: 2, name: "Sales" },
+  { id: 3, name: "Marketing" },
+  { id: 4, name: "Engineering" },
+  { id: 5, name: "Product" },
+  { id: 6, name: "Travel & Facility" },
+  { id: 7, name: "Operations" },
+  { id: 8, name: "Finance" },
+];
+
+export const mockPositions: Position[] = [
+  { id: 1, name: "Direktur Utama" },
+  { id: 2, name: "Sales Executive" },
+  { id: 3, name: "Marketing Manager" },
+  { id: 4, name: "Field Engineer" },
+  { id: 5, name: "Head of Product" },
+  { id: 6, name: "Operations Staff" },
+  { id: 7, name: "Finance Analyst" },
+  { id: 8, name: "Product Designer" },
+  { id: 9, name: "Admin Travel" },
+];
+
 export const mockPolicies: TravelPolicy[] = [
   {
     id: 1,
@@ -748,6 +781,125 @@ export const mockPolicies: TravelPolicy[] = [
     maxEstimatedCost: null,
     requiresDocuments: false,
     isActive: false,
+  },
+];
+
+/**
+ * §5 reimbursement fixture. Rows carry `employeeId` so `GET
+ * /api/reimbursements` can honour the Employee-vs-Finance split, and the
+ * per-row status set gives the employee dashboard real branches to render:
+ * an open draft, a row awaiting Finance, and a settled one.
+ */
+export const mockReimbursements: Array<Reimbursement & { items: ReimbursementItem[] }> = [
+  {
+    id: 501,
+    travelId: 3,
+    travelRef: "TR-2026-003",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    departmentName: "Sales",
+    totalAmount: 2_450_000,
+    advanceAmount: 1_000_000,
+    approvedAmount: 2_450_000,
+    differenceAmount: 1_450_000,
+    status: "APPROVED",
+    items: [
+      {
+        id: 9001,
+        category: "HOTEL",
+        description: "Hotel Aston Surabaya, 2 malam",
+        amount: 1_700_000,
+        transactionDate: isoDay(-9),
+        receiptPath: "uploads/receipts/aston-2-malam.jpg",
+      },
+      {
+        id: 9002,
+        category: "TRANSPORT",
+        description: "Taksi airport - kantor pelanggan",
+        amount: 450_000,
+        transactionDate: isoDay(-9),
+      },
+      {
+        id: 9003,
+        category: "MEAL",
+        description: "Konsumsi tim 3 orang",
+        amount: 300_000,
+        transactionDate: isoDay(-8),
+      },
+    ],
+  },
+  {
+    id: 502,
+    travelId: 4,
+    travelRef: "TR-2026-004",
+    employeeId: 3,
+    employeeName: "Azka Pratama",
+    departmentName: "Sales",
+    totalAmount: 1_180_000,
+    advanceAmount: 0,
+    approvedAmount: 0,
+    differenceAmount: 0,
+    status: "SUBMITTED",
+    submittedAt: new Date().toISOString(),
+    items: [
+      {
+        id: 9004,
+        category: "TICKET",
+        description: "Tiket kereta Surabaya–Solo",
+        amount: 780_000,
+        transactionDate: isoDay(-4),
+      },
+      {
+        id: 9005,
+        category: "MEAL",
+        description: "Makan siang 2 hari",
+        amount: 400_000,
+        transactionDate: isoDay(-3),
+      },
+    ],
+  },
+  {
+    id: 503,
+    travelId: 5,
+    travelRef: "TR-2026-005",
+    employeeId: 5,
+    employeeName: "Bagas Wicaksono",
+    departmentName: "Engineering",
+    totalAmount: 3_900_000,
+    advanceAmount: 1_500_000,
+    approvedAmount: 3_650_000,
+    differenceAmount: 2_150_000,
+    status: "PAID",
+    submittedAt: new Date(Date.now() - 6 * 86_400_000).toISOString(),
+    paidAt: new Date(Date.now() - 2 * 86_400_000).toISOString(),
+    externalJournalRef: "JRN-2026-0412",
+    items: [
+      {
+        id: 9006,
+        category: "HOTEL",
+        description: "Hotel Chapters Bandung, 3 malam",
+        amount: 3_900_000,
+        transactionDate: isoDay(-12),
+      },
+    ],
+  },
+];
+
+/**
+ * §4 delegation fixture — Nadia (Marketing Manager) delegates to Doni for one
+ * window, which is what puts MANAGER-level rows into another account's queue.
+ */
+export const mockDelegations: Array<Delegation & { delegatorId: number }> = [
+  {
+    id: 801,
+    delegatorId: 4,
+    delegatorName: "Nadia Puspita",
+    delegateId: 7,
+    delegateName: "Doni Saputra",
+    startDate: isoDay(-1),
+    endDate: isoDay(6),
+    reason: "Cuti tahunan",
+    isActive: true,
   },
 ];
 

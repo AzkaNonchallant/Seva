@@ -171,6 +171,11 @@ export interface Notification {
   link?: string;
   isRead: boolean;
   createdAt: string;
+  /**
+   * Owner of the row. §6 scopes every notification read to its owner; a row
+   * without one is a system broadcast, which only the recipient can mark read.
+   */
+  userId?: number;
 }
 
 export interface ReportDashboard {
@@ -196,4 +201,39 @@ export interface Delegation {
   endDate: string;
   reason?: string;
   isActive: boolean;
+}
+
+export type ReimbursementStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "APPROVED"
+  | "REJECTED"
+  | "PAID";
+
+export interface ReimbursementItem {
+  id: number;
+  category: "HOTEL" | "TRANSPORT" | "MEAL" | "TICKET" | "OTHER";
+  description: string;
+  amount: number;
+  transactionDate: string;
+  receiptPath?: string;
+}
+
+export interface Reimbursement {
+  id: number;
+  travelId: number;
+  travelRef?: string;
+  employeeId: number;
+  employeeName: string;
+  departmentName?: string;
+  totalAmount: number;
+  advanceAmount: number;
+  approvedAmount: number;
+  differenceAmount: number;
+  status: ReimbursementStatus;
+  submittedAt?: string;
+  paidAt?: string;
+  externalJournalRef?: string;
+  /** Present on `GET /api/reimbursements/:id` only. */
+  items?: ReimbursementItem[];
 }

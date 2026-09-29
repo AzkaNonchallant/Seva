@@ -56,7 +56,7 @@ export default async function QueuePage({
           description="Setiap pengajuan di sini sudah disetujui seluruh tingkat persetujuan tetapi belum memiliki satu pun booking. Urutan mengikuti waktu tunggu — yang terlama diantre paling atas."
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <FilterTabs<Window>
             ariaLabel="Saring antrean menurut jarak keberangkatan"
             paramName="window"

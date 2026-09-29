@@ -68,3 +68,13 @@ export async function requireRole(allowed: Role[]): Promise<User> {
   if (!allowed.includes(user.role)) redirect(ROLE_HOME[user.role] ?? "/login");
   return user;
 }
+
+/**
+ * Gate for the Super Admin segment. API_SPEC section 8 gives SUPER_ADMIN all
+ * master data, and section 2 restricts every master-data mutation to that role,
+ * so the whole area is closed to everyone else — including ADMIN, whose area
+ * is /travel-admin.
+ */
+export async function requireSuperAdmin(): Promise<User> {
+  return requireRole(["SUPER_ADMIN"]);
+}

@@ -1,4 +1,5 @@
 import type { BookingStatus, TravelStatus } from "@/lib/api/types";
+import type { ReimbursementStatus } from "@/lib/api/types";
 
 import { Badge } from "./badge";
 
@@ -23,6 +24,41 @@ export function BookingStatusBadge({ status }: { status: BookingStatus }) {
   return (
     <Badge tone={BOOKING_TONE[status]} dot>
       {BOOKING_LABEL[status]}
+    </Badge>
+  );
+}
+
+/**
+ * §5 exposes exactly these five states, so the badge set mirrors the spec's
+ * list one-to-one rather than offering a status the backend would reject.
+ */
+const REIMBURSEMENT_TONE: Record<
+  ReimbursementStatus,
+  "neutral" | "primary" | "success" | "warning" | "error"
+> = {
+  DRAFT: "neutral",
+  SUBMITTED: "warning",
+  APPROVED: "success",
+  REJECTED: "error",
+  PAID: "primary",
+};
+
+const REIMBURSEMENT_LABEL: Record<ReimbursementStatus, string> = {
+  DRAFT: "Draft",
+  SUBMITTED: "Menunggu verifikasi",
+  APPROVED: "Disetujui",
+  REJECTED: "Ditolak",
+  PAID: "Dibayarkan",
+};
+
+export function ReimbursementStatusBadge({
+  status,
+}: {
+  status: ReimbursementStatus;
+}) {
+  return (
+    <Badge tone={REIMBURSEMENT_TONE[status]} dot>
+      {REIMBURSEMENT_LABEL[status]}
     </Badge>
   );
 }
@@ -53,4 +89,8 @@ export function TravelStatusBadge({ status }: { status: TravelStatus }) {
   );
 }
 
-export { TRAVEL_LABEL, BOOKING_LABEL };
+export {
+  TRAVEL_LABEL,
+  BOOKING_LABEL,
+  REIMBURSEMENT_LABEL,
+};

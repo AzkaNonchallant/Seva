@@ -24,6 +24,7 @@ export function usesMockBackend() {
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  /** A FormData body is sent as-is; anything else is JSON-encoded. */
   body?: unknown;
   /** Set to false for register/login — the only public routes in the spec. */
   auth?: boolean;
@@ -49,6 +50,26 @@ function buildUrl(path: string, query?: RequestOptions["query"]) {
  * Server-only. The token is read from an httpOnly cookie and attached here, so
  * it never reaches the browser bundle.
  */
+export type Settled<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: unknown };
+
+/**
+ * Runs a service call and returns a discriminated result instead of throwing.
+ *
+ * A screen that must render `ErrorState` for one call while still rendering the
+ * rest of the page needs both outcomes side by side. `await call().catch((e) =>
+ * e)` would work but widens the success branch to `T | unknown` and breaks
+ * inference everywhere it is used, so the union is explicit here.
+ */
+export async function settle<T>(call: Promise<T>): Promise<Settled<T>> {
+  try {
+    return { ok: true, data: await call };
+  } catch (error) {
+    return { ok: false, error };
+  }
+}
+
 export async function apiRequest<T>(
   path: string,
   options: RequestOptions = {},
@@ -56,7 +77,10 @@ export async function apiRequest<T>(
   const { method = "GET", body, auth = true, query, signal } = options;
 
   const headers: Record<string, string> = { Accept: "application/json" };
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  // A FormData body must keep the boundary the runtime generates, so the
+  // Content-Type header is only set for JSON payloads.
+  const isMultipart = typeof FormData !== "undefined" && body instanceof FormData;
+  if (body !== undefined && !isMultipart) headers["Content-Type"] = "application/json";
 
   if (auth) {
     const token = await getToken();
@@ -85,7 +109,11 @@ export async function apiRequest<T>(
     response = await fetch(buildUrl(path, query), {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: isMultipart
+        ? (body as FormData)
+        : body === undefined
+          ? undefined
+          : JSON.stringify(body),
       signal,
       cache: "no-store",
     });

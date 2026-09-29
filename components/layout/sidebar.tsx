@@ -22,27 +22,33 @@ export function Sidebar({
   userName,
   userRole,
   userInitials,
+  roleCaption,
+  operationalPaths,
+  homePath,
 }: {
   items: NavItem[];
   userName: string;
   userRole: string;
   userInitials: string;
+  /** Footer line naming the role and its area, e.g. "ADMIN • Booking & keberangkatan". */
+  roleCaption?: string;
+  /**
+   * Hrefs that belong in the first group. The Admin Travel layout passes its
+   * own operational routes; a shell that has no such split omits it and every
+   * item lands in the single group below.
+   */
+  operationalPaths?: string[];
+  /** The dashboard href, exempt from the prefix match so it never self-highlights. */
+  homePath?: string;
 }) {
   const pathname = usePathname();
 
-  const OPERASIONAL = [
-    "/travel-admin/dashboard",
-    "/travel-admin/bookings/queue",
-    "/travel-admin/bookings",
-    "/travel-admin/departures",
-  ];
-  const groups: Array<[string, NavItem[]]> = [
-    ["Operasional", items.filter((item) => OPERASIONAL.includes(item.href))],
-    [
-      "Pendampingan",
-      items.filter((item) => !OPERASIONAL.includes(item.href)),
-    ],
-  ];
+  const groups: Array<[string, NavItem[]]> = operationalPaths?.length
+    ? [
+        ["Operasional", items.filter((item) => operationalPaths.includes(item.href))],
+        ["Pendampingan", items.filter((item) => !operationalPaths.includes(item.href))],
+      ]
+    : [["Navigasi", items]];
 
   return (
     <nav
@@ -87,8 +93,7 @@ export function Sidebar({
                 {groupItems.map((item) => {
                   const active =
                     pathname === item.href ||
-                    (item.href !== "/travel-admin/dashboard" &&
-                      pathname.startsWith(item.href));
+                    (item.href !== homePath && pathname.startsWith(item.href));
                   return (
                     <li key={item.href}>
                       <Link
@@ -120,12 +125,11 @@ export function Sidebar({
         })}
       </div>
 
-      <div className="space-y-1 border-t border-outline-variant/20 px-4 py-3">
-        <p className="px-4 text-caption text-tertiary">
-          Role <span className="font-semibold text-on-surface">ADMIN</span> •
-          Booking &amp; keberangkatan
-        </p>
-      </div>
+      {roleCaption ? (
+        <div className="space-y-1 border-t border-outline-variant/20 px-4 py-3">
+          <p className="px-4 text-caption text-tertiary">{roleCaption}</p>
+        </div>
+      ) : null}
     </nav>
   );
 }

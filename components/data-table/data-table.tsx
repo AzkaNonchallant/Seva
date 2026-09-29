@@ -31,7 +31,14 @@ export function DataTable<T>({
   if (!rows.length && empty) return <>{empty}</>;
 
   return (
-    <div className="overflow-x-auto">
+    /*
+     * `relative` matters as much as `overflow-x-auto`: it makes this the
+     * containing block for the absolutely-positioned `sr-only` labels in the
+     * cells. Without it those labels resolve against a further ancestor, escape
+     * the scroll clip, and add a few pixels of horizontal overflow to the whole
+     * document.
+     */
+    <div className="relative overflow-x-auto">
       <table className="w-full min-w-[720px] border-collapse text-left">
         <thead>
           <tr className="border-b border-outline-variant/20">

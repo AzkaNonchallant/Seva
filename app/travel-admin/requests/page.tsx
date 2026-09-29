@@ -89,7 +89,7 @@ export default async function RequestsPage({
           description="Seluruh pengajuan dinas beserta status persetujuannya. Booking hanya dapat dibuat untuk pengajuan berstatus Disetujui."
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <FilterTabs<StatusFilter>
             ariaLabel="Sarin menurut status pengajuan"
             paramName="status"

@@ -54,6 +54,14 @@ export const STATUS_TO_CODE: Record<number, ApiErrorCode> = {
   504: "SERVER",
 };
 
+/**
+ * True when a rejection is specifically a 404, which is how a detail screen
+ * decides between `notFound()` and a retryable `ErrorState`.
+ */
+export function isNotFound(error: unknown) {
+  return error instanceof ApiError && error.code === "NOT_FOUND";
+}
+
 /** Maps any thrown value to a message safe to show a user. */
 export function toDisplayError(error: unknown): {
   title: string;

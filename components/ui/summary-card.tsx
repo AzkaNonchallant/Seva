@@ -2,11 +2,23 @@ import { cn, formatIDRCompact } from "@/lib/utils";
 
 type Tone = "primary" | "accent" | "neutral" | "success";
 
+/**
+ * The chip palette, exported so a second KPI component — `StatCard` in the
+ * Super Admin area — reuses the same colour assignment rather than inventing
+ * its own.
+ */
+export const SUMMARY_TONES: Record<Tone, string> = {
+  primary: "bg-primary-container/20 text-primary",
+  accent: "bg-secondary-fixed text-on-secondary-fixed",
+  neutral: "bg-surface-container-high text-tertiary",
+  success: "bg-success-container text-success",
+};
+
 const TONES: Record<Tone, { icon: string; chip: string }> = {
-  primary: { icon: "", chip: "bg-primary-container/20 text-primary" },
-  accent: { icon: "", chip: "bg-secondary-fixed text-on-secondary-fixed" },
-  neutral: { icon: "", chip: "bg-surface-container-high text-tertiary" },
-  success: { icon: "", chip: "bg-success-container text-success" },
+  primary: { icon: "", chip: SUMMARY_TONES.primary },
+  accent: { icon: "", chip: SUMMARY_TONES.accent },
+  neutral: { icon: "", chip: SUMMARY_TONES.neutral },
+  success: { icon: "", chip: SUMMARY_TONES.success },
 };
 
 /**

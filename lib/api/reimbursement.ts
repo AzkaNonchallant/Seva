@@ -1,59 +1,27 @@
 import { apiRequest } from "./api";
-import type { TravelRequest } from "./types";
+import type { Reimbursement, ReimbursementItem } from "./types";
 
-export type ReimbursementStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "APPROVED"
-  | "REJECTED"
-  | "PAID";
+export type {
+  Reimbursement,
+  ReimbursementItem,
+  ReimbursementStatus,
+} from "./types";
 
-export interface Reimbursement {
-  id: number;
-  travelId: number;
-  travelRef?: string;
-  employeeId: number;
-  employeeName: string;
-  departmentName?: string;
-  totalAmount: number;
-  advanceAmount: number;
-  approvedAmount: number;
-  differenceAmount: number;
-  status: ReimbursementStatus;
-  submittedAt?: string;
-  paidAt?: string;
-  externalJournalRef?: string;
-}
-
-export interface ReimbursementItem {
-  id: number;
-  category: "HOTEL" | "TRANSPORT" | "MEAL" | "TICKET" | "OTHER";
-  description: string;
-  amount: number;
-  transactionDate: string;
-  receiptPath?: string;
-}
-
-/** GET /api/reimbursements */
-export function listReimbursements(status?: ReimbursementStatus) {
+/** GET /api/reimbursements — own rows for Employee, all rows for Finance. */
+export function listReimbursements(status?: string) {
   return apiRequest<Reimbursement[]>("/api/reimbursements", {
     query: { status },
   });
 }
 
-/**
- * GET /api/reimbursements/:id
- *
- * Not part of the Admin Travel scope, but the Travel Admin needs the owning
- * travel request to decide how much of a trip has already been settled.
- */
+/** GET /api/reimbursements/:id */
 export function getReimbursement(id: number) {
   return apiRequest<Reimbursement & { items: ReimbursementItem[] }>(
     `/api/reimbursements/${id}`,
   );
 }
 
-/** POST /api/reimbursements — requires the travel to be COMPLETED. */
+/** POST /api/reimbursements — only for an owner whose travel is COMPLETED. */
 export function createReimbursement(travelId: number) {
   return apiRequest<Reimbursement>("/api/reimbursements", {
     method: "POST",
@@ -61,4 +29,28 @@ export function createReimbursement(travelId: number) {
   });
 }
 
-export type { TravelRequest };
+/** POST /api/reimbursements/:id/items — while the header is still DRAFT. */
+export function addReimbursementItem(
+  id: number,
+  payload: Omit<ReimbursementItem, "id">,
+) {
+  return apiRequest<ReimbursementItem>(`/api/reimbursements/${id}/items`, {
+    method: "POST",
+    body: payload,
+  });
+}
+
+/** DELETE /api/reimbursements/items/:itemId */
+export function deleteReimbursementItem(id: number, itemId: number) {
+  return apiRequest<{ deleted: number }>(`/api/reimbursements/items/${itemId}`, {
+    method: "DELETE",
+    query: { reimbursementId: id },
+  });
+}
+
+/** POST /api/reimbursements/:id/submit — DRAFT → SUBMITTED. */
+export function submitReimbursement(id: number) {
+  return apiRequest<Reimbursement>(`/api/reimbursements/${id}/submit`, {
+    method: "POST",
+  });
+}

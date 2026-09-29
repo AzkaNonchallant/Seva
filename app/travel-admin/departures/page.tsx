@@ -93,7 +93,7 @@ export default async function DeparturesPage({
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <FilterTabs<Horizon>
             ariaLabel="Pilih rentang waktu keberangkatan"
             paramName="horizon"
