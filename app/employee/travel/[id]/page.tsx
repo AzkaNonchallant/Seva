@@ -21,6 +21,7 @@ import {
 } from "@/lib/utils";
 
 import { isNotFound } from "@/lib/api/errors";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Detail Pengajuan • Employee" };
 
@@ -79,7 +80,7 @@ export default async function TravelDetailPage({
         breadcrumb={[
           { label: "Employee", href: "/employee/dashboard" },
           { label: "Pengajuan Travel", href: "/employee/travel" },
-          { label: request.ref ?? `#${request.id}` },
+          { label: `#${request.id}` },
         ]}
         unreadCount={unread.count}
         notificationsHref="/employee/notifications"
@@ -110,11 +111,11 @@ export default async function TravelDetailPage({
             <Card>
               <CardHeader
                 title="Ringkasan Pengajuan"
-                description={`Dibuat ${formatDate(request.createdAt)}`}
+                description={`Diajukan ${formatDate(request.createdAt ?? "")}`}
                 action={<TravelStatusBadge status={request.status} />}
               />
               <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Fact label="Nomor pengajuan" value={request.ref ?? `#${request.id}`} />
+                <Fact label="Nomor pengajuan" value={`#${request.id}`} />
                 <Fact label="Tujuan" value={request.destination} />
                 <Fact
                   label="Periode"
@@ -123,9 +124,9 @@ export default async function TravelDetailPage({
                 <Fact label="Perkiraan biaya" value={formatIDR(request.estimatedCost)} />
                 <Fact
                   label="Travel policy"
-                  value={request.policyName ?? "Tidak dipilih"}
+                  value={policy?.name ?? (request.policyId ? `#${request.policyId}` : "Tidak dipilih")}
                 />
-                <Fact label="Departemen" value={request.departmentName ?? "—"} />
+                <Fact label="Pemohon" value={travelOwner(request)} />
               </CardBody>
             </Card>
 
@@ -147,7 +148,6 @@ export default async function TravelDetailPage({
                   travelId={request.id}
                   documents={documents}
                   canDelete={isDraft}
-                  policyRequiresDocuments={!!policy?.requiresDocuments}
                 />
               </CardBody>
             </Card>
@@ -178,30 +178,27 @@ export default async function TravelDetailPage({
                     <Badge tone="primary" icon="policy">
                       {policy.name}
                     </Badge>
-                    {policy.requiresDocuments ? (
-                      <Badge tone="warning" icon="attach_file">
-                        Wajib dokumen
-                      </Badge>
-                    ) : null}
+                    <Badge tone="neutral" variant="outline">
+                      {policy.destinationTier}
+                    </Badge>
                   </div>
-                  {policy.description ? (
-                    <p className="text-caption text-on-surface-variant">
-                      {policy.description}
-                    </p>
-                  ) : null}
                   <dl className="mt-1 space-y-1 text-caption">
                     <div className="flex justify-between gap-3">
-                      <dt className="text-tertiary">Batas biaya</dt>
+                      <dt className="text-tertiary">Batas hotel</dt>
                       <dd className="text-on-surface">
-                        {policy.maxEstimatedCost
-                          ? formatIDR(policy.maxEstimatedCost)
-                          : "Tanpa batas"}
+                        {formatIDR(policy.hotelLimit)}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-tertiary">Tingkat tujuan</dt>
+                      <dt className="text-tertiary">Batas transportasi</dt>
                       <dd className="text-on-surface">
-                        {policy.destinationTier ?? "ANY"}
+                        {formatIDR(policy.transportLimit)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-3">
+                      <dt className="text-tertiary">Batas uang saku</dt>
+                      <dd className="text-on-surface">
+                        {formatIDR(policy.allowanceLimit)}
                       </dd>
                     </div>
                   </dl>
@@ -215,22 +212,24 @@ export default async function TravelDetailPage({
                 <div className="flex justify-between gap-3">
                   <span className="text-tertiary">Dibuat</span>
                   <span className="text-on-surface">
-                    {formatDate(request.createdAt)}
+                    {formatDate(request.createdAt ?? "")}
                   </span>
                 </div>
-                {request.submittedAt ? (
+                {request.status === "SUBMITTED" ||
+                request.status === "IN_REVIEW" ||
+                request.status === "APPROVED" ? (
                   <div className="flex justify-between gap-3">
                     <span className="text-tertiary">Diajukan</span>
                     <span className="text-on-surface">
-                      {formatDate(request.submittedAt)}
+                      {formatDate(request.createdAt ?? "")}
                     </span>
                   </div>
                 ) : null}
-                {request.cancelledAt ? (
+                {request.updatedAt ? (
                   <div className="flex justify-between gap-3">
                     <span className="text-tertiary">Dibatalkan</span>
                     <span className="text-on-surface">
-                      {formatDate(request.cancelledAt)}
+                      {formatDate(request.updatedAt ?? "")}
                     </span>
                   </div>
                 ) : null}

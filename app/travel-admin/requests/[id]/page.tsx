@@ -14,6 +14,7 @@ import { getUnreadCount } from "@/lib/api/notification";
 import { getTravel, getTravelDocuments } from "@/lib/api/travel";
 import { requireBookingManager } from "@/lib/auth";
 import { formatDate, formatDateRange, formatIDR } from "@/lib/utils";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Detail Travel Request • Dinas Travel" };
 
@@ -47,7 +48,7 @@ export default async function TravelRequestDetailPage({
         breadcrumb={[
           { label: "Dinas Travel", href: "/travel-admin/dashboard" },
           { label: "Travel Request", href: "/travel-admin/requests" },
-          { label: travel.ref ?? `#${travel.id}` },
+          { label: `#${travel.id}` },
         ]}
         unreadCount={unread.count}
       />
@@ -59,7 +60,7 @@ export default async function TravelRequestDetailPage({
             <div className="min-w-0">
               <div className="mb-2 flex min-w-0 flex-wrap items-center gap-2">
                 <span className="font-mono text-caption text-tertiary">
-                  {travel.ref}
+                  #{travel.id}
                 </span>
                 <TravelStatusBadge status={travel.status} />
               </div>
@@ -100,27 +101,23 @@ export default async function TravelRequestDetailPage({
           </div>
 
           <dl className="grid grid-cols-2 gap-4 border-t border-outline-variant/15 bg-surface-container-lowest px-md py-md lg:grid-cols-4">
-            <Fact label="Pemohon" value={travel.employeeName} sub={travel.positionName} />
-            <Fact label="Departemen" value={travel.departmentName ?? "—"} />
+            <Fact label="Pemohon" value={travelOwner(travel)} />
+            <Fact label="Email pemohon" value={travel.user?.email ?? "—"} />
             <Fact
               label="Periode"
               value={formatDateRange(travel.startDate, travel.endDate)}
             />
             <Fact label="Estimasi biaya" value={formatIDR(travel.estimatedCost)} />
-            {travel.policyName ? (
+            {travel.policyId ? (
               <Fact
                 label="Kebijakan"
-                value={travel.policyName}
+                value={`#${travel.policyId}`}
                 className="col-span-2"
               />
             ) : null}
             <Fact
-              label="Tingkat kota"
-              value={tierLabel(travel.destinationTier)}
-            />
-            <Fact
               label="Diajukan"
-              value={formatDate(travel.submittedAt ?? travel.createdAt)}
+              value={formatDate(travel.createdAt ?? "")}
             />
           </dl>
         </Card>
@@ -192,7 +189,7 @@ export default async function TravelRequestDetailPage({
                             {doc.fileName}
                           </p>
                           <p className="text-caption text-tertiary">
-                            Diunggah {formatDate(doc.uploadedAt)}
+                            Diunggah {formatDate(doc.uploadedAt ?? "")}
                           </p>
                         </div>
                         <span className="rounded-md bg-primary-fixed px-2 py-1 text-caption font-medium text-on-primary-fixed">
@@ -223,21 +220,6 @@ export default async function TravelRequestDetailPage({
       </main>
     </div>
   );
-}
-
-function tierLabel(tier?: string) {
-  switch (tier) {
-    case "TIER_1":
-      return "Tier 1 — Jabodetabek";
-    case "TIER_2":
-      return "Tier 2 — Kota besar";
-    case "TIER_3":
-      return "Tier 3 — Luar Jawa";
-    case "INTERNATIONAL":
-      return "Internasional";
-    default:
-      return "—";
-  }
 }
 
 function Fact({

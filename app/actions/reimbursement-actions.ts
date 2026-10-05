@@ -66,6 +66,8 @@ export async function addItemAction(
     const item = await addReimbursementItem(id, {
       category: String(formData.get("category") ?? "OTHER") as ReimbursementItem["category"],
       description: String(formData.get("description") ?? "").trim(),
+      // The backend validator expects a number for `amount`, so the text
+      // field is coerced here rather than sent as a string.
       amount: Number(String(formData.get("amount") ?? "").replace(/\D/g, "")),
       transactionDate: String(formData.get("transactionDate") ?? ""),
     });
@@ -84,7 +86,7 @@ export async function deleteItemAction(
   const id = Number(formData.get("reimbursementId"));
   const itemId = Number(formData.get("itemId"));
   try {
-    const result = await deleteReimbursementItem(id, itemId);
+    const result = await deleteReimbursementItem(itemId);
     revalidateEmployee(id);
     return { ok: true, data: result, message: "Item dihapus." };
   } catch (error) {

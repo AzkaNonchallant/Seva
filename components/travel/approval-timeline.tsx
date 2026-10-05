@@ -23,11 +23,16 @@ const DECISION: Record<
   },
 };
 
-const LEVEL_LABEL: Record<string, string> = {
-  MANAGER: "Atasan Langsung",
-  DEPARTMENT_HEAD: "Kepala Departemen",
-  HRD: "Human Resource",
-  FINANCE: "Finance",
+/**
+ * The backend identifies an approver by user id rather than by role, so each
+ * level is titled from its position in the chain. There is no delegation flag
+ * on an approval row.
+ */
+const LEVEL_TITLE: Record<number, string> = {
+  1: "Atasan Langsung",
+  2: "Kepala Bagian",
+  3: "Kepala Dinas",
+  4: "Finance",
 };
 
 /**
@@ -82,7 +87,7 @@ export function ApprovalTimeline({ approvals }: { approvals: Approval[] }) {
               <div className="flex flex-wrap items-center justify-between gap-1.5">
                 <p className="text-label-md font-semibold text-on-surface">
                   {approval.level}.{" "}
-                  {LEVEL_LABEL[approval.approverRole] ?? approval.approverRole}
+                  {LEVEL_TITLE[approval.level] ?? "Persetujuan"}
                 </p>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${meta.chip}`}
@@ -91,17 +96,12 @@ export function ApprovalTimeline({ approvals }: { approvals: Approval[] }) {
                 </span>
               </div>
 
-              {approval.approverName ? (
+              {approval.approver?.name ? (
                 <p className="mt-1.5 flex items-center gap-1.5 text-caption text-on-surface-variant">
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-tertiary-container text-[9px] font-bold text-on-tertiary-container">
-                    {initialsOf(approval.approverName)}
+                    {initialsOf(approval.approver.name)}
                   </span>
-                  {approval.approverName}
-                  {approval.delegatedToName ? (
-                    <span className="text-accent">
-                      (didelegasikan ke {approval.delegatedToName})
-                    </span>
-                  ) : null}
+                  {approval.approver.name}
                 </p>
               ) : null}
 
@@ -112,8 +112,8 @@ export function ApprovalTimeline({ approvals }: { approvals: Approval[] }) {
               ) : null}
 
               <p className="mt-1.5 text-caption text-tertiary">
-                {approval.decidedAt
-                  ? `Keputusan ${formatDateTime(approval.decidedAt)}`
+                {approval.approvedAt
+                  ? `Keputusan ${formatDateTime(approval.approvedAt)}`
                   : "Menunggu keputusan approver"}
               </p>
             </div>

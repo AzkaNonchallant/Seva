@@ -8,7 +8,7 @@ import { requireBookingManager } from "@/lib/auth";
 export const metadata = { title: "Notifikasi • Dinas Travel" };
 
 export default async function NotificationsPage() {
-  await requireBookingManager();
+  const user = await requireBookingManager();
   const notifications = await listNotifications();
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -30,7 +30,7 @@ export default async function NotificationsPage() {
 
         <Card>
           {notifications.length ? (
-            <NotificationList notifications={notifications} />
+            <NotificationList notifications={notifications} role={user.role} />
           ) : (
             <EmptyState
               icon="notifications_none"

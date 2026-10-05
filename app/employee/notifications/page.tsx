@@ -4,9 +4,10 @@ import { requireRole } from "@/lib/auth";
 export const metadata = { title: "Notifikasi • Employee" };
 
 export default async function EmployeeNotificationsPage() {
-  await requireRole(["EMPLOYEE"]);
+  const user = await requireRole(["EMPLOYEE"]);
   return (
     <NotificationsPage
+      userRole={user.role}
       areaLabel="Employee"
       homeHref="/employee/dashboard"
       profileHref="/employee/profile"

@@ -14,7 +14,7 @@ const CATEGORY_LABEL: Record<ReimbursementItem["category"], string> = {
   HOTEL: "Hotel",
   TRANSPORT: "Transportasi",
   MEAL: "Konsumsi",
-  TICKET: "Tiket",
+  ALLOWANCE: "Uang Saku",
   OTHER: "Lainnya",
 };
 

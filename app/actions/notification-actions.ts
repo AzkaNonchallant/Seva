@@ -26,7 +26,7 @@ export async function markNotificationReadAction(
 }
 
 export async function markAllNotificationsReadAction(): Promise<
-  ActionResult<{ updated: number }>
+  ActionResult<{ deleted: number }>
 > {
   await requireSession();
   try {

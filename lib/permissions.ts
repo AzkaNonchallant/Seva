@@ -1,9 +1,12 @@
-import type { Role } from "./api/types";
+import type { Booking, Role } from "./api/types";
 
 /**
- * Role → landing route. Each role has its own path segment, so `/dashboard`
- * under `travel-admin/` and under `admin/` are distinct routes rather than
- * competing for one URL.
+ * Role → landing route.
+ *
+ * `TRAVEL_ADMIN` is a real backend role that API_SPEC §8 does not list, and it
+ * is behaviourally identical to `ADMIN` for booking: both can call the booking
+ * endpoints, and the backend authorises neither against `/api/users`. They
+ * therefore share one area.
  */
 export const ROLE_HOME: Record<Role, string> = {
   EMPLOYEE: "/employee/dashboard",
@@ -12,32 +15,39 @@ export const ROLE_HOME: Record<Role, string> = {
   HRD: "/approver/dashboard",
   FINANCE: "/finance/dashboard",
   ADMIN: "/travel-admin/dashboard",
+  TRAVEL_ADMIN: "/travel-admin/dashboard",
   SUPER_ADMIN: "/admin/dashboard",
 };
 
 export const ROLE_LABEL: Record<Role, string> = {
   EMPLOYEE: "Employee",
   MANAGER: "Manager",
-  DEPARTMENT_HEAD: "Department Head",
+  DEPARTMENT_HEAD: "Kepala Bagian",
   HRD: "HRD",
   FINANCE: "Finance",
-  ADMIN: "Admin Travel",
+  ADMIN: "Admin",
+  TRAVEL_ADMIN: "Admin Perjalanan Dinas",
   SUPER_ADMIN: "Super Admin",
 };
 
+/** The roles that appear in the approver chain. */
+export const APPROVER_ROLES: Role[] = ["MANAGER", "DEPARTMENT_HEAD", "HRD"];
+
 /**
- * API_SPEC lists "Admin Travel" as the actor for the booking sub-resource
- * while the role column says `ADMIN`. One role, two labels — the UI label
- * never becomes a separate backend role.
+ * Booking is Admin Travel's area, and the backend grants it to both admin
+ * roles. §8 also gives SUPER_ADMIN visibility of all data, but not the booking
+ * workflow, so it is not included here.
  */
 export function canManageBooking(role: Role) {
-  return role === "ADMIN" || role === "SUPER_ADMIN";
+  return role === "ADMIN" || role === "TRAVEL_ADMIN";
 }
 
 export function canViewReports(role: Role) {
-  return role === "FINANCE" || role === "ADMIN" || role === "SUPER_ADMIN";
+  return role === "FINANCE" || role === "ADMIN";
 }
 
 export function canManageMasterData(role: Role) {
   return role === "SUPER_ADMIN";
 }
+
+export type { Booking };

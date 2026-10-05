@@ -3,6 +3,7 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { me } from "@/lib/api/auth";
+import { departmentName, positionName } from "@/lib/api/user-format";
 import { initials } from "@/lib/utils";
 
 import type { User } from "@/lib/api/types";
@@ -72,8 +73,8 @@ export async function ProfilePage({
           </div>
 
           <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Fact label="Jabatan" value={fresh.positionName ?? "—"} />
-            <Fact label="Departemen" value={fresh.departmentName ?? "—"} />
+            <Fact label="Jabatan" value={positionName(fresh)} />
+            <Fact label="Departemen" value={departmentName(fresh)} />
             <Fact label="Status akun" value={fresh.isActive === false ? "Nonaktif" : "Aktif"} />
             <Fact label="ID pengguna" value={String(fresh.id)} />
           </CardBody>
@@ -145,16 +146,8 @@ function Fact({ label, value }: { label: string; value: string }) {
  * it sits next to the auth guards. Kept as a local map so this shared component
  * can be imported from either kind of page without pulling in `next/headers`.
  */
-const ROLE_LABELS: Record<User["role"], string> = {
-  EMPLOYEE: "Employee",
-  MANAGER: "Manager",
-  DEPARTMENT_HEAD: "Department Head",
-  HRD: "HRD",
-  FINANCE: "Finance",
-  ADMIN: "Admin Travel",
-  SUPER_ADMIN: "Super Admin",
-};
+import { ROLE_LABEL } from "@/lib/permissions";
 
 function labelFor(role: User["role"]) {
-  return ROLE_LABELS[role];
+  return ROLE_LABEL[role];
 }

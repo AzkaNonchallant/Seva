@@ -49,8 +49,12 @@ export async function requireSession(): Promise<User> {
 }
 
 /**
- * Gate for the Admin Travel area. API_SPEC gives booking management to
- * `ADMIN`; SUPER_ADMIN is allowed through because §8 grants it all data.
+ * Gate for the Admin Travel area.
+ *
+ * The backend authorises booking for both `ADMIN` and `TRAVEL_ADMIN`, so both
+ * are admitted. SUPER_ADMIN is not: §8 grants it visibility of all data, not the
+ * booking workflow, and the backend agrees — a SUPER_ADMIN token gets 403 on
+ * `/api/travel/bookings/pending`.
  */
 export async function requireBookingManager(): Promise<User> {
   const user = await requireSession();

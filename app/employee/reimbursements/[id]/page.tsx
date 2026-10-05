@@ -13,6 +13,7 @@ import { getReimbursement } from "@/lib/api/reimbursement";
 import { settle } from "@/lib/api/api";
 import { isNotFound } from "@/lib/api/errors";
 import { requireRole } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { cn, formatDate, formatIDR } from "@/lib/utils";
 
 export const metadata = { title: "Detail Reimbursement • Employee" };
@@ -66,7 +67,7 @@ export default async function ReimbursementDetailPage({
         breadcrumb={[
           { label: "Employee", href: "/employee/dashboard" },
           { label: "Reimbursement", href: "/employee/reimbursements" },
-          { label: claim.travelRef ?? `#${claim.travelId}` },
+          { label: `#${claim.travelId}` },
         ]}
         unreadCount={unread.count}
         notificationsHref="/employee/notifications"
@@ -76,7 +77,7 @@ export default async function ReimbursementDetailPage({
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Detail Reimbursement"
-          description={`Travel ${claim.travelRef ?? `#${claim.travelId}`} • ${claim.employeeName}`}
+          description={`Travel #${claim.travelId}`}
           actions={
             <Link
               href={`/employee/travel/${claim.travelId}`}
@@ -147,7 +148,7 @@ export default async function ReimbursementDetailPage({
                       label="Selisih"
                       value={formatIDR(claim.differenceAmount)}
                       strong
-                      tone={claim.differenceAmount < 0 ? "error" : "success"}
+                      tone={toNumber(claim.differenceAmount) < 0 ? "error" : "success"}
                     />
                   </>
                 ) : null}
@@ -168,7 +169,9 @@ export default async function ReimbursementDetailPage({
                 <div className="flex justify-between gap-3">
                   <span className="text-tertiary">Dibayar</span>
                   <span className="text-on-surface">
-                    {claim.paidAt ? formatDate(claim.paidAt) : "—"}
+                    {claim.status === "PAID" && claim.updatedAt
+                      ? formatDate(claim.updatedAt)
+                      : "—"}
                   </span>
                 </div>
                 {claim.externalJournalRef ? (

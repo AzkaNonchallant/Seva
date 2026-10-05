@@ -5,20 +5,12 @@ import { useRouter } from "next/navigation";
 
 import { PolicyEditor } from "@/components/admin/policy-editor";
 import { deletePolicyAction } from "@/app/actions/master-data-actions";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatIDR } from "@/lib/utils";
 
 import type { Position, TravelPolicy } from "@/lib/api/types";
-
-const TIER_LABEL: Record<string, string> = {
-  ANY: "Semua tingkat",
-  DOMESTIC: "Domestik",
-  REGIONAL: "Regional",
-  INTERNATIONAL: "Internasional",
-};
 
 /**
  * Policy catalogue with an inline editor.
@@ -41,9 +33,8 @@ export function PolicyManager({
     null,
   );
 
-  // The deleted row is hidden by the server-rendered list on refresh, so the
-  // editor only needs closing — and `editing` is derived from a state that the
-  // action itself never sets.
+  // The deleted row disappears on refresh, so the editor only needs closing and
+  // `editing` is state the action itself never sets.
   useEffect(() => {
     if (deleteState?.ok) router.refresh();
   }, [deleteState, router]);
@@ -53,7 +44,7 @@ export function PolicyManager({
       <Card className="xl:col-span-3">
         <CardHeader
           title="Katalog Kebijakan"
-          description="Kebijakan aktif muncul di form pengajuan employee lewat GET /api/travel/policies/applicable."
+          description="Kebijakan berlaku untuk form pengajuan employee lewat GET /api/travel/policies/applicable, yang menyaring menurut jabatan dan tingkat tujuan."
           action={
             <Button
               type="button"
@@ -66,7 +57,7 @@ export function PolicyManager({
           }
         />
         <CardBody>
-          {editing || (!policies.length && !editing) ? (
+          {editing || !policies.length ? (
             <div className="mb-md rounded-xl border border-outline-variant/20 bg-surface-container-low p-md">
               <PolicyEditor
                 policy={editing}
@@ -83,69 +74,69 @@ export function PolicyManager({
                   key={policy.id}
                   className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:gap-3"
                 >
-                    {/*
-                      `basis-0` on the text column and `shrink-0` on the action
-                      column: policy names are long, and letting the buttons win
-                      the shrink collapsed the label to a few dozen pixels even
-                      though the row had room.
-                    */}
-                    <div className="min-w-0 flex-1 basis-0">
-                      <p className="truncate text-label-md font-semibold text-on-surface">
-                        {policy.name}
-                      </p>
-                      <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-caption text-tertiary">
-                        <span>{TIER_LABEL[policy.destinationTier ?? "ANY"]}</span>
-                        <span aria-hidden>•</span>
-                        <span className="truncate">
-                          {policy.positionName ?? "Semua jabatan"}
-                        </span>
-                        <span aria-hidden>•</span>
-                        <span className="whitespace-nowrap">
-                          {policy.maxEstimatedCost
-                            ? `Maks ${formatIDR(policy.maxEstimatedCost)}`
-                            : "Tanpa batas nominal"}
-                        </span>
-                      </p>
-                    </div>
+                  {/* `basis-0` on the text column and `shrink-0` on the
+                      action column: policy names are long, and letting the
+                      buttons win the shrink collapsed the label. */}
+                  <div className="min-w-0 flex-1 basis-0">
+                    <p className="truncate text-label-md font-semibold text-on-surface">
+                      {policy.name}
+                    </p>
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-caption text-tertiary">
+                      <span>{policy.destinationTier}</span>
+                      <span aria-hidden>•</span>
+                      <span className="truncate">
+                        {policy.positionId
+                          ? (positions.find((p) => p.id === policy.positionId)?.name ??
+                            `Jabatan #${policy.positionId}`)
+                          : "Semua jabatan"}
+                      </span>
+                    </p>
+                    <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-caption">
+                      <span>
+                        Hotel{" "}
+                        <strong className="font-semibold text-on-surface">
+                          {formatIDR(policy.hotelLimit)}
+                        </strong>
+                      </span>
+                      <span>
+                        Transportasi{" "}
+                        <strong className="font-semibold text-on-surface">
+                          {formatIDR(policy.transportLimit)}
+                        </strong>
+                      </span>
+                      <span>
+                        Uang saku{" "}
+                        <strong className="font-semibold text-on-surface">
+                          {formatIDR(policy.allowanceLimit)}
+                        </strong>
+                      </span>
+                    </p>
+                  </div>
 
-                    <div className="flex shrink-0 flex-wrap items-center gap-1.5">
-                    {policy.requiresDocuments ? (
-                      <Badge tone="warning" icon="attach_file">
-                        Wajib dokumen
-                      </Badge>
-                    ) : null}
-                    <Badge
-                      tone={policy.isActive ? "success" : "neutral"}
-                      dot
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      icon="edit"
+                      onClick={() => setEditing(policy)}
                     >
-                      {policy.isActive ? "Aktif" : "Nonaktif"}
-                    </Badge>
-
-                    <div className="flex gap-1.5">
+                      Ubah
+                    </Button>
+                    <form action={deleteFormAction}>
+                      <input type="hidden" name="id" value={policy.id} />
                       <Button
-                        type="button"
+                        type="submit"
                         size="sm"
-                        variant="ghost"
-                        icon="edit"
-                        onClick={() => setEditing(policy)}
+                        variant="danger"
+                        icon="delete"
+                        disabled={deleting}
                       >
-                        Ubah
+                        {deleting ? "..." : "Hapus"}
                       </Button>
-                      <form action={deleteFormAction}>
-                        <input type="hidden" name="id" value={policy.id} />
-                        <Button
-                          type="submit"
-                          size="sm"
-                          variant="danger"
-                          icon="delete"
-                          disabled={deleting}
-                        >
-                          {deleting ? "..." : "Hapus"}
-                        </Button>
-                      </form>
-                    </div>
-                    </div>
-                  </li>
+                    </form>
+                  </div>
+                </li>
               ))}
             </ul>
           ) : (
@@ -173,7 +164,7 @@ export function PolicyManager({
       <Card className="xl:col-span-2">
         <CardHeader
           title="Aturan Pemakaian"
-          description="Bagaimana pilihan di atas memengaruhi pengajuan."
+          description="Bagaimana ketiga batas tersebut memengaruhi pengajuan."
         />
         <CardBody className="flex flex-col gap-3 text-caption text-on-surface-variant">
           <Rule
@@ -181,16 +172,16 @@ export function PolicyManager({
             body="Policy tanpa jabatan berlaku untuk semua orang. Policy berjenjang hanya muncul kepada pemohon dengan jabatan yang cocok."
           />
           <Rule
-            title="Batas nominal"
-            body="Apabila diisi, perkiraan biaya di atas batas akan ditolak server saat pengajuan dikirim, bukan hanya dicegat di form."
+            title="Tingkat tujuan"
+            body="Backend hanya menerima dua tingkat: Domestik dan Internasional. Pemberitahuan pada form memunculkan daftar yang sudah disaring keduanya."
           />
           <Rule
-            title="Dokumen pendukung"
-            body="Policy yang mewajibkan dokumen memunculkan pengingat pada pengajuan yang memakai policy tersebut."
+            title="Tiga batas terpisah"
+            body="Hotel, transportasi, dan uang saku punya plafon masing-masing, bukan satu pagu gabungan. Backend menolak pengajuan yang melampaui batas yang relevan."
           />
           <Rule
-            title="Nonaktif"
-            body="Policy nonaktif disembunyikan dari form pengajuan tetapi tetap menempel pada pengajuan yang sudah berjalan."
+            title="Nominal sebagai angka"
+            body="Semua batas dikirim sebagai angka, bukan string, karena validator server menerimanya sebagai number."
           />
         </CardBody>
       </Card>

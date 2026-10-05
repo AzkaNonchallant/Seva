@@ -14,6 +14,7 @@ import { listTravels } from "@/lib/api/travel";
 import { daysUntil, formatDateRange, formatIDR, initials } from "@/lib/utils";
 
 import type { TravelRequest, TravelStatus } from "@/lib/api/types";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Travel Request • Dinas Travel" };
 
@@ -25,6 +26,7 @@ const STATUS_LABEL: Record<StatusFilter, string> = {
   ALL: "Semua",
   DRAFT: "Draft",
   SUBMITTED: "Diajukan",
+  IN_REVIEW: "Ditinjau",
   APPROVED: "Disetujui",
   REJECTED: "Ditolak",
   CANCELLED: "Dibatalkan",
@@ -48,20 +50,26 @@ export default async function RequestsPage({
 
   const bookingCount = await countBookingsPerTravel();
 
-  const counts = travels.reduce(
-    (acc, travel) => {
-      acc.ALL += 1;
-      acc[travel.status] += 1;
+  // Every key is seeded from STATUS_LABEL first. Accumulating onto a bare
+  // `{ ALL: 0 }` left the statuses absent from the result, so a tab that had
+  // never occurred read `undefined` and its badge rendered "NaN".
+  const counts = (Object.keys(STATUS_LABEL) as StatusFilter[]).reduce(
+    (acc, key) => {
+      acc[key] = 0;
       return acc;
     },
-    { ALL: 0 } as Record<StatusFilter, number>,
+    {} as Record<StatusFilter, number>,
   );
+  for (const travel of travels) {
+    counts.ALL += 1;
+    counts[travel.status] += 1;
+  }
 
   const filtered = travels
     .filter((travel) => status === "ALL" || travel.status === status)
     .filter((travel) =>
       query
-        ? [travel.ref, travel.employeeName, travel.destination, travel.purpose]
+        ? [String(travel.id), travelOwner(travel), travel.destination, travel.purpose]
             .filter(Boolean)
             .some((value) =>
               String(value).toLowerCase().includes(query as string),
@@ -91,7 +99,7 @@ export default async function RequestsPage({
 
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <FilterTabs<StatusFilter>
-            ariaLabel="Sarin menurut status pengajuan"
+            ariaLabel="Saring menurut status pengajuan"
             paramName="status"
             value={status}
             options={(Object.keys(STATUS_LABEL) as StatusFilter[]).map(
@@ -127,7 +135,7 @@ export default async function RequestsPage({
                         href={`/travel-admin/requests/${travel.id}`}
                         className="font-mono text-label-md font-semibold text-primary hover:underline"
                       >
-                        {travel.ref}
+                        #{travel.id}
                       </Link>
                     ),
                   },
@@ -137,14 +145,14 @@ export default async function RequestsPage({
                     cell: (travel) => (
                       <div className="flex items-center gap-2">
                         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-container text-[10px] font-bold text-on-primary-container">
-                          {initials(travel.employeeName)}
+                          {initials(travelOwner(travel))}
                         </span>
                         <div className="min-w-0 leading-tight">
                           <p className="truncate font-medium">
-                            {travel.employeeName}
+                            {travelOwner(travel)}
                           </p>
                           <p className="truncate text-caption text-tertiary">
-                            {travel.departmentName}
+                            {travel.user?.email ?? "—"}
                           </p>
                         </div>
                       </div>

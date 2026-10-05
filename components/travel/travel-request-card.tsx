@@ -9,13 +9,20 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import type { PendingTravel } from "@/lib/api/booking";
-import {
-  cn,
-  daysUntil,
-  formatDateRange,
-  formatIDR,
-  initials,
-} from "@/lib/utils";
+import { cn, daysUntil, formatDateRange, formatIDR, initials } from "@/lib/utils";
+import { travelOwner } from "@/components/travel/travel-labels";
+
+/**
+ * How long a request has sat in the booking queue.
+ *
+ * The backend returns no `waitingHours`, so it is derived from `createdAt`. The
+ * SLA ladder itself is unchanged from the Stitch reference: amber at 12h, red
+ * past 24h.
+ */
+function waitingHoursFrom(createdAt?: string) {
+  if (!createdAt) return 0;
+  return Math.max(0, Math.round((Date.now() - new Date(createdAt).getTime()) / 3_600_000));
+}
 
 /** SLA ladder from the Stitch reference: amber at 12h, red past 24h. */
 function urgency(waitingHours: number) {
@@ -35,7 +42,8 @@ export function TravelRequestCard({
   const [, startTransition] = useTransition();
   const router = useRouter();
   const days = daysUntil(travel.startDate);
-  const flag = showUrgency ? urgency(travel.waitingHours) : null;
+  const waiting = waitingHoursFrom(travel.createdAt);
+  const flag = showUrgency ? urgency(waiting) : null;
 
   return (
     <>
@@ -43,14 +51,14 @@ export function TravelRequestCard({
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-1.5">
             <span className="font-mono text-label-md font-bold text-primary">
-              {travel.ref}
+              #{travel.id}
             </span>
             <Badge tone="success" dot>
               Disetujui
             </Badge>
             {flag ? (
               <Badge tone={flag.tone} icon="timer">
-                Menunggu {travel.waitingHours} jam • {flag.label}
+                Menunggu {waiting} jam • {flag.label}
               </Badge>
             ) : null}
           </div>
@@ -68,11 +76,10 @@ export function TravelRequestCard({
           <div className="mt-3 flex flex-wrap items-center gap-md">
             <div className="flex items-center gap-1.5">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-container text-[10px] font-bold text-on-primary-container">
-                {initials(travel.employeeName)}
+                {initials(travelOwner(travel))}
               </span>
               <span className="text-caption text-on-surface">
-                <span className="text-tertiary">{travel.positionName}</span>
-                <span className="text-tertiary"> • {travel.departmentName}</span>
+                <span className="text-tertiary">{travelOwner(travel)}</span>
               </span>
             </div>
             <span className="flex items-center gap-1 text-caption text-tertiary">

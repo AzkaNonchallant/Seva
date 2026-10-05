@@ -4,9 +4,10 @@ import { requireSuperAdmin } from "@/lib/auth";
 export const metadata = { title: "Notifikasi • Super Admin" };
 
 export default async function AdminNotificationsPage() {
-  await requireSuperAdmin();
+  const user = await requireSuperAdmin();
   return (
     <NotificationsPage
+      userRole={user.role}
       areaLabel="Super Admin"
       homeHref="/admin/dashboard"
       profileHref="/admin/profile"

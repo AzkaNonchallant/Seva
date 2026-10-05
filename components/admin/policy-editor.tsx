@@ -5,17 +5,19 @@ import { useRouter } from "next/navigation";
 
 import { savePolicyAction } from "@/app/actions/master-data-actions";
 import { Button } from "@/components/ui/button";
-import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import { Field, Input, Select } from "@/components/ui/field";
 
+import type { ActionResult } from "@/app/actions/action-result";
 import type { Position, TravelPolicy } from "@/lib/api/types";
+import { toNumber } from "@/lib/api/types";
 
 /**
- * Create or edit one travel policy — POST /api/travel/policies and
- * PUT /api/travel/policies/:id.
+ * Create or edit one travel policy.
  *
- * `positionId` and `maxEstimatedCost` use 0 as the "applies to all" / "uncapped"
- * sentinel, because the spec models both as nullable and an empty select value
- * cannot be distinguished from a missing one.
+ * A policy is three spending limits in the backend's model — hotel, transport
+ * and allowance — rather than the single cap plus document/active flags the
+ * older spec described. All three are required: the server's validator rejects
+ * a request that omits any of them.
  */
 export function PolicyEditor({
   policy,
@@ -48,19 +50,9 @@ export function PolicyEditor({
           id="policy-name"
           name="name"
           defaultValue={policy?.name ?? ""}
-          placeholder="Contoh: Perjalanan Domestik Manajer"
+          placeholder="Contoh: Kepala Dinas - Domestik"
           invalid={!!state && !state.ok}
           required
-        />
-      </Field>
-
-      <Field label="Deskripsi" htmlFor="policy-description">
-        <Textarea
-          id="policy-description"
-          name="description"
-          rows={2}
-          defaultValue={policy?.description ?? ""}
-          placeholder="Ringkasan aturan yang ditampilkan ke pemohon."
         />
       </Field>
 
@@ -84,60 +76,71 @@ export function PolicyEditor({
           </Select>
         </Field>
 
-        <Field label="Tingkat tujuan" htmlFor="policy-tier">
+        <Field label="Tingkat tujuan" htmlFor="policy-tier" required>
           <Select
             id="policy-tier"
             name="destinationTier"
-            defaultValue={policy?.destinationTier ?? "ANY"}
+            defaultValue={policy?.destinationTier ?? "DOMESTIC"}
           >
-            <option value="ANY">Semua tingkat</option>
             <option value="DOMESTIC">Domestik</option>
-            <option value="REGIONAL">Regional</option>
             <option value="INTERNATIONAL">Internasional</option>
           </Select>
         </Field>
 
         <Field
-          label="Batas perkiraan biaya"
-          htmlFor="policy-cap"
-          hint="Isi 0 bila tidak ada batas. Diterjemahkan menjadi null di server."
+          label="Batas hotel"
+          htmlFor="policy-hotel"
+          required
+          hint="Nilai maksimum biaya penginapan."
+          error={state && !state.ok ? state.fields?.hotelLimit : undefined}
         >
           <Input
-            id="policy-cap"
-            name="maxEstimatedCost"
+            id="policy-hotel"
+            name="hotelLimit"
             type="number"
             min={0}
             step={100_000}
-            defaultValue={policy?.maxEstimatedCost ?? 0}
+            defaultValue={policy ? toNumber(policy.hotelLimit) : 0}
+            required
           />
         </Field>
 
         <Field
-          label="Status"
-          htmlFor="policy-active"
-          hint="Policy nonaktif tidak muncul di form pengajuan."
+          label="Batas transportasi"
+          htmlFor="policy-transport"
+          required
+          hint="Nilai maksimum tiket dan transportasi."
+          error={state && !state.ok ? state.fields?.transportLimit : undefined}
         >
-          <Select
-            id="policy-active"
-            name="isActive"
-            defaultValue={policy?.isActive === false ? "false" : "true"}
-          >
-            <option value="true">Aktif</option>
-            <option value="false">Nonaktif</option>
-          </Select>
+          <Input
+            id="policy-transport"
+            name="transportLimit"
+            type="number"
+            min={0}
+            step={100_000}
+            defaultValue={policy ? toNumber(policy.transportLimit) : 0}
+            required
+          />
+        </Field>
+
+        <Field
+          label="Batas uang saku"
+          htmlFor="policy-allowance"
+          required
+          hint="Nilai maksimum uang saku harian."
+          error={state && !state.ok ? state.fields?.allowanceLimit : undefined}
+        >
+          <Input
+            id="policy-allowance"
+            name="allowanceLimit"
+            type="number"
+            min={0}
+            step={50_000}
+            defaultValue={policy ? toNumber(policy.allowanceLimit) : 0}
+            required
+          />
         </Field>
       </div>
-
-      <label className="flex items-center gap-2 text-caption text-on-surface-variant">
-        <input
-          type="checkbox"
-          name="requiresDocuments"
-          value="true"
-          defaultChecked={policy?.requiresDocuments ?? false}
-          className="h-4 w-4 accent-[var(--color-primary)]"
-        />
-        Wajibkan dokumen pendukung saat pengajuan
-      </label>
 
       {state && !state.ok ? (
         <p
@@ -161,7 +164,11 @@ export function PolicyEditor({
           </Button>
         ) : null}
         <Button type="submit" disabled={pending}>
-          {pending ? "Menyimpan..." : policy ? "Simpan Perubahan" : "Tambah Kebijakan"}
+          {pending
+            ? "Menyimpan..."
+            : policy
+              ? "Simpan Perubahan"
+              : "Tambah Kebijakan"}
         </Button>
       </div>
     </form>

@@ -44,9 +44,6 @@ export function TravelForm({
   const [endDate, setEndDate] = useState(travel?.endDate ?? "");
 
   const selected = policies.find((policy) => String(policy.id) === policyId);
-  const cap = selected?.maxEstimatedCost ?? null;
-  const amount = Number(cost.replace(/\D/g, "")) || 0;
-  const overCap = cap !== null && amount > cap;
   const dateOrderWrong = !!startDate && !!endDate && endDate < startDate;
 
   useEffect(() => {
@@ -144,13 +141,7 @@ export function TravelForm({
         htmlFor="estimatedCost"
         required
         hint="Masukkan angka saja, pemisah ribuan ditambahkan otomatis."
-        error={
-          state && !state.ok
-            ? state.fields?.estimatedCost
-            : overCap
-              ? `Melebihi batas ${formatIDR(cap!)} pada kebijakan ini.`
-              : undefined
-        }
+        error={state && !state.ok ? state.fields?.estimatedCost : undefined}
       >
         <Input
           id="estimatedCost"
@@ -159,7 +150,7 @@ export function TravelForm({
           value={cost}
           onChange={(event) => setCost(event.target.value.replace(/\D/g, ""))}
           placeholder="4500000"
-          invalid={!!state && !state.ok || overCap}
+          invalid={!!state && !state.ok}
           required
         />
       </Field>
@@ -179,22 +170,41 @@ export function TravelForm({
           {policies.map((policy) => (
             <option key={policy.id} value={policy.id}>
               {policy.name}
-              {policy.maxEstimatedCost
-                ? ` — maks ${formatIDR(policy.maxEstimatedCost)}`
-                : ""}
             </option>
           ))}
         </Select>
       </Field>
 
-      {selected?.requiresDocuments ? (
-        <p className="flex items-start gap-2 rounded-lg bg-warning-container p-3 text-caption text-warning">
-          <span className="material-symbols-outlined mt-px shrink-0" style={{ fontSize: 16 }}>
-            attach_file
-          </span>
-          Kebijakan ini mewajibkan dokumen pendukung. Unggah lampiran pada
-          halaman detail pengajuan sebelum mengajukan.
-        </p>
+      {selected ? (
+        <div className="rounded-lg bg-surface-container-low p-3">
+          <p className="text-caption font-semibold text-on-surface">
+            Batas pada kebijakan ini
+          </p>
+          <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-caption text-on-surface-variant">
+            <span>
+              Hotel{" "}
+              <strong className="font-semibold text-on-surface">
+                {formatIDR(selected.hotelLimit)}
+              </strong>
+            </span>
+            <span>
+              Transportasi{" "}
+              <strong className="font-semibold text-on-surface">
+                {formatIDR(selected.transportLimit)}
+              </strong>
+            </span>
+            <span>
+              Uang saku{" "}
+              <strong className="font-semibold text-on-surface">
+                {formatIDR(selected.allowanceLimit)}
+              </strong>
+            </span>
+          </p>
+          <p className="mt-1.5 text-caption text-tertiary">
+            Batas berlaku per komponen, bukan pada total estimasi. Backend yang
+            memvalidasinya.
+          </p>
+        </div>
       ) : null}
 
       {state && !state.ok ? (
@@ -219,7 +229,7 @@ export function TravelForm({
         </Button>
         <Button
           type="submit"
-          disabled={pending || overCap || dateOrderWrong}
+          disabled={pending || dateOrderWrong}
         >
           {pending
             ? "Menyimpan..."

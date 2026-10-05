@@ -7,6 +7,7 @@ import { getUnreadCount } from "@/lib/api/notification";
 import { listReimbursements } from "@/lib/api/reimbursement";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { formatDate, formatIDR, formatIDRCompact } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard • Finance" };
@@ -48,7 +49,7 @@ export default async function FinanceDashboardPage() {
   const submitted = reimbursements.filter((row) => row.status === "SUBMITTED");
   const approved = reimbursements.filter((row) => row.status === "APPROVED");
   const paid = reimbursements.filter((row) => row.status === "PAID");
-  const toPay = approved.reduce((sum, row) => sum + row.differenceAmount, 0);
+  const toPay = approved.reduce((sum, row) => sum + toNumber(row.differenceAmount), 0);
 
   return (
     <>
@@ -114,11 +115,13 @@ export default async function FinanceDashboardPage() {
                   <li key={row.id} className="flex flex-wrap items-center gap-3 py-2.5">
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-body-md text-on-surface">
-                        {row.employeeName}
-                        {row.departmentName ? ` • ${row.departmentName}` : ""}
+                        {row.travel?.user?.name ?? "—"}
+                        {row.travel?.destination
+                          ? ` • ${row.travel.destination}`
+                          : ""}
                       </p>
                       <p className="text-caption text-tertiary">
-                        {row.travelRef ?? `#${row.travelId}`}
+                        #{row.travelId}
                         {row.submittedAt ? ` • ${formatDate(row.submittedAt)}` : ""}
                       </p>
                     </div>

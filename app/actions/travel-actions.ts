@@ -66,7 +66,7 @@ export async function createTravelAction(
     return {
       ok: true,
       data: travel,
-      message: `Draft ${travel.ref} tersimpan. Periksa kembali sebelum mengajukan.`,
+      message: `Draft #${travel.id} tersimpan. Periksa kembali sebelum mengajukan.`,
     };
   } catch (error) {
     return fail(error);
@@ -145,7 +145,7 @@ export async function deleteDocumentAction(
   const travelId = Number(formData.get("travelId"));
   const documentId = Number(formData.get("documentId"));
   try {
-    const result = await deleteTravelDocument(travelId, documentId);
+    const result = await deleteTravelDocument(documentId);
     revalidateEmployee(travelId);
     return { ok: true, data: result, message: "Dokumen dihapus." };
   } catch (error) {

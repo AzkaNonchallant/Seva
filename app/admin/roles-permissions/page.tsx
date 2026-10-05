@@ -40,14 +40,18 @@ const SCOPE: Record<Role, string[]> = {
     "Membaca laporan pengeluaran per departemen, karyawan, dan project",
   ],
   ADMIN: [
-    "Membuat, mengonfirmasi, dan membatalkan booking",
-    "Mengelola antrean penugasan booking dan keberangkatan",
-    "Membaca seluruh travel request dan travel policy",
+    "Membaca seluruh travel request",
+    "Membaca laporan keuangan dan memverifikasi reimbursement",
   ],
   SUPER_ADMIN: [
     "Mengelola seluruh master data: pengguna, departemen, jabatan, travel policy",
     "Menetapkan role setiap pengguna",
     "Membaca seluruh data pengajuan di seluruh perusahaan",
+  ],
+  TRAVEL_ADMIN: [
+    "Membuat, mengonfirmasi, dan membatalkan booking",
+    "Mengelola antrean penugasan booking dan keberangkatan",
+    "Membaca seluruh travel request dan travel policy",
   ],
 };
 
@@ -58,6 +62,7 @@ const ORDER: Role[] = [
   "HRD",
   "FINANCE",
   "ADMIN",
+  "TRAVEL_ADMIN",
   "SUPER_ADMIN",
 ];
 
@@ -74,11 +79,11 @@ export default async function RolesPermissionsPage() {
 
   const [unread, users] = await Promise.all([
     getUnreadCount().catch(() => ({ count: 0 })),
-    listUsers().catch(() => []),
+    listUsers().catch(() => ({ data: [], pagination: { page: 1, limit: 0, total: 0, totalPages: 0 } })),
   ]);
 
   const counts = new Map<Role, number>();
-  for (const user of users) {
+  for (const user of users.data) {
     if (user.isActive === false) continue;
     counts.set(user.role, (counts.get(user.role) ?? 0) + 1);
   }
