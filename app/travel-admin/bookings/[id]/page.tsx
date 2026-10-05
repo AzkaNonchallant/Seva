@@ -12,9 +12,11 @@ import { fetchOrNotFound } from "@/lib/api/fetch-or-not-found";
 import { getUnreadCount } from "@/lib/api/notification";
 import { getTravel } from "@/lib/api/travel";
 import { requireBookingManager } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { formatDate, formatDateRange, formatIDR } from "@/lib/utils";
 
 import type { Booking } from "@/lib/api/types";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Detail Booking • Dinas Travel" };
 
@@ -45,7 +47,7 @@ export default async function BookingDetailPage({
         breadcrumb={[
           { label: "Dinas Travel", href: "/travel-admin/dashboard" },
           { label: "Kelola Booking", href: "/travel-admin/bookings" },
-          { label: travel.ref ?? `#${travel.id}` },
+          { label: `#${travel.id}` },
         ]}
         unreadCount={unread.count}
       />
@@ -59,7 +61,7 @@ export default async function BookingDetailPage({
               <CardHeader
                 title="Booking pada pengajuan ini"
                 description={`${bookings.length} pemesanan tercatat • total ${formatIDR(
-                  bookings.reduce((sum, b) => sum + b.amount, 0),
+                  bookings.reduce((sum, b) => sum + toNumber(b.amount), 0),
                 )}`}
               />
               <CardBody className="space-y-3">
@@ -106,7 +108,7 @@ function TravelSummary({
         <div className="min-w-0">
           <div className="mb-1.5 flex min-w-0 flex-wrap items-center gap-2">
             <h1 className="font-mono text-headline-md font-bold text-primary">
-              {travel.ref}
+              #{travel.id}
             </h1>
             <TravelStatusBadge status={travel.status} />
           </div>
@@ -120,17 +122,21 @@ function TravelSummary({
       </div>
 
       <dl className="mt-md grid grid-cols-2 gap-3 border-t border-outline-variant/15 pt-md lg:grid-cols-4">
-        <Fact label="Pemohon" value={travel.employeeName} sub={travel.positionName} />
-        <Fact label="Departemen" value={travel.departmentName ?? "—"} />
+        <Fact label="Pemohon" value={travelOwner(travel)} />
+        <Fact label="Email" value={travel.user?.email ?? "—"} />
         <Fact
           label="Periode"
           value={formatDateRange(travel.startDate, travel.endDate)}
         />
         <Fact label="Estimasi" value={formatIDR(travel.estimatedCost)} />
-        {travel.policyName ? (
-          <Fact label="Kebijakan" value={travel.policyName} className="col-span-2" />
+        {travel.policyId ? (
+          <Fact
+            label="Kebijakan"
+            value={`#${travel.policyId}`}
+            className="col-span-2"
+          />
         ) : null}
-        <Fact label="Diajukan" value={formatDate(travel.submittedAt ?? travel.createdAt)} />
+        <Fact label="Diajukan" value={formatDate(travel.createdAt ?? "")} />
       </dl>
     </Card>
   );

@@ -14,6 +14,7 @@ import { getUnreadCount } from "@/lib/api/notification";
 import { listUsers } from "@/lib/api/user";
 import { settle } from "@/lib/api/api";
 import { requireSuperAdmin } from "@/lib/auth";
+import { departmentName, positionName } from "@/lib/api/user-format";
 import { ROLE_LABEL } from "@/lib/permissions";
 
 import type { Role, User } from "@/lib/api/types";
@@ -78,7 +79,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     );
   }
 
-  const users = all.data;
+  const users = all.data.data;
   const counts = new Map<Role | "ALL", number>();
   counts.set("ALL", users.length);
   for (const row of users) counts.set(row.role, (counts.get(row.role) ?? 0) + 1);
@@ -86,7 +87,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   const filtered = users.filter((row) => {
     if (role !== "ALL" && row.role !== role) return false;
     if (!query) return true;
-    return [row.name, row.email, row.departmentName, row.positionName]
+    return [row.name, row.email, departmentName(row), positionName(row)]
       .filter(Boolean)
       .some((value) => String(value).toLowerCase().includes(query));
   });
@@ -120,10 +121,10 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
       cell: (row) => (
         <div className="min-w-0 text-caption">
           <span className="block truncate text-on-surface">
-            {row.departmentName ?? "—"}
+            {departmentName(row)}
           </span>
           <span className="block truncate text-tertiary">
-            {row.positionName ?? "—"}
+            {positionName(row)}
           </span>
         </div>
       ),

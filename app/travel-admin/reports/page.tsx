@@ -9,6 +9,7 @@ import {
   getExpenseByDepartment,
 } from "@/lib/api/report";
 import { requireBookingManager } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { formatIDR, formatIDRCompact } from "@/lib/utils";
 
 export const metadata = { title: "Laporan • Dinas Travel" };
@@ -24,7 +25,10 @@ export default async function ReportsPage() {
       getExpenseByDepartment(),
     ]);
 
-  const grandTotal = byDepartment.reduce((sum, row) => sum + row.total, 0);
+  const grandTotal = byDepartment.reduce(
+    (sum, row) => sum + toNumber(row.total),
+    0,
+  );
   const completedShare = summary.total
     ? Math.round((summary.completed / summary.total) * 100)
     : 0;
@@ -111,10 +115,10 @@ export default async function ReportsPage() {
                   <ul className="space-y-3">
                     {byDepartment.map((row) => {
                       const pct = grandTotal
-                        ? Math.round((row.total / grandTotal) * 100)
+                        ? Math.round((toNumber(row.total) / grandTotal) * 100)
                         : 0;
                       return (
-                        <li key={row.department}>
+                        <li key={row.departmentId ?? row.department}>
                           <div className="mb-1 flex items-center justify-between gap-2">
                             <span className="truncate text-caption text-on-surface-variant">
                               {row.department}

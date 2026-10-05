@@ -4,6 +4,7 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { getUnreadCount } from "@/lib/api/notification";
 import { listPolicies } from "@/lib/api/travel";
+import { listPositions } from "@/lib/api/user";
 import { requireBookingManager } from "@/lib/auth";
 import { formatIDR } from "@/lib/utils";
 
@@ -21,10 +22,14 @@ const TIER_LABEL: Record<string, string> = {
 
 export default async function PolicyPage() {
   await requireBookingManager();
-  const [policies, unread] = await Promise.all([
+  const [policies, unread, positions] = await Promise.all([
     listPolicies(),
     getUnreadCount().catch(() => ({ count: 0 })),
+    listPositions().catch(() => []),
   ]);
+
+  const positionLabel = (id: number | null) =>
+    id ? (positions.find((p) => p.id === id)?.name ?? `Jabatan #${id}`) : "Semua jabatan";
 
   return (
     <div className="min-h-screen">
@@ -46,7 +51,7 @@ export default async function PolicyPage() {
           <ul className="grid grid-cols-1 gap-md lg:grid-cols-2">
             {policies.map((policy) => (
               <li key={policy.id}>
-                <PolicyCard policy={policy} />
+                <PolicyCard policy={policy} positionLabel={positionLabel(policy.positionId)} />
               </li>
             ))}
           </ul>
@@ -64,9 +69,13 @@ export default async function PolicyPage() {
   );
 }
 
-function PolicyCard({ policy }: { policy: TravelPolicy }) {
-  const uncapped = policy.maxEstimatedCost == null;
-
+function PolicyCard({
+  policy,
+  positionLabel,
+}: {
+  policy: TravelPolicy;
+  positionLabel: string;
+}) {
   return (
     <Card className="flex h-full flex-col">
       <div className="flex items-start justify-between gap-3 border-b border-outline-variant/15 p-md">
@@ -74,35 +83,29 @@ function PolicyCard({ policy }: { policy: TravelPolicy }) {
           <h2 className="text-body-lg font-semibold text-on-surface">
             {policy.name}
           </h2>
-          <p className="mt-0.5 text-caption text-tertiary">
-            {policy.positionName ?? "Semua jabatan"}
-          </p>
+          <p className="mt-0.5 text-caption text-tertiary">{positionLabel}</p>
         </div>
         <Badge tone="primary" dot>
-          {TIER_LABEL[policy.destinationTier ?? "ANY"] ?? policy.destinationTier}
+          {TIER_LABEL[policy.destinationTier] ?? policy.destinationTier}
         </Badge>
       </div>
 
       <CardBody className="flex flex-1 flex-col gap-md">
-        {policy.description ? (
-          <p className="text-body-md leading-relaxed text-on-surface-variant">
-            {policy.description}
-          </p>
-        ) : null}
-
-        <dl className="mt-auto grid grid-cols-2 gap-3 border-t border-outline-variant/15 pt-3">
-          <div>
-            <dt className="text-caption text-tertiary">Plafon estimasi</dt>
-            <dd className="mt-0.5 text-label-md font-semibold text-on-surface">
-              {uncapped ? "Tanpa plafon" : formatIDR(policy.maxEstimatedCost ?? 0)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-caption text-tertiary">Dokumen wajib</dt>
-            <dd className="mt-0.5 text-label-md font-semibold text-on-surface">
-              {policy.requiresDocuments ? "Ya" : "Tidak"}
-            </dd>
-          </div>
+        {/* A policy is three per-component limits in the backend's model, not a
+            single cap on the total estimate. */}
+        <dl className="mt-auto space-y-2 border-t border-outline-variant/15 pt-3">
+          {[
+            ["Batas hotel", policy.hotelLimit],
+            ["Batas transportasi", policy.transportLimit],
+            ["Batas uang saku", policy.allowanceLimit],
+          ].map(([label, value]) => (
+            <div key={label} className="flex justify-between gap-3">
+              <dt className="text-caption text-tertiary">{label}</dt>
+              <dd className="text-caption font-semibold text-on-surface">
+                {formatIDR(value as string)}
+              </dd>
+            </div>
+          ))}
         </dl>
       </CardBody>
     </Card>

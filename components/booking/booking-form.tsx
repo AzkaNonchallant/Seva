@@ -8,6 +8,7 @@ import { Field, Input, Select, Textarea } from "@/components/ui/field";
 
 import type { ActionResult } from "@/app/actions/action-result";
 import type { Booking, BookingType, CreateBookingInput } from "@/lib/api/types";
+import { toNumber } from "@/lib/api/types";
 import { formatIDR } from "@/lib/utils";
 
 const TYPE_LABEL: Record<BookingType, string> = {
@@ -27,7 +28,7 @@ const EMPTY: ActionResult<Booking> | null = null;
  */
 export function BookingForm({
   travelId,
-  travelRef,
+  travelLabel,
   destination,
   travelWindow,
   estimatedCost,
@@ -35,7 +36,7 @@ export function BookingForm({
   onCancel,
 }: {
   travelId: number;
-  travelRef?: string;
+  travelLabel: string;
   destination: string;
   travelWindow: string;
   estimatedCost: number;
@@ -44,21 +45,18 @@ export function BookingForm({
 }) {
   const [state, formAction, pending] = useActionState(
     async (_prev: ActionResult<Booking> | null, formData: FormData) => {
+      // The backend's booking model is a provider, a confirmation code, one
+      // date and a free-text description — not the origin/destination and
+      // per-night date range the older spec described.
       const payload: CreateBookingInput = {
         type: formData.get("type") as BookingType,
         provider: String(formData.get("provider") ?? "").trim() || undefined,
-        referenceNumber:
-          String(formData.get("referenceNumber") ?? "").trim() || undefined,
-        origin: String(formData.get("origin") ?? "").trim() || undefined,
-        destination:
-          String(formData.get("destination") ?? "").trim() || undefined,
-        departureDate:
-          String(formData.get("departureDate") ?? "").trim() || undefined,
-        returnDate: String(formData.get("returnDate") ?? "").trim() || undefined,
-        checkInDate:
-          String(formData.get("checkInDate") ?? "").trim() || undefined,
-        checkOutDate:
-          String(formData.get("checkOutDate") ?? "").trim() || undefined,
+        bookingCode:
+          String(formData.get("bookingCode") ?? "").trim() || undefined,
+        description:
+          String(formData.get("description") ?? "").trim() || undefined,
+        bookingDate:
+          String(formData.get("bookingDate") ?? "").trim() || undefined,
         amount: Number(formData.get("amount") ?? 0),
         notes: String(formData.get("notes") ?? "").trim() || undefined,
       };
@@ -75,8 +73,10 @@ export function BookingForm({
   // A successful action is terminal: the modal is closed from here, so the
   // form never needs to return to its editable state.
   if (state?.ok) {
+    // `amount` crosses the wire as a decimal string, so it is compared as a
+    // number rather than the string it is.
     const overBudget =
-      state.data.amount > estimatedCost * 1.1 && estimatedCost > 0;
+      toNumber(state.data.amount) > estimatedCost * 1.1 && estimatedCost > 0;
     return (
       <div className="flex flex-col items-center px-md py-lg text-center">
         <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-success-container text-success">
@@ -88,8 +88,8 @@ export function BookingForm({
           Booking berhasil dibuat
         </p>
         <p className="mt-1 max-w-sm text-caption text-on-surface-variant">
-          {state.data.referenceNumber ?? state.data.provider ?? "Booking"} untuk{" "}
-          {travelRef} sudah masuk daftar dan menunggu konfirmasi.
+          {state.data.bookingCode ?? state.data.provider ?? "Booking"} untuk{" "}
+          {travelLabel} sudah masuk daftar dan menunggu konfirmasi.
         </p>
         {overBudget ? (
           <p className="mt-3 flex items-start gap-1.5 rounded-lg bg-warning-container px-3 py-2 text-left text-caption text-warning">
@@ -107,7 +107,7 @@ export function BookingForm({
             // The travel leaves the queue once it gains its first booking, so
             // the list behind the modal is stale until it is revalidated.
             onSuccess?.(
-              `${state.data.referenceNumber ?? state.data.provider ?? "Booking"} untuk ${travelRef} berhasil dibuat.`,
+              `${state.data.bookingCode ?? state.data.provider ?? "Booking"} untuk ${travelLabel} berhasil dibuat.`,
             );
             onCancel?.();
           }}
@@ -122,7 +122,7 @@ export function BookingForm({
     <form action={formAction} className="flex flex-col gap-md p-md">
       <div className="rounded-lg bg-surface-container-low p-3">
         <p className="text-label-md font-semibold text-on-surface">
-          {travelRef ?? `Travel #${travelId}`}
+          {travelLabel}
         </p>
         <p className="mt-0.5 text-caption text-on-surface-variant">
           {destination} • {travelWindow} • estimasi{" "}
@@ -172,47 +172,32 @@ export function BookingForm({
       </div>
 
       <Field
-        label="No. Referensi / PNR"
-        htmlFor="referenceNumber"
-        hint="Boleh diisi setelah suppliers mengonfirmasi."
+        label="Kode Pemesanan"
+        htmlFor="bookingCode"
+        hint="Boleh diisi setelah supplier mengonfirmasi."
       >
-        <Input id="referenceNumber" name="referenceNumber" placeholder="ABC123" />
+        <Input id="bookingCode" name="bookingCode" placeholder="ABC123" />
       </Field>
 
-      {type === "HOTEL" ? (
-        <div className="grid grid-cols-1 gap-md sm:grid-cols-2">
-          <Field label="Check-in" htmlFor="checkInDate">
-            <Input id="checkInDate" name="checkInDate" type="date" />
-          </Field>
-          <Field label="Check-out" htmlFor="checkOutDate">
-            <Input id="checkOutDate" name="checkOutDate" type="date" />
-          </Field>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Field label="Dari" htmlFor="origin" hint="Kode kota">
-            <Input id="origin" name="origin" placeholder="CGK" />
-          </Field>
-          <Field label="Keberangkatan" htmlFor="departureDate">
-            <Input id="departureDate" name="departureDate" type="date" />
-          </Field>
-          <Field label="Kepulangan" htmlFor="returnDate">
-            <Input id="returnDate" name="returnDate" type="date" />
-          </Field>
-        </div>
-      )}
+      <Field label="Keterangan" htmlFor="description">
+        <Textarea
+          id="description"
+          name="description"
+          rows={2}
+          placeholder={
+            type === "HOTEL"
+              ? "Kamar superior 3 malam"
+              : "Tiket pesawat ekonomi"
+          }
+        />
+      </Field>
 
       <Field
-        label="Tujuan"
-        htmlFor="destination"
-        hint={`Default: ${destination}`}
+        label="Tanggal Pemesanan"
+        htmlFor="bookingDate"
+        hint="Tanggal pemesanan atau check-in, sesuai jenis booking."
       >
-        <Input
-          id="destination"
-          name="destination"
-          defaultValue={type === "HOTEL" ? destination : ""}
-          placeholder={destination}
-        />
+        <Input id="bookingDate" name="bookingDate" type="date" />
       </Field>
 
       <Field

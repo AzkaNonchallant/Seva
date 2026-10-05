@@ -7,6 +7,7 @@ export function Field({
   error,
   required,
   htmlFor,
+  trailing,
   children,
   className,
 }: {
@@ -15,18 +16,23 @@ export function Field({
   error?: string;
   required?: boolean;
   htmlFor: string;
+  /** Sits on the label row, opposite the label. Used for a "lupa password" link. */
+  trailing?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label
-        htmlFor={htmlFor}
-        className="text-label-md font-medium text-on-surface"
-      >
-        {label}
-        {required ? <span className="ml-0.5 text-error">*</span> : null}
-      </label>
+      <div className="flex items-baseline justify-between gap-3">
+        <label
+          htmlFor={htmlFor}
+          className="text-label-md font-medium text-on-surface"
+        >
+          {label}
+          {required ? <span className="ml-0.5 text-error">*</span> : null}
+        </label>
+        {trailing}
+      </div>
       {children}
       {error ? (
         <p className="flex items-center gap-1 text-caption text-error" role="alert">

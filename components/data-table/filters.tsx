@@ -77,12 +77,12 @@ export function FilterTabs<T extends string>({
           >
             {option.label}
             {option.count !== undefined ? (
-              <span>
+              <span
                 className={cn(
                   "rounded-full px-1.5 text-[10px] font-bold",
                   active ? "bg-primary-fixed text-on-primary-fixed" : "bg-surface-container-high",
                 )}
-                
+              >
                 {option.count}
               </span>
             ) : null}

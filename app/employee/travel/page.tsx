@@ -12,7 +12,8 @@ import { getUnreadCount } from "@/lib/api/notification";
 import { listTravels } from "@/lib/api/travel";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
-import { formatIDR } from "@/lib/utils";
+import { toNumber } from "@/lib/api/types";
+import { formatIDR, formatIDRCompact } from "@/lib/utils";
 
 import type { TravelStatus } from "@/lib/api/types";
 
@@ -78,7 +79,7 @@ export default async function EmployeeTravelPage({
   const filtered = rows.filter((row) => {
     if (status !== "ALL" && row.status !== status) return false;
     if (!query) return true;
-    return [row.ref, row.destination, row.purpose]
+    return [String(row.id), row.destination, row.purpose]
       .filter(Boolean)
       .some((value) => String(value).toLowerCase().includes(query));
   });
@@ -143,7 +144,7 @@ export default async function EmployeeTravelPage({
           />
           <SummaryCard
             label="Total Estimasi"
-            value={formatIDR(approved.reduce((sum, row) => sum + row.estimatedCost, 0))}
+            value={formatIDRCompact(approved.reduce((sum, row) => sum + toNumber(row.estimatedCost), 0))}
             icon="payments"
             tone="primary"
             footnote="Akumulasi pengajuan disetujui"

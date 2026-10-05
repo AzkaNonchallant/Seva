@@ -6,6 +6,8 @@ import { NotificationList } from "@/components/ui/notification-list";
 import { listNotifications } from "@/lib/api/notification";
 import { settle } from "@/lib/api/api";
 
+import type { Role } from "@/lib/api/types";
+
 /**
  * The notification inbox, shared by every role area.
  *
@@ -14,19 +16,22 @@ import { settle } from "@/lib/api/api";
  * one place is what stops the three areas from drifting apart.
  */
 export async function NotificationsPage({
+  userRole,
   areaLabel,
   homeHref,
   profileHref,
   description,
 }: {
+  /** Drives where each notification type leads. */
+  userRole: Role;
   areaLabel: string;
   homeHref: string;
   profileHref: string;
   description: string;
 }) {
-  const notifications = await settle(listNotifications());
+  const loaded = await settle(listNotifications());
 
-  if (!notifications.ok) {
+  if (!loaded.ok) {
     return (
       <>
         <Header
@@ -40,13 +45,13 @@ export async function NotificationsPage({
         />
         <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
           <PageHeader title="Notifikasi" description={description} />
-          <ErrorState error={notifications.error} />
+          <ErrorState error={loaded.error} />
         </main>
       </>
     );
   }
 
-  const rows = notifications.data;
+  const rows = loaded.data;
   const unreadCount = rows.filter((row) => !row.isRead).length;
 
   return (
@@ -66,7 +71,7 @@ export async function NotificationsPage({
 
         <Card>
           {rows.length ? (
-            <NotificationList notifications={rows} />
+            <NotificationList notifications={rows} role={userRole} />
           ) : (
             <EmptyState
               icon="notifications_none"

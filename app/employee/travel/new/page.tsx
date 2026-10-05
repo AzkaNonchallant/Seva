@@ -19,7 +19,9 @@ export default async function NewTravelPage() {
 
   const [unread, policies] = await Promise.all([
     getUnreadCount().catch(() => ({ count: 0 })),
-    settle(listApplicablePolicies(user.positionId)),
+    user.positionId
+      ? settle(listApplicablePolicies(user.positionId))
+      : settle(Promise.resolve([])),
   ]);
 
   return (

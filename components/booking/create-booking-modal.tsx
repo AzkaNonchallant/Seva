@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { BookingForm } from "@/components/booking/booking-form";
 
 import type { PendingTravel } from "@/lib/api/booking";
+import { toNumber } from "@/lib/api/types";
 import { countDays, formatDateRange } from "@/lib/utils";
 
 /**
@@ -74,10 +75,10 @@ export function CreateBookingModal({
         <div className="overflow-y-auto">
           <BookingForm
             travelId={travel.id}
-            travelRef={travel.ref}
+            travelLabel={travel.destination}
             destination={travel.destination}
             travelWindow={formatDateRange(travel.startDate, travel.endDate)}
-            estimatedCost={travel.estimatedCost}
+            estimatedCost={toNumber(travel.estimatedCost)}
             onCancel={onClose}
             onSuccess={onSaved}
           />

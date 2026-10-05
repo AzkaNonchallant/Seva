@@ -3,21 +3,28 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import { ApiError, STATUS_TO_CODE, type ApiErrorCode } from "./errors";
-import type { ApiEnvelope, User } from "./types";
+import type { ApiEnvelope, Page, Pagination, User } from "./types";
 
 export { ApiError } from "./errors";
 export type { ApiErrorCode } from "./errors";
 
 /**
- * Base URL of the real backend. Unset in this repository, which keeps the
- * mock transport active. Set NEXT_PUBLIC_API_BASE_URL (e.g. http://localhost:3001)
- * and the same service functions start hitting the real API — no call site changes.
+ * Base URL of the backend. Set in `.env.local`.
+ *
+ * The origin is used without a trailing `/api` on purpose: every service
+ * function already passes a path that begins with `/api`, so appending it here
+ * would request `/api/api/travel`.
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
 
 /** Cookie holding the JWT. httpOnly, so JS on the client can never read it. */
 export const AUTH_COOKIE = "horizon_token";
 
+/**
+ * The backend is required. Kept as a predicate because the login screen uses it
+ * to decide whether to offer the demo-account shortcuts, and because a missing
+ * base URL should fail loudly rather than silently rendering empty screens.
+ */
 export function usesMockBackend() {
   return !API_BASE_URL;
 }
@@ -95,13 +102,11 @@ export async function apiRequest<T>(
   }
 
   if (usesMockBackend()) {
-    const { handleMockRequest } = await import("@/lib/mocks/handlers");
-    return handleMockRequest<T>({
-      method,
-      path: buildUrl(path, query),
-      body,
-      hasAuth: auth,
-    });
+    throw new ApiError(
+      "NETWORK",
+      "NEXT_PUBLIC_API_BASE_URL belum diisi. Isi di .env.local lalu jal ulang dev server.",
+      0,
+    );
   }
 
   let response: Response;
@@ -133,16 +138,108 @@ export async function apiRequest<T>(
       STATUS_TO_CODE[response.status] ?? ("UNKNOWN" as ApiErrorCode),
       payload.message || `Permintaan gagal (${response.status}).`,
       response.status,
+      // The backend reports validation failures as an `errors` array of
+      // `{ path, message }`. Flattening it into the field map the UI already
+      // renders is what lets `Field error={...}` show them unchanged.
+      (payload.errors ?? []).reduce<Record<string, string>>((fields, error) => {
+        fields[error.path] = error.message;
+        return fields;
+      }, {}),
     );
   }
   return payload.data;
+}
+
+/**
+ * A paginated list read.
+ *
+ * The backend nests list rows one level deeper than a single resource —
+ * `{ data: { data, pagination } }` for travel, users, notifications and
+ * approvals, and `{ data: { items, total, page, limit } }` for reimbursements.
+ * Both collapse to `Page<T>` here so no screen has to know which it called.
+ */
+export async function apiList<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<Page<T>> {
+  const payload = await apiRequest<unknown>(path, options);
+
+  const bag = (payload ?? {}) as Record<string, unknown>;
+
+  if (Array.isArray(bag.data)) {
+    const pagination = (bag.pagination ?? {}) as Partial<Pagination>;
+    const limit = pagination.limit ?? (bag.data.length || 1);
+    const total = pagination.total ?? bag.data.length;
+    return {
+      data: bag.data as T[],
+      pagination: {
+        page: pagination.page ?? 1,
+        limit,
+        total,
+        totalPages: pagination.totalPages ?? Math.max(1, Math.ceil(total / limit)),
+      },
+    };
+  }
+
+  if (Array.isArray(bag.items)) {
+    const page = Number(bag.page ?? 1);
+    const limit = Number(bag.limit ?? bag.items.length) || 1;
+    const total = Number(bag.total ?? bag.items.length);
+    return {
+      data: bag.items as T[],
+      pagination: { page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) },
+    };
+  }
+
+  // An unwrapped array, which some endpoints still use.
+  if (Array.isArray(payload)) {
+    return {
+      data: payload as T[],
+      pagination: {
+        page: 1,
+        limit: payload.length,
+        total: payload.length,
+        totalPages: 1,
+      },
+    };
+  }
+
+  return { data: [], pagination: { page: 1, limit: 0, total: 0, totalPages: 0 } };
+}
+
+/**
+ * A list read for screens that show every row and do not paginate.
+ *
+ * A short alias for `apiList(...).then(page => page.data)`, which is what most
+ * callers want; the paginated form stays available for the directory and the
+ * booking list.
+ */
+export async function apiRows<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T[]> {
+  const page = await apiList<T>(path, {
+    // Ask for a page large enough to hold the result, since the caller is not
+    // paginating and silently losing rows would be worse than a large limit.
+    ...options,
+    query: { limit: 200, ...options.query },
+  });
+  return page.data;
 }
 
 async function readEnvelope<T>(response: Response): Promise<ApiEnvelope<T>> {
   try {
     return (await response.json()) as ApiEnvelope<T>;
   } catch {
-    return { success: false, message: "Respons server tidak valid." };
+    // A body that is not JSON means something other than the API answered —
+    // a tunnel or gateway error page, or an HTML login screen. Reporting that as
+    // an invalid response sends the reader hunting for a data bug, so it is
+    // named as the connectivity problem it is.
+    throw new ApiError(
+      "NETWORK",
+      "Server API tidak dapat dihubungi. Periksa koneksi dan ketersediaan backend.",
+      response.status || 0,
+    );
   }
 }
 

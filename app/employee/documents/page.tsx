@@ -89,7 +89,7 @@ export default async function EmployeeDocumentsPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/20 p-md">
                     <div className="min-w-0">
                       <p className="font-mono text-caption text-tertiary">
-                        {travel.ref ?? `#${travel.id}`}
+                        #{travel.id}
                       </p>
                       <Link
                         href={`/employee/travel/${travel.id}`}
@@ -118,7 +118,7 @@ export default async function EmployeeDocumentsPage() {
                           </span>
                         </span>
                         <span className="shrink-0 text-caption text-tertiary">
-                          {formatDate(document.uploadedAt)}
+                          {formatDate(document.uploadedAt ?? "")}
                         </span>
                       </li>
                     ))}

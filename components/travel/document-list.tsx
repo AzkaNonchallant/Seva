@@ -21,12 +21,10 @@ export function DocumentList({
   travelId,
   documents,
   canDelete,
-  policyRequiresDocuments,
 }: {
   travelId: number;
   documents: TravelDocument[];
   canDelete: boolean;
-  policyRequiresDocuments: boolean;
 }) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(deleteDocumentAction, null);
@@ -80,18 +78,6 @@ export function DocumentList({
           description="Lampiran pendukung belum diunggah pada pengajuan ini."
         />
       )}
-
-      {policyRequiresDocuments && !documents.length ? (
-        <p className="flex items-start gap-2 rounded-lg bg-warning-container p-3 text-caption text-warning">
-          <span
-            className="material-symbols-outlined mt-px shrink-0"
-            style={{ fontSize: 16 }}
-          >
-            attach_file
-          </span>
-          Travel policy yang dipilih mewajibkan dokumen pendukung.
-        </p>
-      ) : null}
 
       {state && !state.ok ? (
         <p

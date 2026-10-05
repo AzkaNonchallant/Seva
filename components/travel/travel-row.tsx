@@ -21,7 +21,7 @@ export function TravelRow({ travel }: { travel: TravelRequest }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-caption text-tertiary">
-            {travel.ref ?? `#${travel.id}`}
+            #{travel.id}
           </span>
           <TravelStatusBadge status={travel.status} />
         </div>

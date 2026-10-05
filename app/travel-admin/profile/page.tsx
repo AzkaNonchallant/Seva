@@ -5,6 +5,7 @@ import { logoutAction } from "@/app/actions/auth-actions";
 import { me } from "@/lib/api/auth";
 import { requireBookingManager } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/permissions";
+import { departmentName, positionName } from "@/lib/api/user-format";
 
 export const metadata = { title: "Profil • Dinas Travel" };
 
@@ -60,8 +61,8 @@ export default async function ProfilePage() {
           </div>
 
           <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Fact label="Jabatan" value={fresh.positionName ?? "—"} />
-            <Fact label="Departemen" value={fresh.departmentName ?? "—"} />
+            <Fact label="Jabatan" value={positionName(fresh)} />
+            <Fact label="Departemen" value={departmentName(fresh)} />
             <Fact label="Status akun" value={fresh.isActive ? "Aktif" : "Nonaktif"} />
             <Fact label="ID pengguna" value={String(fresh.id)} />
           </CardBody>

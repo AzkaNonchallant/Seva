@@ -58,13 +58,13 @@ export default async function UserDetailPage({
     );
   }
 
-  const user = users.data.find((row) => row.id === userId);
+  const user = users.data.data.find((row) => row.id === userId);
   if (!user) notFound();
 
   // The spec has no per-employee travel endpoint, so this filters the list it
   // already publishes for readers of all data.
   const travels = await listTravels().catch(() => []);
-  const ownTravels = travels.filter((travel) => travel.employeeId === userId);
+  const ownTravels = travels.filter((travel) => travel.userId === userId);
 
   return (
     <>
@@ -152,7 +152,7 @@ export default async function UserDetailPage({
                     className="flex flex-wrap items-center gap-3 py-3"
                   >
                     <span className="font-mono text-caption text-tertiary">
-                      {travel.ref ?? `#${travel.id}`}
+                      #{travel.id}
                     </span>
                     <span className="min-w-0 flex-1 truncate text-body-md text-on-surface">
                       {travel.destination}

@@ -4,9 +4,10 @@ import { requireRole } from "@/lib/auth";
 export const metadata = { title: "Notifikasi • Finance" };
 
 export default async function FinanceNotificationsPage() {
-  await requireRole(["FINANCE"]);
+  const user = await requireRole(["FINANCE"]);
   return (
     <NotificationsPage
+      userRole={user.role}
       areaLabel="Finance"
       homeHref="/finance/dashboard"
       profileHref="/finance/profile"

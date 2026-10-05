@@ -13,20 +13,13 @@ import { listPolicies } from "@/lib/api/travel";
 import { listDepartments, listPositions, listUsers } from "@/lib/api/user";
 import { settle } from "@/lib/api/api";
 import { requireSuperAdmin } from "@/lib/auth";
+import { departmentName } from "@/lib/api/user-format";
+
+import { ROLE_LABEL } from "@/lib/permissions";
 
 import type { User } from "@/lib/api/types";
 
 export const metadata = { title: "Dashboard • Super Admin" };
-
-const ROLE_LABEL: Record<User["role"], string> = {
-  EMPLOYEE: "Employee",
-  MANAGER: "Manager",
-  DEPARTMENT_HEAD: "Department Head",
-  HRD: "HRD",
-  FINANCE: "Finance",
-  ADMIN: "Admin Travel",
-  SUPER_ADMIN: "Super Admin",
-};
 
 /**
  * Super Admin overview.
@@ -62,7 +55,7 @@ export default async function AdminDashboardPage() {
     );
   }
 
-  const userRows = users.data;
+  const userRows = users.data.data;
   const travelReport = travel.ok ? travel.data : null;
   const policyRows = policies.ok ? policies.data : [];
   const departmentRows = departments.ok ? departments.data : [];
@@ -75,7 +68,7 @@ export default async function AdminDashboardPage() {
     byRole.set(row.role, (byRole.get(row.role) ?? 0) + 1);
   }
   const roleRows = [...byRole.entries()].sort((a, b) => b[1] - a[1]);
-  const activePolicies = policyRows.filter((policy) => policy.isActive);
+  const activePolicies = policyRows;
 
   return (
     <Frame unread={unread.count} user={user}>
@@ -296,7 +289,7 @@ export default async function AdminDashboardPage() {
                         {row.name}
                       </span>
                       <span className="block truncate text-caption text-tertiary">
-                        {row.departmentName ?? "Tanpa departemen"}
+                        {departmentName(row)}
                       </span>
                     </span>
                     <Badge tone="neutral" variant="outline">

@@ -14,6 +14,7 @@ import { listReimbursements } from "@/lib/api/reimbursement";
 import { listTravels } from "@/lib/api/travel";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { daysUntil, formatDate, formatIDR, formatIDRCompact } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard • Employee" };
@@ -72,7 +73,7 @@ export default async function EmployeeDashboardPage() {
   );
   const owed = reimbursementRows
     .filter((row) => row.status === "APPROVED" || row.status === "PAID")
-    .reduce((sum, row) => sum + Math.max(0, row.differenceAmount), 0);
+    .reduce((sum, row) => sum + Math.max(0, toNumber(row.differenceAmount)), 0);
 
   return (
     <>
@@ -233,7 +234,7 @@ export default async function EmployeeDashboardPage() {
               <Card>
                 <CardHeader
                   title="Progres Persetujuan"
-                  description={waiting[0].ref ?? undefined}
+                  description={`#${waiting[0].id}`}
                 />
                 <ApprovalTimeline approvals={waiting[0].approvals ?? []} />
               </Card>
@@ -267,7 +268,7 @@ export default async function EmployeeDashboardPage() {
                             its own line in a narrow sidebar column. */}
                         <div className="min-w-0 flex-1 basis-32">
                           <p className="truncate font-mono text-caption text-tertiary">
-                            {row.travelRef ?? `#${row.travelId}`}
+                            #{row.travelId}
                           </p>
                           <p className="whitespace-nowrap text-body-md text-on-surface">
                             {formatIDR(row.totalAmount)}
@@ -304,7 +305,10 @@ export default async function EmployeeDashboardPage() {
           />
           <CardBody>
             {notificationRows.length ? (
-              <NotificationList notifications={notificationRows.slice(0, 5)} />
+              <NotificationList
+                notifications={notificationRows.slice(0, 5)}
+                role={user.role}
+              />
             ) : (
               <EmptyState
                 icon="notifications_none"

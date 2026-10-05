@@ -1,13 +1,20 @@
-import type { BookingStatus, TravelStatus } from "@/lib/api/types";
-import type { ReimbursementStatus } from "@/lib/api/types";
-
 import { Badge } from "./badge";
 
+import type {
+  BookingStatus,
+  NotificationType,
+  ReimbursementStatus,
+  TravelStatus,
+} from "@/lib/api/types";
+
 /**
- * Status vocabulary is fixed by API_SPEC. Booking exposes exactly
- * PENDING / CONFIRMED / CANCELLED on PATCH .../status, so the UI offers no
- * other option and the badge set mirrors that list one-to-one.
+ * Status labels and tones.
+ *
+ * The vocabulary follows what the backend actually accepts, which differs from
+ * API_SPEC §3 in two places: `IN_REVIEW` is a real travel status, and booking
+ * `CANCELLED` is reachable through the status endpoint.
  */
+
 const BOOKING_TONE: Record<BookingStatus, "warning" | "success" | "error"> = {
   PENDING: "warning",
   CONFIRMED: "success",
@@ -28,10 +35,37 @@ export function BookingStatusBadge({ status }: { status: BookingStatus }) {
   );
 }
 
-/**
- * §5 exposes exactly these five states, so the badge set mirrors the spec's
- * list one-to-one rather than offering a status the backend would reject.
- */
+const TRAVEL_TONE: Record<
+  TravelStatus,
+  "neutral" | "primary" | "success" | "warning" | "error" | "accent"
+> = {
+  DRAFT: "neutral",
+  SUBMITTED: "accent",
+  IN_REVIEW: "warning",
+  APPROVED: "success",
+  REJECTED: "error",
+  CANCELLED: "neutral",
+  COMPLETED: "primary",
+};
+
+const TRAVEL_LABEL: Record<TravelStatus, string> = {
+  DRAFT: "Draft",
+  SUBMITTED: "Diajukan",
+  IN_REVIEW: "Ditinjau",
+  APPROVED: "Disetujui",
+  REJECTED: "Ditolak",
+  CANCELLED: "Dibatalkan",
+  COMPLETED: "Selesai",
+};
+
+export function TravelStatusBadge({ status }: { status: TravelStatus }) {
+  return (
+    <Badge tone={TRAVEL_TONE[status]} dot>
+      {TRAVEL_LABEL[status]}
+    </Badge>
+  );
+}
+
 const REIMBURSEMENT_TONE: Record<
   ReimbursementStatus,
   "neutral" | "primary" | "success" | "warning" | "error"
@@ -63,34 +97,34 @@ export function ReimbursementStatusBadge({
   );
 }
 
-const TRAVEL_TONE: Record<TravelStatus, "neutral" | "primary" | "success" | "warning" | "error" | "accent"> = {
-  DRAFT: "neutral",
-  SUBMITTED: "accent",
-  APPROVED: "success",
-  REJECTED: "error",
-  CANCELLED: "neutral",
-  COMPLETED: "primary",
+/**
+ * Icon per notification type.
+ *
+ * The backend emits a wider set than API_SPEC §6 lists — `TRAVEL_APPROVED`,
+ * `APPROVAL_REQUIRED` and friends — and sends no `link`, so the notification
+ * list routes on the type instead of a server-supplied URL.
+ */
+const NOTIFICATION_ICON: Record<NotificationType, string> = {
+  APPROVAL_REQUIRED: "verified_user",
+  TRAVEL_SUBMITTED: "outgoing_mail",
+  TRAVEL_APPROVED: "task_alt",
+  TRAVEL_REJECTED: "cancel",
+  TRAVEL_CANCELLED: "event_busy",
+  BOOKING_CREATED: "confirmation_number",
+  BOOKING_CONFIRMED: "luggage",
+  REIMBURSEMENT_SUBMITTED: "receipt_long",
+  REIMBURSEMENT_APPROVED: "account_balance_wallet",
+  REIMBURSEMENT_REJECTED: "report",
+  REIMBURSEMENT_PAID: "paid",
+  SYSTEM: "campaign",
 };
 
-const TRAVEL_LABEL: Record<TravelStatus, string> = {
-  DRAFT: "Draft",
-  SUBMITTED: "Diajukan",
-  APPROVED: "Disetujui",
-  REJECTED: "Ditolak",
-  CANCELLED: "Dibatalkan",
-  COMPLETED: "Selesai",
-};
-
-export function TravelStatusBadge({ status }: { status: TravelStatus }) {
-  return (
-    <Badge tone={TRAVEL_TONE[status]} dot>
-      {TRAVEL_LABEL[status]}
-    </Badge>
-  );
+export function notificationIcon(type: NotificationType) {
+  return NOTIFICATION_ICON[type] ?? "notifications";
 }
 
 export {
-  TRAVEL_LABEL,
   BOOKING_LABEL,
   REIMBURSEMENT_LABEL,
+  TRAVEL_LABEL,
 };

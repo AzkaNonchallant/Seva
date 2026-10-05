@@ -12,6 +12,7 @@ import { requireBookingManager } from "@/lib/auth";
 import { daysUntil } from "@/lib/utils";
 
 import type { PendingTravel } from "@/lib/api/booking";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Antrean Booking • Dinas Travel" };
 
@@ -113,10 +114,23 @@ export default async function QueuePage({
   );
 }
 
-/** Oldest wait first — the row most likely to breach SLA should lead. */
+/**
+ * Oldest wait first — the row most likely to breach SLA should lead.
+ *
+ * The backend returns no `waitingHours`, so it is derived from `createdAt`.
+ */
+function waitingHoursOf(travel: PendingTravel) {
+  if (!travel.createdAt) return 0;
+  return Math.max(
+    0,
+    Math.round((Date.now() - new Date(travel.createdAt).getTime()) / 3_600_000),
+  );
+}
+
 function sortByWaiting(rows: PendingTravel[]) {
   return [...rows].sort((a, b) => {
-    if (b.waitingHours !== a.waitingHours) return b.waitingHours - a.waitingHours;
+    const diff = waitingHoursOf(b) - waitingHoursOf(a);
+    if (diff !== 0) return diff;
     return a.startDate.localeCompare(b.startDate);
   });
 }
@@ -135,7 +149,7 @@ function applyFilters(rows: PendingTravel[], query: string, window: Window) {
 
   if (query) {
     filtered = filtered.filter((travel) =>
-      [travel.ref, travel.employeeName, travel.destination, travel.purpose]
+      [String(travel.id), travelOwner(travel), travel.destination, travel.purpose]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(query)),
     );

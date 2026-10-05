@@ -14,7 +14,7 @@ const CATEGORIES: Array<{ value: ReimbursementItem["category"]; label: string }>
   { value: "HOTEL", label: "Hotel" },
   { value: "TRANSPORT", label: "Transportasi" },
   { value: "MEAL", label: "Konsumsi" },
-  { value: "TICKET", label: "Tiket" },
+  { value: "ALLOWANCE", label: "Uang Saku" },
   { value: "OTHER", label: "Lainnya" },
 ];
 

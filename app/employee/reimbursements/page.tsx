@@ -13,6 +13,7 @@ import { listReimbursements } from "@/lib/api/reimbursement";
 import { listTravels } from "@/lib/api/travel";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { formatDate, formatIDR, formatIDRCompact } from "@/lib/utils";
 
 import type { Reimbursement, ReimbursementStatus } from "@/lib/api/types";
@@ -88,7 +89,7 @@ export default async function ReimbursementsPage({
   const settled = rows.filter((row) => row.status === "PAID");
   const outstanding = rows
     .filter((row) => row.status === "APPROVED")
-    .reduce((sum, row) => sum + Math.max(0, row.differenceAmount), 0);
+    .reduce((sum, row) => sum + Math.max(0, toNumber(row.differenceAmount)), 0);
 
   return (
     <>
@@ -129,7 +130,7 @@ export default async function ReimbursementsPage({
           <SummaryCard
             label="Sudah Dibayarkan"
             value={formatIDRCompact(
-              settled.reduce((sum, row) => sum + row.approvedAmount, 0),
+              settled.reduce((sum, row) => sum + toNumber(row.approvedAmount), 0),
             )}
             icon="paid"
             tone="success"
@@ -160,7 +161,7 @@ export default async function ReimbursementsPage({
                 <li key={travel.id} className="flex flex-wrap items-center gap-3 p-md">
                   <div className="min-w-0 flex-1">
                     <p className="font-mono text-caption text-tertiary">
-                      {travel.ref ?? `#${travel.id}`}
+                      #{travel.id}
                     </p>
                     <p className="truncate text-body-md text-on-surface">
                       {travel.destination}
@@ -239,7 +240,7 @@ function ReimbursementRow({ reimbursement }: { reimbursement: Reimbursement }) {
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             <span className="font-mono text-caption text-tertiary">
-              {reimbursement.travelRef ?? `#${reimbursement.travelId}`}
+              {`#${reimbursement.travelId}`}
             </span>
             <ReimbursementStatusBadge status={reimbursement.status} />
           </div>
@@ -250,7 +251,9 @@ function ReimbursementRow({ reimbursement }: { reimbursement: Reimbursement }) {
             {reimbursement.submittedAt
               ? `Diajukan ${formatDate(reimbursement.submittedAt)}`
               : "Belum diajukan"}
-            {reimbursement.paidAt ? ` • dibayar ${formatDate(reimbursement.paidAt)}` : ""}
+            {reimbursement.status === "PAID" && reimbursement.updatedAt
+              ? ` • dibayar ${formatDate(reimbursement.updatedAt)}`
+              : ""}
           </p>
         </div>
         <span

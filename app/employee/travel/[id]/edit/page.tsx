@@ -29,7 +29,9 @@ export default async function EditTravelPage({
   const [unread, travel, policies] = await Promise.all([
     getUnreadCount().catch(() => ({ count: 0 })),
     settle(getTravel(travelId)),
-    listApplicablePolicies(user.positionId).catch(() => []),
+    user.positionId
+      ? listApplicablePolicies(user.positionId).catch(() => [])
+      : Promise.resolve([]),
   ]);
 
   if (!travel.ok) {
@@ -61,7 +63,7 @@ export default async function EditTravelPage({
         breadcrumb={[
           { label: "Employee", href: "/employee/dashboard" },
           { label: "Pengajuan Travel", href: "/employee/travel" },
-          { label: request.ref ?? `#${request.id}` },
+          { label: `#${request.id}` },
         ]}
         unreadCount={unread.count}
         notificationsHref="/employee/notifications"

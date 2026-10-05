@@ -1,11 +1,23 @@
 /**
- * Domain types mirroring the shapes described in API_SPEC.md.
+ * Domain types.
  *
- * Field names follow the spec's request/response examples verbatim
- * (camelCase: `estimatedCost`, `policyId`, `travelId`, ...) so a real
- * backend response can be dropped in without renaming anything.
+ * These mirror the responses the backend actually returns. Where the backend
+ * differs from `API_SPEC.md` the backend wins, because that is the thing that
+ * runs; the differences are called out in each type's comment.
+ *
+ * Two conventions hold throughout:
+ *
+ * - **Money arrives as a string.** Prisma's `Decimal` serialises that way, so
+ *   `estimatedCost` is `"12750000"` rather than a number. `toNumber()` below is
+ *   the single place that converts, and every consumer goes through it rather
+ *   than coercing inline.
+ * - **List endpoints nest their rows.** A paginated read answers with
+ *   `{ data: { data: [...], pagination } }` (or `items` for reimbursements),
+ *   while a single read answers with `{ data: {...} }`. `apiRequest` flattens
+ *   both into `Page<T>`, so no component sees the nesting.
  */
 
+/** Every role the backend accepts. `TRAVEL_ADMIN` is not in API_SPEC §8. */
 export type Role =
   | "EMPLOYEE"
   | "MANAGER"
@@ -13,23 +25,77 @@ export type Role =
   | "HRD"
   | "FINANCE"
   | "ADMIN"
-  | "SUPER_ADMIN";
+  | "SUPER_ADMIN"
+  | "TRAVEL_ADMIN";
 
-/** Envelope used by every endpoint in the spec. */
+/**
+ * Coerces a backend decimal string to a number.
+ *
+ * Money is the only place this is needed, but it is a real trap: `"12750000" + 1`
+ * concatenates, and `Intl.NumberFormat` renders a string as `NaN`.
+ */
+export function toNumber(value: string | number | null | undefined): number {
+  if (value === null || value === undefined) return 0;
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 export type ApiSuccess<T> = { success: true; data: T };
-export type ApiFailure = { success: false; message: string };
+export type ApiFailure = { success: false; message: string; errors?: ApiFieldError[] };
 export type ApiEnvelope<T> = ApiSuccess<T> | ApiFailure;
 
+export interface ApiFieldError {
+  path: string;
+  message: string;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+/** The envelope every paginated list endpoint resolves to. */
+export interface Page<T> {
+  data: T[];
+  pagination: Pagination;
+}
+
+export interface Department {
+  id: number;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Position {
+  id: number;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * A user as the backend returns it.
+ *
+ * `Department` and `Position` arrive as nested objects rather than the
+ * `departmentName` / `positionName` strings the older spec described, and there
+ * is an `externalEmployeeId` the app does not currently use.
+ */
 export interface User {
   id: number;
   name: string;
   email: string;
   role: Role;
-  departmentId?: number;
-  departmentName?: string;
-  positionId?: number;
-  positionName?: string;
-  isActive?: boolean;
+  isActive: boolean;
+  externalEmployeeId?: string;
+  departmentId: number | null;
+  positionId: number | null;
+  createdAt?: string;
+  updatedAt?: string;
+  Department?: Department | null;
+  Position?: Position | null;
 }
 
 export interface AuthPayload {
@@ -37,40 +103,33 @@ export interface AuthPayload {
   token: string;
 }
 
-export interface Department {
-  id: number;
-  name: string;
-}
-
-export interface Position {
-  id: number;
-  name: string;
-}
-
+/**
+ * `IN_REVIEW` is a real backend status that API_SPEC §3 does not list.
+ */
 export type TravelStatus =
   | "DRAFT"
   | "SUBMITTED"
+  | "IN_REVIEW"
   | "APPROVED"
   | "REJECTED"
   | "CANCELLED"
   | "COMPLETED";
-
-export type ApprovalLevel = "MANAGER" | "DEPARTMENT_HEAD" | "HRD" | "FINANCE";
 
 export type ApprovalDecision = "PENDING" | "APPROVED" | "REJECTED";
 
 export interface Approval {
   id: number;
   travelId: number;
+  /** The approver is a user id, not a role as the spec implied. */
+  approverId: number;
   level: number;
-  approverRole: ApprovalLevel;
-  approverName?: string;
-  /** Set when a delegation is active for this row. */
-  delegatedToName?: string;
   status: ApprovalDecision;
-  note?: string;
-  decidedAt?: string;
-  createdAt: string;
+  note?: string | null;
+  approvedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  approver?: Pick<User, "id" | "name" | "email"> | null;
+  travel?: TravelRequest | null;
 }
 
 export interface TravelDocument {
@@ -78,129 +137,170 @@ export interface TravelDocument {
   travelId: number;
   fileName: string;
   filePath: string;
-  mimeType?: string;
-  size?: number;
-  uploadedAt: string;
+  /** Named `fileType`, not `mimeType`, and nullable. */
+  fileType?: string | null;
+  uploadedAt?: string;
 }
 
+/**
+ * The nested `user` the backend includes on every travel row, so a list can
+ * show who raised a request without a second call.
+ */
+export interface TravelOwner {
+  id: number;
+  name: string;
+  email: string;
+}
+
+/**
+ * A travel request.
+ *
+ * Two deliberate departures from API_SPEC §3: ownership is `userId` (not
+ * `employeeId`) and there is no `ref` field — the backend does not mint one.
+ * Every consumer therefore identifies a request by its numeric id.
+ */
 export interface TravelRequest {
   id: number;
-  ref?: string;
-  employeeId: number;
-  employeeName: string;
-  employeeEmail?: string;
-  positionName?: string;
-  departmentId?: number;
-  departmentName?: string;
+  userId: number;
+  policyId: number | null;
   destination: string;
-  destinationTier?: string;
   purpose: string;
   startDate: string;
   endDate: string;
-  estimatedCost: number;
-  policyId?: number;
-  policyName?: string;
   status: TravelStatus;
-  createdAt: string;
-  submittedAt?: string;
-  cancelledAt?: string;
-  /** Present on `GET /api/travel/:id` only. */
+  /** Decimal string, e.g. `"12750000"`. */
+  estimatedCost: string;
+  createdAt?: string;
+  updatedAt?: string;
+  user?: TravelOwner | null;
+  /** Detail responses only. */
   approvals?: Approval[];
   documents?: TravelDocument[];
   bookings?: Booking[];
 }
 
-export type BookingType = "FLIGHT" | "HOTEL" | "TRAIN" | "TRANSPORT";
+/** Only the two tiers the backend accepts on the applicable-policy filter. */
+export type DestinationTier = "DOMESTIC" | "INTERNATIONAL";
 
-/** Only the three statuses the spec exposes on PATCH .../status. */
+/**
+ * A travel policy.
+ *
+ * The backend models a policy as three spending limits, not the single
+ * `maxEstimatedCost` cap plus `requiresDocuments` / `isActive` flags the spec
+ * describes. There is no active flag: all nine seeded policies are live.
+ */
+export interface TravelPolicy {
+  id: number;
+  name: string;
+  positionId: number | null;
+  destinationTier: DestinationTier;
+  hotelLimit: string;
+  transportLimit: string;
+  allowanceLimit: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type BookingType = "FLIGHT" | "HOTEL" | "TRAIN" | "TRANSPORT";
 export type BookingStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
 
 export interface Booking {
   id: number;
   travelId: number;
-  travelRef?: string;
   type: BookingType;
-  provider?: string;
-  referenceNumber?: string;
-  origin?: string;
-  destination?: string;
-  departureDate?: string;
-  returnDate?: string;
-  checkInDate?: string;
-  checkOutDate?: string;
-  amount: number;
+  provider?: string | null;
+  /** The backend's name for the PNR / confirmation code. */
+  bookingCode?: string | null;
+  description?: string | null;
+  bookingDate?: string | null;
+  amount: string;
   status: BookingStatus;
-  notes?: string;
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
 }
 
 export interface CreateBookingInput {
   type: BookingType;
   provider?: string;
-  referenceNumber?: string;
-  origin?: string;
-  destination?: string;
-  departureDate?: string;
-  returnDate?: string;
-  checkInDate?: string;
-  checkOutDate?: string;
+  bookingCode?: string;
+  description?: string;
+  bookingDate?: string;
   amount: number;
   notes?: string;
 }
 
-export interface TravelPolicy {
-  id: number;
-  name: string;
-  description?: string;
-  /** null means the policy applies to every position. */
-  positionId?: number | null;
-  positionName?: string;
-  destinationTier?: string;
-  /** null means uncapped. */
-  maxEstimatedCost?: number | null;
-  requiresDocuments?: boolean;
-  isActive: boolean;
-}
+/**
+ * Notification types the backend emits.
+ *
+ * `APPROVAL` and `BOOKING`, which API_SPEC §6 lists, are not among them, and
+ * there is no `link` field — the notification list therefore navigates by its
+ * own type rather than following a server-supplied URL.
+ */
+export type NotificationType =
+  | "APPROVAL_REQUIRED"
+  | "TRAVEL_SUBMITTED"
+  | "TRAVEL_APPROVED"
+  | "TRAVEL_REJECTED"
+  | "TRAVEL_CANCELLED"
+  | "BOOKING_CREATED"
+  | "BOOKING_CONFIRMED"
+  | "REIMBURSEMENT_SUBMITTED"
+  | "REIMBURSEMENT_APPROVED"
+  | "REIMBURSEMENT_REJECTED"
+  | "REIMBURSEMENT_PAID"
+  | "SYSTEM";
 
 export interface Notification {
   id: number;
+  userId: number;
   title: string;
   message: string;
-  type?: "APPROVAL" | "BOOKING" | "REIMBURSEMENT" | "SYSTEM";
-  link?: string;
+  type: NotificationType;
   isRead: boolean;
-  createdAt: string;
-  /**
-   * Owner of the row. §6 scopes every notification read to its owner; a row
-   * without one is a system broadcast, which only the recipient can mark read.
-   */
-  userId?: number;
+  createdAt?: string;
 }
 
+/** The `/api/reports/dashboard` payload, which is keyed by status. */
 export interface ReportDashboard {
-  ongoing: number;
-  upcoming: number;
-  completed: number;
   total: number;
+  byStatus: Record<TravelStatus, number>;
+  upcoming: number;
+  ongoing: number;
+  completed: number;
+  /** Decimal string. */
+  totalEstimatedCost: string;
 }
 
-/** Per-type split used by the dashboard donut. Derived from bookings. */
-export interface BookingStatusBreakdown {
-  PENDING: number;
-  CONFIRMED: number;
-  CANCELLED: number;
+export type BookingStatusBreakdown = Record<BookingStatus, number>;
+
+export interface ExpenseByDepartment {
+  departmentId: number | null;
+  department: string;
+  total: string;
+}
+
+export interface ExpenseByEmployee {
+  userId: number | null;
+  employee: string;
+  total: string;
+}
+
+export interface ExpenseByProject {
+  project: string;
+  total: string;
 }
 
 export interface Delegation {
   id: number;
-  delegatorName: string;
+  delegatorId: number;
   delegateId: number;
-  delegateName: string;
   startDate: string;
   endDate: string;
-  reason?: string;
-  isActive: boolean;
+  reason?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  delegator?: Pick<User, "id" | "name"> | null;
+  delegate?: Pick<User, "id" | "name"> | null;
 }
 
 export type ReimbursementStatus =
@@ -210,30 +310,41 @@ export type ReimbursementStatus =
   | "REJECTED"
   | "PAID";
 
+/** `ALLOWANCE` is real here; API_SPEC §5 lists `TICKET` instead. */
+export type ReimbursementCategory =
+  | "TRANSPORT"
+  | "HOTEL"
+  | "MEAL"
+  | "ALLOWANCE"
+  | "OTHER";
+
 export interface ReimbursementItem {
   id: number;
-  category: "HOTEL" | "TRANSPORT" | "MEAL" | "TICKET" | "OTHER";
+  reimbursementId: number;
+  category: ReimbursementCategory;
   description: string;
-  amount: number;
+  amount: string;
   transactionDate: string;
-  receiptPath?: string;
+  receiptPath?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Reimbursement {
   id: number;
   travelId: number;
-  travelRef?: string;
-  employeeId: number;
-  employeeName: string;
-  departmentName?: string;
-  totalAmount: number;
-  advanceAmount: number;
-  approvedAmount: number;
-  differenceAmount: number;
+  advanceAmount: string;
+  totalAmount: string;
+  approvedAmount: string | null;
+  differenceAmount: string | null;
   status: ReimbursementStatus;
-  submittedAt?: string;
-  paidAt?: string;
-  externalJournalRef?: string;
-  /** Present on `GET /api/reimbursements/:id` only. */
+  submittedAt?: string | null;
+  approvedAt?: string | null;
+  externalJournalRef?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  /** Present on the list endpoint. */
+  travel?: TravelRequest | null;
+  /** Present on the detail endpoint only. */
   items?: ReimbursementItem[];
 }

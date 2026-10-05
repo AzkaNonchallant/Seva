@@ -30,7 +30,7 @@ export function BookingStatusActions({
     if (
       status === "CANCELLED" &&
       !window.confirm(
-        `Batalkan booking ${booking.referenceNumber ?? booking.id}? Tindakan ini tidak dapat dibatalkan.`,
+        `Batalkan booking ${booking.bookingCode ?? booking.id}? Tindakan ini tidak dapat dibatalkan.`,
       )
     ) {
       return;

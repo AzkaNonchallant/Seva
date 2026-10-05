@@ -10,6 +10,7 @@ import { getUnreadCount } from "@/lib/api/notification";
 import { getBookingOverview, type DepartureRow } from "@/lib/api/report";
 import { requireBookingManager } from "@/lib/auth";
 import { formatDate, formatIDR, initials } from "@/lib/utils";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Monitoring Keberangkatan • Dinas Travel" };
 
@@ -140,14 +141,14 @@ export default async function DeparturesPage({
                     cell: (row) => (
                       <div className="flex items-center gap-2">
                         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-container text-[10px] font-bold text-on-primary-container">
-                          {initials(row.travel.employeeName)}
+                          {initials(travelOwner(row.travel))}
                         </span>
                         <div className="min-w-0 leading-tight">
                           <p className="truncate font-medium">
-                            {row.travel.employeeName}
+                            {travelOwner(row.travel)}
                           </p>
                           <p className="truncate text-caption text-tertiary">
-                            {row.travel.departmentName}
+                            {row.travel.user?.email ?? "—"}
                           </p>
                         </div>
                       </div>
@@ -155,15 +156,11 @@ export default async function DeparturesPage({
                   },
                   {
                     key: "leg",
-                    header: "Rute / Akomodasi",
+                    header: "Pemesanan",
                     cell: (row) => (
                       <div className="leading-tight">
                         <p className="font-medium">
-                          {row.type === "HOTEL"
-                            ? (row.destination ?? row.origin ?? "—")
-                            : [row.origin, row.destination]
-                                .filter(Boolean)
-                                .join(" → ") || "—"}
+                          {row.description ?? TYPE_LABEL[row.type]}
                         </p>
                         <p className="text-caption text-tertiary">
                           {TYPE_LABEL[row.type]} • {row.provider ?? "—"}
@@ -177,9 +174,9 @@ export default async function DeparturesPage({
                     cell: (row) => (
                       <div className="space-y-1">
                         <BookingStatusBadge status={row.status} />
-                        {row.referenceNumber ? (
+                        {row.bookingCode ? (
                           <p className="font-mono text-caption text-tertiary">
-                            {row.referenceNumber}
+                            {row.bookingCode}
                           </p>
                         ) : null}
                       </div>
@@ -193,7 +190,7 @@ export default async function DeparturesPage({
                         href={`/travel-admin/requests/${row.travel.id}`}
                         className="text-caption font-semibold text-primary hover:underline"
                       >
-                        {row.travel.ref}
+                        #{row.travel.id}
                       </Link>
                     ),
                   },

@@ -43,9 +43,7 @@ export default async function TravelPolicyPage() {
   }
 
   const policyRows = policies.data;
-  const active = policyRows.filter((policy) => policy.isActive);
-  const capped = active.filter((policy) => policy.maxEstimatedCost);
-  const withDocs = active.filter((policy) => policy.requiresDocuments);
+  const active = policyRows;
 
   return (
     <>
@@ -74,21 +72,21 @@ export default async function TravelPolicyPage() {
             value={active.length}
             icon="policy"
             tone="success"
-            footnote={`${policyRows.length} total kebijakan`}
+            footnote={`${policyRows.length} kebijakan terdaftar`}
           />
           <SummaryCard
-            label="Dengan Batas Nominal"
-            value={capped.length}
-            icon="payments"
+            label="Kebijakan Aktif"
+            value={policyRows.length}
+            icon="hotel"
             tone="primary"
-            footnote="Batas perkiraan biaya"
+            footnote="Jumlah kebijakan aktif"
           />
           <SummaryCard
-            label="Wajib Dokumen"
-            value={withDocs.length}
-            icon="attach_file"
+            label="Tingkat Domestik"
+            value={active.filter((policy) => policy.destinationTier === "DOMESTIC").length}
+            icon="flight"
             tone="accent"
-            footnote="Memerlukan lampiran saat mengajukan"
+            footnote=" Berlaku untuk perjalanan dalam negeri"
           />
         </section>
 

@@ -8,6 +8,7 @@ import { requireBookingManager } from "@/lib/auth";
 import { formatDate } from "@/lib/utils";
 
 import type { TravelDocument } from "@/lib/api/types";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Dokumen • Dinas Travel" };
 
@@ -55,13 +56,13 @@ export default async function DocumentsPage() {
                   <div className="flex items-start justify-between gap-3 border-b border-outline-variant/15 p-md">
                     <div className="min-w-0">
                       <p className="font-mono text-caption font-semibold text-primary">
-                        {travel.ref}
+                        #{travel.id}
                       </p>
                       <p className="mt-0.5 truncate text-body-md font-semibold text-on-surface">
                         {travel.destination}
                       </p>
                       <p className="truncate text-caption text-tertiary">
-                        {travel.employeeName} • {travel.departmentName}
+                        {travelOwner(travel)} • {travel.user?.email ?? "—"}
                       </p>
                     </div>
                   </div>
@@ -81,7 +82,7 @@ export default async function DocumentsPage() {
                             {doc.fileName}
                           </p>
                           <p className="text-caption text-tertiary">
-                            {formatDate(doc.uploadedAt)}
+                            {formatDate(doc.uploadedAt ?? "")}
                           </p>
                         </div>
                         <span className="rounded-md bg-primary-fixed px-2 py-1 text-caption font-medium text-on-primary-fixed">

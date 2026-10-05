@@ -190,20 +190,22 @@ export async function deletePositionAction(
 /* ── Travel policy (§3) ───────────────────────────────────────────────── */
 
 /**
- * The form sends 0 for "applies to every position" and "uncapped", which is how
- * the spec models both fields (`positionId: null`, `maxEstimatedCost: null`).
+ * The backend models a policy as three spending limits and requires all of
+ * them, so the form's text inputs are coerced to numbers here rather than sent
+ * as strings. A `positionId` of 0 means "every position" and becomes null.
  */
 function policyPayload(formData: FormData) {
-  const positionId = Number(formData.get("positionId")) || null;
-  const cap = Number(formData.get("maxEstimatedCost")) || 0;
+  const limit = (name: string) => Number(formData.get(name)) || 0;
   return {
     name: String(formData.get("name") ?? "").trim(),
-    description: String(formData.get("description") ?? "").trim() || undefined,
-    positionId,
-    destinationTier: String(formData.get("destinationTier") ?? "ANY") || "ANY",
-    maxEstimatedCost: cap > 0 ? cap : null,
-    requiresDocuments: formData.get("requiresDocuments") === "true",
-    isActive: formData.get("isActive") !== "false",
+    positionId: Number(formData.get("positionId")) || null,
+    destinationTier:
+      String(formData.get("destinationTier") ?? "DOMESTIC") === "INTERNATIONAL"
+        ? ("INTERNATIONAL" as const)
+        : ("DOMESTIC" as const),
+    hotelLimit: limit("hotelLimit"),
+    transportLimit: limit("transportLimit"),
+    allowanceLimit: limit("allowanceLimit"),
   };
 }
 

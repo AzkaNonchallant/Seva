@@ -12,13 +12,19 @@ const idrFormatter = new Intl.NumberFormat("id-ID", {
 
 const numberFormatter = new Intl.NumberFormat("id-ID");
 
-export function formatIDR(amount: number) {
-  return idrFormatter.format(amount ?? 0);
+export function formatIDR(amount: number | string | null | undefined) {
+  return idrFormatter.format(toAmount(amount));
 }
 
-/** Compact form for KPI tiles where a full rupiah figure would wrap. */
-export function formatIDRCompact(amount: number) {
-  const value = amount ?? 0;
+/**
+ * Compact form for KPI tiles where a full rupiah figure would wrap.
+ *
+ * Every amount arrives from the backend as a decimal string, so the conversion
+ * happens here rather than at each call site — a raw string would format as NaN
+ * and a `reduce` over them would concatenate.
+ */
+export function formatIDRCompact(amount: number | string | null | undefined) {
+  const value = toAmount(amount);
   if (Math.abs(value) >= 1_000_000_000) {
     return `Rp ${(value / 1_000_000_000).toFixed(1).replace(".", ",")} M`;
   }
@@ -26,6 +32,13 @@ export function formatIDRCompact(amount: number) {
     return `Rp ${(value / 1_000_000).toFixed(1).replace(".", ",")} jt`;
   }
   return formatIDR(value);
+}
+
+/** Prisma decimals cross the wire as strings; coerce defensively. */
+function toAmount(value: number | string | null | undefined): number {
+  if (value === null || value === undefined) return 0;
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 export function formatNumber(value: number) {

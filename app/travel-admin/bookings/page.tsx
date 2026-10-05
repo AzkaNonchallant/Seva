@@ -11,9 +11,11 @@ import { SummaryCard } from "@/components/ui/summary-card";
 import { getUnreadCount } from "@/lib/api/notification";
 import { loadBookingsWithTravel, summariseBookings } from "@/lib/api/report";
 import { requireBookingManager } from "@/lib/auth";
+import { toNumber } from "@/lib/api/types";
 import { formatIDR, formatIDRCompact } from "@/lib/utils";
 
 import type { Booking, BookingStatus } from "@/lib/api/types";
+import { travelOwner } from "@/components/travel/travel-labels";
 
 export const metadata = { title: "Kelola Booking • Dinas Travel" };
 
@@ -204,7 +206,7 @@ export default async function BookingsPage({
         {filtered.length ? (
           <p className="text-caption text-tertiary">
             Total nilai {status === "CONFIRMED" ? "terkonfirmasi" : "terfilter"}:{" "}
-            {formatIDR(filtered.reduce((sum, row) => sum + row.amount, 0))}
+            {formatIDR(filtered.reduce((sum, row) => sum + toNumber(row.amount), 0))}
           </p>
         ) : null}
       </main>
@@ -225,7 +227,13 @@ function applyFilters(
     if (filters.type && row.type !== filters.type) return false;
     if (!filters.query) return true;
 
-    return [row.referenceNumber, row.provider, row.travel.employeeName, row.travel.ref, row.destination]
+    return [
+      row.bookingCode,
+      row.provider,
+      row.description,
+      travelOwner(row.travel),
+      row.travel.destination,
+    ]
       .filter(Boolean)
       .some((value) => String(value).toLowerCase().includes(filters.query));
   });
