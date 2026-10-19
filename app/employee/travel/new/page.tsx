@@ -3,7 +3,7 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Card, CardBody } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { getUnreadCount } from "@/lib/api/notification";
-import { listApplicablePolicies } from "@/lib/api/travel";
+import { listApplicablePoliciesForPosition } from "@/lib/api/travel";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
 
@@ -20,7 +20,7 @@ export default async function NewTravelPage() {
   const [unread, policies] = await Promise.all([
     getUnreadCount().catch(() => ({ count: 0 })),
     user.positionId
-      ? settle(listApplicablePolicies(user.positionId))
+      ? settle(listApplicablePoliciesForPosition(user.positionId))
       : settle(Promise.resolve([])),
   ]);
 

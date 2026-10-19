@@ -208,23 +208,56 @@ export async function apiList<T>(
 }
 
 /**
+ * The backend rejects a page larger than 100 with a 422 — `Too big: expected
+ * number to be <=100`. This is the ceiling every list read has to respect.
+ */
+const MAX_PAGE_SIZE = 100;
+
+/** Caps the walk so a nonsensical `total` cannot turn it into a long loop. */
+const MAX_PAGES = 50;
+
+/**
  * A list read for screens that show every row and do not paginate.
  *
  * A short alias for `apiList(...).then(page => page.data)`, which is what most
  * callers want; the paginated form stays available for the directory and the
  * booking list.
+ *
+ * This used to ask for `limit: 200` in one request, on the reasoning that a
+ * large page beats silently losing rows. The backend caps the page at 100, so
+ * the request was rejected outright and every screen built on it — the Employee,
+ * Finance and Admin Travel dashboards and most of the Admin Travel area — fell
+ * through to its error panel. Fetching the maximum allowed page and then walking
+ * the rest is what actually avoids losing rows.
  */
 export async function apiRows<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T[]> {
-  const page = await apiList<T>(path, {
-    // Ask for a page large enough to hold the result, since the caller is not
-    // paginating and silently losing rows would be worse than a large limit.
+  const requested = Number(options.query?.limit);
+  const size =
+    Number.isFinite(requested) && requested > 0
+      ? Math.min(Math.floor(requested), MAX_PAGE_SIZE)
+      : MAX_PAGE_SIZE;
+
+  const first = await apiList<T>(path, {
     ...options,
-    query: { limit: 200, ...options.query },
+    query: { ...options.query, limit: size, page: 1 },
   });
-  return page.data;
+
+  const rows = [...first.data];
+
+  const lastPage = Math.min(first.pagination.totalPages, MAX_PAGES);
+  for (let page = 2; page <= lastPage; page += 1) {
+    const next = await apiList<T>(path, {
+      ...options,
+      query: { ...options.query, limit: size, page },
+    });
+    if (!next.data.length) break;
+    rows.push(...next.data);
+  }
+
+  return rows;
 }
 
 async function readEnvelope<T>(response: Response): Promise<ApiEnvelope<T>> {

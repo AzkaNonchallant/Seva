@@ -57,7 +57,11 @@ export function Input({
     <input
       aria-invalid={invalid || undefined}
       className={cn(
-        "h-10 w-full px-3 text-body-md placeholder:text-outline focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
+        // Placeholder is text, so it is graded against AA (4.5:1), not the 3:1
+        // that `outline` — the token this used to share — is tuned for. On the
+        // field surface `outline` measures 4.03:1 and fails; `tertiary` is the
+        // token the caption/hint text already uses and clears it at 6.03:1.
+        "h-10 w-full px-3 text-body-md placeholder:text-tertiary focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
         invalid && "border-error focus:border-error focus:shadow-[0_0_0_3px_rgb(186_26_26/0.15)]",
         className,
       )}
@@ -96,7 +100,8 @@ export function Textarea({
     <textarea
       aria-invalid={invalid || undefined}
       className={cn(
-        "w-full resize-y px-3 py-2 text-body-md placeholder:text-outline focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
+        // Same reason as Input: placeholder has to clear AA on the field surface.
+        "w-full resize-y px-3 py-2 text-body-md placeholder:text-tertiary focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
         invalid && "border-error",
         className,
       )}

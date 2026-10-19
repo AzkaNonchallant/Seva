@@ -1,5 +1,5 @@
 import { apiList, apiRequest, apiRows, ApiError } from "./api";
-import type { TravelDocument, TravelPolicy, TravelRequest } from "./types";
+import type { DestinationTier, TravelDocument, TravelPolicy, TravelRequest } from "./types";
 
 type ListParams = {
   status?: string;
@@ -50,10 +50,31 @@ export function listPolicies() {
  * Both parameters are required by the backend — it answers 422 without them —
  * so they are not optional here either.
  */
-export function listApplicablePolicies(positionId: number, destinationTier?: string) {
+export function listApplicablePolicies(positionId: number, destinationTier?: DestinationTier) {
   return apiRequest<TravelPolicy[]>("/api/travel/policies/applicable", {
     query: { positionId, destinationTier },
   });
+}
+
+/**
+ * Every policy that can apply to a position, across both destination tiers.
+ *
+ * `destinationTier` is not optional to the backend — it answers 422 for
+ * `?positionId=2` alone — but the tier is a field the traveller fills in on the
+ * form, so it is not known when this list has to be fetched to populate it.
+ * Reading both tiers and merging is the only way to have the catalogue ready
+ * before the choice is made. Deduplicated by id, because one policy can cover
+ * both tiers.
+ */
+export async function listApplicablePoliciesForPosition(positionId: number) {
+  const tiers: DestinationTier[] = ["DOMESTIC", "INTERNATIONAL"];
+  const groups = await Promise.all(
+    tiers.map((tier) => listApplicablePolicies(positionId, tier)),
+  );
+
+  const byId = new Map<number, TravelPolicy>();
+  for (const policy of groups.flat()) byId.set(policy.id, policy);
+  return [...byId.values()];
 }
 
 /* ── Employee-owned mutations ──────────────────────────────────────────── */

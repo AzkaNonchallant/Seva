@@ -29,23 +29,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="id" className={`${inter.variable} h-full antialiased`}>
       {/*
         Material Symbols carries the icon set the DESIGN.md component inventory
-        uses. It is a variable font served as a stylesheet — the only form that
-        exposes the FILL/wght axes to CSS, so it cannot go through next/font.
-        Placed directly under <html> rather than inside an explicit <head> so
-        Next hoists and preloads it on every route.
+        uses. It is a variable font, which next/font cannot express, so it is
+        declared by hand in globals.css and served from /public.
 
-        display=swap lets text paint in the fallback face immediately, so the
-        swap causes no layout shift.
-
-        The lint rule below targets the Pages Router, where a link in
-        _app/_document only attaches to one page. This is the App Router, where
-        the root layout wraps every route, so the warning does not apply.
+        Preloaded because the icons sit in the first paint on every screen:
+        without it the browser discovers the file only after parsing the CSS,
+        and the ligature names show through as plain text. crossorigin is
+        required for a preloaded font even though the response is same-origin;
+        the fetch mode must match or the preload is discarded and refetched.
       */}
-      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
-        precedence="high"
+        rel="preload"
+        href="/fonts/material-symbols-outlined.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
       />
       <body className="min-h-full bg-background font-sans text-body-md text-on-background">
         {children}

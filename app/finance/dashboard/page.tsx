@@ -55,8 +55,8 @@ export default async function FinanceDashboardPage() {
     <>
       <Header
         breadcrumb={[
-          { label: "Horizon Odyssey", href: "/finance/dashboard" },
-          { label: "Finance" },
+          { label: "Finance", href: "/finance/dashboard" },
+          { label: "Dashboard" },
         ]}
         unreadCount={unread.count}
         notificationsHref="/finance/notifications"

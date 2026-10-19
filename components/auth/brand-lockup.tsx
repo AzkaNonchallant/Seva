@@ -32,16 +32,18 @@ export function BrandLockup({
           flight_takeoff
         </span>
       </span>
-      <div className="leading-tight">
+      <div className="min-w-0 leading-tight">
         <p
           className={cn(
-            "font-bold tracking-tight text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.45)]",
+            "truncate font-bold tracking-tight text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.5)]",
             tall ? "text-headline-md" : "text-body-lg",
           )}
         >
           Horizon Odyssey
         </p>
-        <p className="text-caption text-white/80">Dinas Travel &middot; PT Andrea</p>
+        <p className="truncate text-caption text-white/85 [text-shadow:0_1px_3px_rgb(0_0_0/0.5)]">
+          Dinas Travel &middot; PT Andrea
+        </p>
       </div>
     </div>
   );

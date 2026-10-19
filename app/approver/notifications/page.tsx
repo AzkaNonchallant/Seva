@@ -1,11 +1,19 @@
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { NotificationsPage } from "@/components/shared/notifications-page";
+import { requireRole } from "@/lib/auth";
+import { APPROVER_ROLES } from "@/lib/permissions";
 
-export default function Page() {
+export const metadata = { title: "Notifikasi • Approver" };
+
+export default async function ApproverNotificationsPage() {
+  const user = await requireRole(APPROVER_ROLES);
+
   return (
-    <PlaceholderPage
-      role="Approver · Alur Persetujuan"
-      title="Notifications"
-      description="Layar ini berada di luar cakupan implementasi Dinas Travel. Rute tetap dibuat agar navigasi dan pengetikan Route API tetap utuh."
+    <NotificationsPage
+      userRole={user.role}
+      areaLabel="Approver"
+      homeHref="/approver/dashboard"
+      profileHref="/approver/profile"
+      description="Pemberitahuan saat ada pengajuan dinas yang menunggu keputusan Anda. Sesuai API_SPEC bagian 6, notifikasi hanya terlihat oleh pemiliknya."
     />
   );
 }
