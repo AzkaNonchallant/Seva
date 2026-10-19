@@ -44,10 +44,13 @@ export function LoginForm({ mockMode }: { mockMode: boolean }) {
 
   return (
     <div className="w-full">
-      <h1 className="text-headline-lg-mobile font-semibold tracking-tight text-on-surface">
+      {/* Clamp rather than a fixed step: DESIGN.md pairs 32px on phones with
+          40px on desktop, and a jump at one breakpoint leaves every width in
+          between sized for the wrong column. */}
+      <h1 className="text-[clamp(1.5rem,1.2rem+1.5vw,2.5rem)] font-semibold leading-tight tracking-tight text-on-surface">
         Selamat datang kembali
       </h1>
-      <p className="mt-1 text-body-md text-on-surface-variant">
+      <p className="mt-1.5 text-body-md text-on-surface-variant">
         Masuk dengan email kantor PT Andrea untuk membuka dashboard Anda.
       </p>
 
@@ -103,7 +106,7 @@ export function LoginForm({ mockMode }: { mockMode: boolean }) {
           <div className="relative">
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-outline"
+              className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-tertiary"
             >
               <span
                 className="material-symbols-outlined"
@@ -145,7 +148,7 @@ export function LoginForm({ mockMode }: { mockMode: boolean }) {
           <div className="relative">
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-outline"
+              className="pointer-events-none absolute inset-y-0 left-0 flex w-11 items-center justify-center text-tertiary"
             >
               <span
                 className="material-symbols-outlined"

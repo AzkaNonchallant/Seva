@@ -222,17 +222,44 @@
   }
 }
 
-/* The icon font is loaded from Google's CDN, so its glyphs must not fall back
-   to the body font's line box. */
+/* Material Symbols is self-hosted rather than pulled from Google's CDN.
+   With the CDN, a slow or blocked gstatic left every icon rendering as its own
+   ligature name ("mail", "lock", "visibility") in the body font, so one
+   unreachable host turned the whole interface into visible placeholder text.
+   Serving it from /public removes that dependency.
+
+   font-display: block is deliberate and differs from the CDN's swap. Icons are
+   decoration around real text, and swap would paint the ligature name in Inter
+   first, which is precisely the artefact being removed here. block holds the
+   text invisible for up to 3s and then shows it either way. The file is
+   preloaded in the root layout, so in practice this window is one round trip
+   and never observed. */
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+}
+
 .material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  /* Must not inherit the body font's line box, or the box drifts per size. */
+  display: inline-block;
   font-size: 24px;
   line-height: 1;
   letter-spacing: normal;
+  text-transform: none;
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
+  /* The ligature substitution that turns "mail" into the mail glyph. Without
+     this the class is just a font-family and the raw word shows through. */
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
   font-variation-settings:
     "FILL" 0,
     "wght" 400,
