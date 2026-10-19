@@ -1,7 +1,7 @@
 import { RoleShell } from "@/components/layout/role-shell";
 import { listPendingBookings } from "@/lib/api/booking";
 import { requireBookingManager } from "@/lib/auth";
-import { ROLE_LABEL } from "@/lib/permissions";
+import { canViewReports, ROLE_LABEL } from "@/lib/permissions";
 
 /**
  * Shell for the Admin Travel area. API_SPEC names this role `ADMIN`; the
@@ -35,7 +35,12 @@ export default async function TravelAdminLayout({
     { href: "/travel-admin/departures", label: "Keberangkatan", icon: "flight" },
     { href: "/travel-admin/requests", label: "Travel Request", icon: "assignment" },
     { href: "/travel-admin/policy", label: "Travel Policy", icon: "policy" },
-    { href: "/travel-admin/reports", label: "Laporan", icon: "analytics" },
+    // Reports read /api/reports/*, which the backend answers for ADMIN and
+    // Finance only — TRAVEL_ADMIN gets a 403. The entry is offered only to the
+    // role the endpoint will actually serve, so it is not a door onto an error.
+    ...(canViewReports(user.role)
+      ? [{ href: "/travel-admin/reports", label: "Laporan", icon: "analytics" }]
+      : []),
     { href: "/travel-admin/documents", label: "Dokumen", icon: "folder" },
     { href: "/travel-admin/notifications", label: "Notifikasi", icon: "notifications" },
     { href: "/travel-admin/profile", label: "Profil", icon: "account_circle" },

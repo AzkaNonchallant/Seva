@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Header, PageHeader } from "@/components/layout/header";
@@ -9,13 +11,54 @@ import {
   getExpenseByDepartment,
 } from "@/lib/api/report";
 import { requireBookingManager } from "@/lib/auth";
+import { canViewReports } from "@/lib/permissions";
 import { toNumber } from "@/lib/api/types";
 import { formatIDR, formatIDRCompact } from "@/lib/utils";
 
 export const metadata = { title: "Laporan • Dinas Travel" };
 
 export default async function ReportsPage() {
-  await requireBookingManager();
+  const user = await requireBookingManager();
+
+  // The nav hides this entry from roles the report endpoints reject, but the URL
+  // is still typeable. Without this, TRAVEL_ADMIN would land on the 403 and the
+  // error boundary would replace the whole screen.
+  if (!canViewReports(user.role)) {
+    return (
+      <div className="min-h-screen">
+        <Header
+          breadcrumb={[
+            { label: "Horizon Odyssey", href: "/travel-admin/dashboard" },
+            { label: "Laporan" },
+          ]}
+          unreadCount={0}
+        />
+        <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
+          <PageHeader
+            title="Laporan Perjalanan Dinas"
+            description="Ringkasan dari GET /api/reports."
+          />
+          <Card>
+            <CardBody>
+              <EmptyState
+                icon="analytics"
+                title="Laporan tidak tersedia untuk role Anda"
+                description="Endpoint laporan hanya melayani Admin dan Finance. Angka realisasi booking tetap dapat Anda pantau dari Dashboard dan Keberangkatan."
+                action={
+                  <Link
+                    href="/travel-admin/dashboard"
+                    className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-md text-label-md font-semibold text-on-primary transition-opacity hover:opacity-90"
+                  >
+                    Buka Dashboard
+                  </Link>
+                }
+              />
+            </CardBody>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   const [unread, summary, { breakdown, confirmedValue, total }, byDepartment] =
     await Promise.all([

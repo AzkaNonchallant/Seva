@@ -5,7 +5,7 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Card, CardBody } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { getUnreadCount } from "@/lib/api/notification";
-import { getTravel, listApplicablePolicies } from "@/lib/api/travel";
+import { getTravel, listApplicablePoliciesForPosition } from "@/lib/api/travel";
 import { settle } from "@/lib/api/api";
 import { isNotFound } from "@/lib/api/errors";
 import { requireRole } from "@/lib/auth";
@@ -30,7 +30,7 @@ export default async function EditTravelPage({
     getUnreadCount().catch(() => ({ count: 0 })),
     settle(getTravel(travelId)),
     user.positionId
-      ? listApplicablePolicies(user.positionId).catch(() => [])
+      ? listApplicablePoliciesForPosition(user.positionId).catch(() => [])
       : Promise.resolve([]),
   ]);
 
