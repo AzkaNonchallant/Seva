@@ -27,8 +27,11 @@ const DECISION: Record<
  * The backend identifies an approver by user id rather than by role, so each
  * level is titled from its position in the chain. There is no delegation flag
  * on an approval row.
+ *
+ * Exported because the approver queue labels the same levels; two copies of this
+ * map would drift the moment a level is renamed.
  */
-const LEVEL_TITLE: Record<number, string> = {
+export const APPROVAL_LEVEL_TITLE: Record<number, string> = {
   1: "Atasan Langsung",
   2: "Kepala Bagian",
   3: "Kepala Dinas",
@@ -87,7 +90,7 @@ export function ApprovalTimeline({ approvals }: { approvals: Approval[] }) {
               <div className="flex flex-wrap items-center justify-between gap-1.5">
                 <p className="text-label-md font-semibold text-on-surface">
                   {approval.level}.{" "}
-                  {LEVEL_TITLE[approval.level] ?? "Persetujuan"}
+                  {APPROVAL_LEVEL_TITLE[approval.level] ?? "Persetujuan"}
                 </p>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${meta.chip}`}

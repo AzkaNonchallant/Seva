@@ -46,6 +46,37 @@ export function deleteDelegation(id: number) {
   return apiRequest<{ deleted: number }>(`/api/approvals/delegations/${id}`, { method: "DELETE" });
 }
 
+/**
+ * Whether one approval is the caller's to decide.
+ *
+ * Being "in the queue" is not the same as being able to act. An approver can
+ * still open a request they have already decided, at which point the open level
+ * belongs to the next approver — and a decision form there would only ever come
+ * back refused. `GET /api/approvals/pending` already hides those rows, but a
+ * detail page reached by URL does not go through that list.
+ *
+ * The second case is a delegation: the backend lets a delegate decide in place
+ * of the named approver for the dates on the delegation row, and the seeded data
+ * exercises exactly that (Kepala Bagian delegates to a Manager), so checking
+ * only `approverId === userId` would hide a decision the caller is entitled to.
+ */
+export function canDecideApproval(
+  approval: Pick<Approval, "approverId">,
+  userId: number,
+  delegations: Array<Pick<Delegation, "delegatorId" | "delegateId" | "startDate" | "endDate">>,
+  at: Date = new Date(),
+) {
+  if (approval.approverId === userId) return true;
+
+  return delegations.some(
+    (delegation) =>
+      delegation.delegateId === userId &&
+      delegation.delegatorId === approval.approverId &&
+      new Date(delegation.startDate) <= at &&
+      at <= new Date(delegation.endDate),
+  );
+}
+
 /* ── Notifications (§6) ─────────────────────────────────────────────────── */
 
 /** GET /api/notifications?isRead= — paginated. */
