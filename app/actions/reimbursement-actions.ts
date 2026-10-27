@@ -8,11 +8,14 @@ import {
   deleteReimbursementItem,
   submitReimbursement,
 } from "@/lib/api/reimbursement";
+import { getReimbursement } from "@/lib/api/reimbursement";
+import { uploadTravelDocument } from "@/lib/api/travel";
 import { ApiError } from "@/lib/api/errors";
 import { requireRole } from "@/lib/auth";
+import { buildReimbursementPdf } from "@/lib/pdf/reimbursement-pdf";
 
 import type { ActionResult } from "./action-result";
-import type { Reimbursement, ReimbursementItem } from "@/lib/api/types";
+import type { Reimbursement, ReimbursementItem, TravelDocument } from "@/lib/api/types";
 
 /**
  * Server actions for the employee's own reimbursements.
@@ -27,6 +30,41 @@ function revalidateEmployee(reimbursementId?: number) {
   revalidatePath("/employee/reimbursements");
   if (reimbursementId) {
     revalidatePath(`/employee/reimbursements/${reimbursementId}`);
+  }
+}
+
+export async function saveReimbursementPdfAction(
+  _prev: ActionResult<TravelDocument> | null,
+  formData: FormData,
+): Promise<ActionResult<TravelDocument>> {
+  await requireRole(["EMPLOYEE"]);
+  const reimbursementId = Number(formData.get("reimbursementId"));
+
+  try {
+    const reimbursement = await getReimbursement(reimbursementId);
+    if (!reimbursement.travel) {
+      return { ok: false, message: "Informasi travel tidak tersedia untuk PDF ini." };
+    }
+
+    const bytes = buildReimbursementPdf(reimbursement);
+    const fileBytes = bytes.buffer.slice(
+      bytes.byteOffset,
+      bytes.byteOffset + bytes.byteLength,
+    ) as ArrayBuffer;
+    const file = new File([fileBytes], `reimbursement-${reimbursement.id}.pdf`, {
+      type: "application/pdf",
+    });
+    const document = await uploadTravelDocument(reimbursement.travel.id, file);
+
+    revalidateEmployee(reimbursementId);
+    revalidatePath("/employee/documents");
+    return {
+      ok: true,
+      data: document,
+      message: "PDF berhasil dibuat dan disimpan di Documents.",
+    };
+  } catch (error) {
+    return fail(error);
   }
 }
 

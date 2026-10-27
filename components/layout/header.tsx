@@ -3,8 +3,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 /**
- * Level 2 elevation: blurred translucent background with a hairline edge, so
- * the header stays legible over content without a hard shadow.
+ * The authenticated header stays flat and quiet so the purple brand accent can
+ * remain reserved for navigation and actions.
  */
 export function Header({
   breadcrumb,
@@ -19,8 +19,8 @@ export function Header({
   profileHref?: string;
 }) {
   return (
-    <header className="glass sticky top-0 z-30 border-b border-outline-variant/20">
-      <div className="flex h-16 items-center justify-between gap-md px-margin-mobile md:px-md">
+    <header className="sticky top-0 z-30 border-b border-outline-variant/50 bg-white">
+      <div className="flex min-h-[77px] items-center justify-between gap-md px-margin-mobile md:px-md">
         <nav aria-label="Breadcrumb" className="min-w-0">
           <ol className="flex items-center gap-1 text-caption text-tertiary">
             {breadcrumb.map((crumb, index) => (

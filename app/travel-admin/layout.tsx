@@ -34,6 +34,7 @@ export default async function TravelAdminLayout({
     { href: "/travel-admin/bookings", label: "Kelola Booking", icon: "confirmation_number" },
     { href: "/travel-admin/departures", label: "Keberangkatan", icon: "flight" },
     { href: "/travel-admin/requests", label: "Travel Request", icon: "assignment" },
+    { href: "/travel-admin/reimbursements", label: "Reimbursement", icon: "receipt_long" },
     { href: "/travel-admin/policy", label: "Travel Policy", icon: "policy" },
     // Reports read /api/reports/*, which the backend answers for ADMIN and
     // Finance only — TRAVEL_ADMIN gets a 403. The entry is offered only to the
@@ -57,6 +58,7 @@ export default async function TravelAdminLayout({
         "/travel-admin/bookings/queue",
         "/travel-admin/bookings",
         "/travel-admin/departures",
+        "/travel-admin/reimbursements",
       ]}
       homePath="/travel-admin/dashboard"
     >

@@ -58,9 +58,9 @@ export default async function LoginPage() {
             on a light patch of water. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/25 to-slate-950/85"
+          className="absolute inset-0 bg-gradient-to-b from-[#15002C]/90 via-[#15002C]/30 to-[#060000]/90"
         />
-        <div aria-hidden className="absolute inset-0 bg-slate-900/25 mix-blend-multiply" />
+        <div aria-hidden className="absolute inset-0 bg-[#15002C]/25 mix-blend-multiply" />
 
         {/* Centred rather than spread top-and-bottom. justify-between left a
             band of empty water at the top and pushed the card off the optical
@@ -73,7 +73,7 @@ export default async function LoginPage() {
           <div className="max-w-xl [container-type:inline-size]">
             {/* Dark-tinted glass, not white: white type has to clear AA against
                 whatever the photograph is doing behind it. */}
-            <div className="rounded-2xl border border-white/20 bg-slate-950/45 p-lg backdrop-blur-xl">
+            <div className="rounded-md border border-white/20 bg-[#15002C]/70 p-lg">
               {/* Scaled to the column, not the viewport. The photo column is
                   512px at `lg` and 860px at `xl`, so one fixed 40px heading
                   wrapped to four cramped lines in the narrow case. */}
@@ -134,7 +134,7 @@ export default async function LoginPage() {
           />
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/55 to-slate-950/35"
+            className="absolute inset-0 bg-gradient-to-r from-[#15002C]/90 via-[#15002C]/60 to-[#15002C]/30"
           />
           <div className="absolute inset-0 flex items-center px-margin-mobile">
             <BrandLockup variant="band" />

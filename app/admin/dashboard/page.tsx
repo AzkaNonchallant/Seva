@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { StatCard } from "@/components/dashboard/stat-card";
+import { AdminDataDiagram } from "@/components/admin/admin-data-diagram";
 import { Header, PageHeader } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
@@ -14,10 +15,7 @@ import { listDepartments, listPositions, listUsers } from "@/lib/api/user";
 import { settle } from "@/lib/api/api";
 import { requireSuperAdmin } from "@/lib/auth";
 import { departmentName } from "@/lib/api/user-format";
-
 import { ROLE_LABEL } from "@/lib/permissions";
-
-import type { User } from "@/lib/api/types";
 
 export const metadata = { title: "Dashboard • Super Admin" };
 
@@ -63,11 +61,6 @@ export default async function AdminDashboardPage() {
 
   const active = userRows.filter((row) => row.isActive !== false);
   const inactive = userRows.length - active.length;
-  const byRole = new Map<User["role"], number>();
-  for (const row of active) {
-    byRole.set(row.role, (byRole.get(row.role) ?? 0) + 1);
-  }
-  const roleRows = [...byRole.entries()].sort((a, b) => b[1] - a[1]);
   const activePolicies = policyRows;
 
   return (
@@ -127,53 +120,9 @@ export default async function AdminDashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 items-start gap-md xl:grid-cols-3">
-        <Card className="xl:col-span-2">
-          <CardHeader
-            title="Sebaran Pengguna per Role"
-            description="Dari GET /api/users. Role diubah satu per pengguna melalui PATCH /api/users/:id/role."
-            action={
-              <Link
-                href="/admin/roles-permissions"
-                className="whitespace-nowrap text-caption font-semibold text-primary transition-colors hover:text-primary-container"
-              >
-                Rincian izin
-              </Link>
-            }
-          />
-          <CardBody className="space-y-3">
-            {roleRows.map(([role, count]) => {
-              const pct = active.length ? Math.round((count / active.length) * 100) : 0;
-              return (
-                <div key={role}>
-                  <div className="mb-1 flex items-center justify-between gap-3">
-                    <span className="text-caption text-on-surface-variant">
-                      {ROLE_LABEL[role]}
-                    </span>
-                    <span className="text-label-md font-bold text-on-surface">
-                      {count}{" "}
-                      <span className="text-caption font-normal text-tertiary">
-                        ({pct}%)
-                      </span>
-                    </span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-surface-container-highest">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-            {!roleRows.length ? (
-              <EmptyState
-                icon="group_off"
-                title="Belum ada pengguna"
-                description="Tidak ada akun aktif yang tercatat."
-              />
-            ) : null}
-          </CardBody>
-        </Card>
+        <div className="xl:col-span-2">
+          <AdminDataDiagram users={userRows} travel={travelReport} />
+        </div>
 
         <div className="flex flex-col gap-md">
           <Card>

@@ -102,7 +102,7 @@ export default async function EmployeeDocumentsPage() {
                   </div>
                   <ul className="flex flex-col divide-y divide-outline-variant/15">
                     {documents.map((document) => (
-                      <li key={document.id} className="flex items-center gap-3 px-md py-2.5">
+                      <li key={document.id} className="flex flex-wrap items-center gap-3 px-md py-2.5">
                         <span
                           className="material-symbols-outlined shrink-0 text-primary"
                           style={{ fontSize: 20 }}
@@ -117,9 +117,24 @@ export default async function EmployeeDocumentsPage() {
                             {document.filePath}
                           </span>
                         </span>
-                        <span className="shrink-0 text-caption text-tertiary">
-                          {formatDate(document.uploadedAt ?? "")}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="shrink-0 text-caption text-tertiary">
+                            {formatDate(document.uploadedAt ?? "")}
+                          </span>
+                          {reimbursementIdFrom(document.fileName) ? (
+                            <Link
+                              href={`/employee/documents/pdf/${encodeURIComponent(document.fileName)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-11 items-center gap-1 rounded-full border border-primary px-3 text-caption font-semibold text-primary transition-colors hover:bg-primary-fixed/40"
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                                visibility
+                              </span>
+                              Buka PDF
+                            </Link>
+                          ) : null}
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -158,4 +173,8 @@ export default async function EmployeeDocumentsPage() {
       </main>
     </>
   );
+}
+
+function reimbursementIdFrom(fileName: string) {
+  return fileName.match(/^reimbursement-(\d+)\.pdf$/i)?.[1] ?? null;
 }

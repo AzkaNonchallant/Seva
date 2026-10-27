@@ -16,11 +16,12 @@ import {
   updatePosition,
   updateUser,
 } from "@/lib/api/user";
+import { register } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/errors";
 import { requireSuperAdmin } from "@/lib/auth";
 
 import type { ActionResult } from "./action-result";
-import type { Department, Position, TravelPolicy, User } from "@/lib/api/types";
+import type { Department, Position, Role, TravelPolicy, User } from "@/lib/api/types";
 
 /**
  * Server actions for the Super Admin master-data screens.
@@ -83,6 +84,54 @@ export async function updateUserAction(
     revalidateSuperAdmin();
     revalidatePath(`/admin/users/${userId}`);
     return { ok: true, data: user, message: "Data pengguna diperbarui." };
+  } catch (error) {
+    return fail(error);
+  }
+}
+
+const CREATABLE_ROLES: Role[] = [
+  "EMPLOYEE",
+  "MANAGER",
+  "DEPARTMENT_HEAD",
+  "HRD",
+  "FINANCE",
+  "ADMIN",
+  "TRAVEL_ADMIN",
+  "SUPER_ADMIN",
+];
+
+export async function createUserAction(
+  _prev: ActionResult<User> | null,
+  formData: FormData,
+): Promise<ActionResult<User>> {
+  await requireSuperAdmin();
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const role = String(formData.get("role") ?? "") as Role;
+
+  if (!name || !email || password.length < 8 || !CREATABLE_ROLES.includes(role)) {
+    return {
+      ok: false,
+      message: "Lengkapi nama, email, password minimal 8 karakter, dan role yang valid.",
+    };
+  }
+
+  const departmentId = Number(formData.get("departmentId"));
+  const positionId = Number(formData.get("positionId"));
+
+  try {
+    const created = await register({
+      name,
+      email,
+      password,
+      ...(departmentId > 0 ? { departmentId } : {}),
+      ...(positionId > 0 ? { positionId } : {}),
+    });
+    const user = await assignUserRole(created.user.id, role);
+    revalidateSuperAdmin();
+    revalidatePath(`/admin/users/${user.id}`);
+    return { ok: true, data: user, message: `Akun ${email} dibuat dengan role ${role}.` };
   } catch (error) {
     return fail(error);
   }
