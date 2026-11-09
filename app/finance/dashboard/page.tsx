@@ -66,7 +66,7 @@ export default async function FinanceDashboardPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Dashboard Finance"
-          description="Antrean verifikasi dan pembayaran reimbursement seluruh perusahaan. Sumber data: GET /api/reimbursements."
+          description="Antrean verifikasi dan pembayaran reimbursement perusahaan."
         />
 
         <section

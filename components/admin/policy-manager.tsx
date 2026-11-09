@@ -44,7 +44,7 @@ export function PolicyManager({
       <Card className="xl:col-span-3">
         <CardHeader
           title="Katalog Kebijakan"
-          description="Kebijakan berlaku untuk form pengajuan employee lewat GET /api/travel/policies/applicable, yang menyaring menurut jabatan dan tingkat tujuan."
+          description="Kebijakan yang sesuai akan tersedia saat karyawan membuat pengajuan perjalanan."
           action={
             <Button
               type="button"

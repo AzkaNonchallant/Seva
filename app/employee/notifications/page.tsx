@@ -11,7 +11,7 @@ export default async function EmployeeNotificationsPage() {
       areaLabel="Employee"
       homeHref="/employee/dashboard"
       profileHref="/employee/profile"
-      description="Pemberitahuan hasil approval pengajuan travel dan status reimbursement Anda. Sesuai API_SPEC bagian 6, notifikasi hanya terlihat oleh pemiliknya."
+      description="Pemberitahuan hasil persetujuan perjalanan dan status reimbursement Anda."
     />
   );
 }

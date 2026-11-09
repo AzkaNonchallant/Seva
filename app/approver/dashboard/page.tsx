@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { SummaryCard } from "@/components/ui/summary-card";
 import { APPROVAL_LEVEL_TITLE } from "@/components/travel/approval-timeline";
-import { listDelegations, listPendingApprovals } from "@/lib/api/approval";
+import { listDelegations, listPendingApprovals, uniquePendingApprovals } from "@/lib/api/approval";
 import { getUnreadCount } from "@/lib/api/notification";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
@@ -57,12 +57,7 @@ export default async function ApproverDashboardPage() {
     );
   }
 
-  const queue = [...pending.data].sort((a, b) => {
-    const left = a.createdAt ?? "";
-    const right = b.createdAt ?? "";
-    if (left !== right) return left < right ? -1 : 1;
-    return a.level - b.level;
-  });
+  const queue = uniquePendingApprovals(pending.data);
 
   const rows = delegations.ok ? delegations.data : [];
 

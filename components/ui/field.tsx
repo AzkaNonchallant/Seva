@@ -61,7 +61,7 @@ export function Input({
         // that `outline` — the token this used to share — is tuned for. On the
         // field surface `outline` measures 4.03:1 and fails; `tertiary` is the
         // token the caption/hint text already uses and clears it at 6.03:1.
-        "h-10 w-full px-3 text-body-md placeholder:text-tertiary focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
+        "h-11 w-full rounded-xl px-3.5 text-body-md shadow-sm shadow-transparent transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out placeholder:text-tertiary hover:border-primary/40 focus-visible:-translate-y-px focus-visible:border-primary focus-visible:bg-surface focus-visible:shadow-[0_0_0_4px_rgb(83_70_152/0.14)] motion-reduce:transition-none",
         invalid && "border-error focus:border-error focus:shadow-[0_0_0_3px_rgb(186_26_26/0.15)]",
         className,
       )}
@@ -80,7 +80,7 @@ export function Select({
     <select
       aria-invalid={invalid || undefined}
       className={cn(
-        "h-10 w-full px-3 text-body-md text-on-surface focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
+        "h-11 w-full rounded-xl px-3.5 text-body-md text-on-surface shadow-sm shadow-transparent transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out hover:border-primary/40 focus-visible:-translate-y-px focus-visible:border-primary focus-visible:bg-surface focus-visible:shadow-[0_0_0_4px_rgb(83_70_152/0.14)] motion-reduce:transition-none",
         invalid && "border-error",
         className,
       )}
@@ -101,7 +101,7 @@ export function Textarea({
       aria-invalid={invalid || undefined}
       className={cn(
         // Same reason as Input: placeholder has to clear AA on the field surface.
-        "w-full resize-y px-3 py-2 text-body-md placeholder:text-tertiary focus:shadow-[0_0_0_3px_rgb(0_89_187/0.2)]",
+        "min-h-28 w-full resize-y rounded-xl px-3.5 py-3 text-body-md placeholder:text-tertiary shadow-sm shadow-transparent transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out hover:border-primary/40 focus-visible:-translate-y-px focus-visible:border-primary focus-visible:bg-surface focus-visible:shadow-[0_0_0_4px_rgb(83_70_152/0.14)] motion-reduce:transition-none",
         invalid && "border-error",
         className,
       )}

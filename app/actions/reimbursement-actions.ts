@@ -7,6 +7,7 @@ import {
   createReimbursement,
   deleteReimbursementItem,
   submitReimbursement,
+  verifyReimbursement,
 } from "@/lib/api/reimbursement";
 import { getReimbursement } from "@/lib/api/reimbursement";
 import { uploadTravelDocument } from "@/lib/api/travel";
@@ -145,6 +146,42 @@ export async function submitReimbursementAction(
       ok: true,
       data: reimbursement,
       message: "Reimbursement diajukan dan menunggu verifikasi Finance.",
+    };
+  } catch (error) {
+    return fail(error);
+  }
+}
+
+export async function verifyReimbursementAction(
+  _prev: ActionResult<Reimbursement> | null,
+  formData: FormData,
+): Promise<ActionResult<Reimbursement>> {
+  await requireRole(["FINANCE"]);
+  const id = Number(formData.get("reimbursementId"));
+  const approvedAmount = Number(formData.get("approvedAmount"));
+  const status = String(formData.get("status") ?? "");
+
+  if (!Number.isSafeInteger(id) || id < 1 || !Number.isFinite(approvedAmount) || approvedAmount < 0) {
+    return { ok: false, message: "Nominal atau nomor reimbursement tidak valid." };
+  }
+  if (status !== "APPROVED" && status !== "REJECTED") {
+    return { ok: false, message: "Pilih keputusan Setujui atau Tolak." };
+  }
+
+  try {
+    const reimbursement = await verifyReimbursement(id, {
+      approvedAmount,
+      status,
+    });
+    revalidatePath("/finance/dashboard");
+    revalidatePath("/finance/reimbursements");
+    revalidatePath(`/finance/reimbursements/${id}`);
+    revalidatePath("/employee/reimbursements");
+    revalidatePath(`/employee/reimbursements/${id}`);
+    return {
+      ok: true,
+      data: reimbursement,
+      message: status === "APPROVED" ? "Reimbursement disetujui." : "Reimbursement ditolak.",
     };
   } catch (error) {
     return fail(error);

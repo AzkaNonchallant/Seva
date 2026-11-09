@@ -17,7 +17,6 @@ export default async function ApprovalConfigPage() {
       homeHref="/admin/dashboard"
       title="Konfigurasi Approval"
       description="Urutan level persetujuan dan aturan yang menentukan siapa menyetujui pengajuan."
-      missingEndpoint="GET / PATCH /api/approval-config"
       plannedContent={[
         "Urutan level persetujuan per jabatan dan tingkat tujuan",
         "Rules eskalasi otomatis bila level pertama belum merespons",

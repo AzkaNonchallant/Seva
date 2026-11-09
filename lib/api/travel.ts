@@ -142,6 +142,11 @@ export function cancelTravel(id: number) {
   return apiRequest<TravelRequest>(`/api/travel/${id}/cancel`, { method: "POST" });
 }
 
+/** POST /api/travel/:id/complete — Admin Travel closes an ended approved trip. */
+export function completeTravel(id: number) {
+  return apiRequest<TravelRequest>(`/api/travel/${id}/complete`, { method: "POST" });
+}
+
 /** POST /api/travel/:id/documents — multipart upload. */
 export function uploadTravelDocument(travelId: number, file: File) {
   const form = new FormData();

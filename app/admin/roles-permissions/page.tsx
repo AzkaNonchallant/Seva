@@ -103,7 +103,7 @@ export default async function RolesPermissionsPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Role & Izin"
-          description="Ringkasan tabel akses pada API_SPEC bagian 8. API_SPEC mendefinisikan izin sebagai tabel per role, bukan sebagai endpoint, sehingga halaman ini bersifat referensi dan tidak menyimpan data terpisah."
+          description="Ringkasan akses dan tanggung jawab setiap peran di aplikasi."
         />
 
         <div className="grid grid-cols-1 gap-md lg:grid-cols-2">
@@ -149,32 +149,6 @@ export default async function RolesPermissionsPage() {
           ))}
         </div>
 
-        <Card>
-          <CardHeader
-            title="Cara Mengubah Role"
-            description="Satu pengguna satu kali, melalui endpoint yang sama dengan yang di screens ini."
-          />
-          <CardBody className="flex flex-col gap-2 text-caption text-on-surface-variant">
-            <p>
-              Penetapan role memakai{" "}
-              <code className="font-mono text-on-surface">
-                PATCH /api/users/:id/role
-              </code>{" "}
-              dengan body{" "}
-              <code className="font-mono text-on-surface">
-                {'{ "role": "MANAGER" }'}
-              </code>
-              . Kontrol pada kolom role di tabel pengguna memanggil endpoint yang
-              sama.
-            </p>
-            <p>
-              API_SPEC tidak menyediakan endpoint untuk membaca atau menulis
-              matriks izin. Daftar di atas berasal langsung dari tabel pada
-              bagian 8, sehingga menambah role baru memerlukan perubahan pada
-              spec lebih dahulu.
-            </p>
-          </CardBody>
-        </Card>
       </main>
     </>
   );

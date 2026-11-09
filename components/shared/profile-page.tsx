@@ -1,5 +1,4 @@
 import { Header, PageHeader } from "@/components/layout/header";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { me } from "@/lib/api/auth";
 import { departmentName, positionName } from "@/lib/api/user-format";
@@ -47,7 +46,7 @@ export async function ProfilePage({
         <main className="flex max-w-5xl flex-col gap-section px-margin-mobile py-section md:px-md">
         <PageHeader
           title="Profil Saya"
-          description="Data akun yang dibaca dari GET /api/auth/me."
+          description="Informasi akun Anda."
         />
 
         <Card className="overflow-hidden">
@@ -92,7 +91,7 @@ export async function ProfilePage({
         <Card className="overflow-hidden">
           <CardHeader
             title="Cakupan Akses"
-            description="Hak yang diberikan oleh role ini berdasarkan API_SPEC bagian 8."
+            description="Hak akses yang tersedia untuk peran ini."
             action={
               <span className="inline-flex min-h-9 items-center rounded-full bg-primary-fixed px-3 text-caption font-semibold text-on-primary-fixed">
                 {scope.length} hak akses

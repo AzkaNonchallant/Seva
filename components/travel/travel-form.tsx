@@ -51,11 +51,12 @@ export function TravelForm({
   }, [state, router]);
 
   return (
-    <form action={formAction} className="flex flex-col gap-md">
+    <form action={formAction} autoComplete="off" className="grid grid-cols-1 gap-x-xl gap-y-lg lg:grid-cols-2">
       {travel ? <input type="hidden" name="travelId" value={travel.id} /> : null}
       <input type="hidden" name="policyId" value={policyId} />
 
       <Field
+        className="lg:col-span-2"
         label="Tujuan"
         htmlFor="destination"
         required
@@ -64,6 +65,7 @@ export function TravelForm({
         <Input
           id="destination"
           name="destination"
+          autoComplete="off"
           defaultValue={travel?.destination ?? ""}
           placeholder="Kota atau lokasi tujuan"
           invalid={!!state && !state.ok}
@@ -72,6 +74,7 @@ export function TravelForm({
       </Field>
 
       <Field
+        className="lg:col-span-2"
         label="Tujuan dana"
         htmlFor="purpose"
         required
@@ -89,7 +92,7 @@ export function TravelForm({
         />
       </Field>
 
-      <div className="grid grid-cols-1 gap-md sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-md sm:grid-cols-2 lg:col-span-2">
         <Field
           label="Tanggal mulai"
           htmlFor="startDate"
@@ -158,7 +161,7 @@ export function TravelForm({
       <Field
         label="Travel policy"
         htmlFor="policyId"
-        hint="Daftar di bawah berasal dari GET /api/travel/policies/applicable, yang sudah disaring sesuai jabatan Anda."
+        hint="Pilih kebijakan perjalanan yang sesuai jika tersedia."
       >
         <Select
           id="policyId"
@@ -176,7 +179,7 @@ export function TravelForm({
       </Field>
 
       {selected ? (
-        <div className="rounded-lg bg-surface-container-low p-3">
+        <div className="rounded-lg bg-surface-container-low p-3 lg:col-span-2">
           <p className="text-caption font-semibold text-on-surface">
             Batas pada kebijakan ini
           </p>
@@ -209,7 +212,7 @@ export function TravelForm({
 
       {state && !state.ok ? (
         <p
-          className="flex items-center gap-1.5 text-caption text-error"
+          className="flex items-center gap-1.5 text-caption text-error lg:col-span-2"
           role="alert"
         >
           <span className="material-symbols-outlined" style={{ fontSize: 14 }}>
@@ -219,7 +222,7 @@ export function TravelForm({
         </p>
       ) : null}
 
-      <div className="flex flex-wrap justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2 lg:col-span-2">
         <Button
           type="button"
           variant="ghost"
@@ -239,7 +242,7 @@ export function TravelForm({
         </Button>
       </div>
 
-      <p className="text-caption text-tertiary">
+      <p className="text-caption text-tertiary lg:col-span-2">
         Pengajuan baru disimpan sebagai DRAFT dan belum masuk antrean approval
         sampai Anda menekan tombol kirim pada halaman detail.
       </p>

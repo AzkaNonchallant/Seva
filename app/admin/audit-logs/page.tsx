@@ -18,7 +18,6 @@ export default async function AuditLogsPage() {
       homeHref="/admin/dashboard"
       title="Audit Log"
       description="Catatan perubahan pada master data dan keputusan approval."
-      missingEndpoint="GET /api/audit-logs"
       plannedContent={[
         "Jejak perubahan master data: siapa mengubah apa dan kapan",
         "Riwayat penetapan role beserta alasan perubahan",

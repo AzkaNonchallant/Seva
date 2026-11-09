@@ -5,8 +5,8 @@ export const metadata = { title: "Profil • Finance" };
 
 /** §8 for FINANCE. */
 const SCOPE = [
-  "Memverifikasi reimbursement melalui PATCH /api/reimbursements/:id/verify",
-  "Menandai reimbursement lunas melalui PATCH /api/reimbursements/:id/pay",
+  "Memverifikasi reimbursement",
+  "Menandai reimbursement sebagai lunas",
   "Membaca laporan pengeluaran per departemen, karyawan, dan project",
 ];
 

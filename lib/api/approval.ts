@@ -6,6 +6,21 @@ export function listPendingApprovals(params: { page?: number; limit?: number } =
   return apiRows<Approval>("/api/approvals/pending", { query: { ...params } });
 }
 
+/** Keep one actionable approval per travel; sequential levels cannot be pending together. */
+export function uniquePendingApprovals(approvals: Approval[]) {
+  const byTravel = new Map<number, Approval>();
+  for (const approval of approvals) {
+    const current = byTravel.get(approval.travelId);
+    if (!current || approval.level < current.level) byTravel.set(approval.travelId, approval);
+  }
+  return [...byTravel.values()].sort((a, b) => {
+    const left = a.createdAt ?? "";
+    const right = b.createdAt ?? "";
+    if (left !== right) return left < right ? -1 : 1;
+    return a.level - b.level;
+  });
+}
+
 /** GET /api/approvals/travel/:travelId — the timeline for one request. */
 export function getApprovalTimeline(travelId: number) {
   return apiRequest<Approval[]>(`/api/approvals/travel/${travelId}`);

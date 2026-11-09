@@ -14,11 +14,31 @@ export const SUMMARY_TONES: Record<Tone, string> = {
   success: "bg-success-container text-success",
 };
 
-const TONES: Record<Tone, { icon: string; chip: string }> = {
-  primary: { icon: "", chip: SUMMARY_TONES.primary },
-  accent: { icon: "", chip: SUMMARY_TONES.accent },
-  neutral: { icon: "", chip: SUMMARY_TONES.neutral },
-  success: { icon: "", chip: SUMMARY_TONES.success },
+const TONES: Record<Tone, { card: string; icon: string; text: string; muted: string }> = {
+  primary: {
+    card: "bg-primary text-white",
+    icon: "bg-white/15 text-white",
+    text: "text-white",
+    muted: "text-white/75",
+  },
+  accent: {
+    card: "bg-secondary text-white",
+    icon: "bg-white/15 text-white",
+    text: "text-white",
+    muted: "text-white/75",
+  },
+  neutral: {
+    card: "bg-surface-container-lowest",
+    icon: SUMMARY_TONES.neutral,
+    text: "text-on-surface",
+    muted: "text-tertiary",
+  },
+  success: {
+    card: "bg-surface-container-lowest",
+    icon: SUMMARY_TONES.success,
+    text: "text-on-surface",
+    muted: "text-tertiary",
+  },
 };
 
 /**
@@ -46,21 +66,19 @@ export function SummaryCard({
   const content = (
     <>
       <div className="mb-3 flex items-start justify-between gap-2">
-        <span
-          className={cn("flex h-9 w-9 items-center justify-center rounded-lg", styles.chip)}
-        >
+        <span className={cn("flex h-9 w-9 items-center justify-center rounded-xl", styles.icon)}>
           <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
             {icon}
           </span>
         </span>
         {badge}
       </div>
-      <p className="text-label-md text-on-surface-variant">{label}</p>
-      <p className="mt-0.5 text-headline-md font-bold text-on-surface">
+      <p className={cn("text-label-md", styles.muted)}>{label}</p>
+      <p className={cn("mt-0.5 text-headline-md font-bold", styles.text)}>
         {typeof value === "number" ? value : value}
       </p>
       {footnote ? (
-        <p className="mt-1.5 text-caption text-tertiary">{footnote}</p>
+        <p className={cn("mt-1.5 text-caption", styles.muted)}>{footnote}</p>
       ) : null}
     </>
   );
@@ -69,7 +87,10 @@ export function SummaryCard({
     return (
       <a
         href={href}
-        className="flex flex-col rounded-2xl bg-surface-container-lowest p-md shadow-ambient ring-1 ring-outline-variant/15 transition-shadow hover:shadow-float"
+        className={cn(
+          "flex flex-col rounded-2xl p-md shadow-ambient ring-1 ring-outline-variant/15 transition duration-200 hover:-translate-y-0.5 hover:shadow-float",
+          styles.card,
+        )}
       >
         {content}
       </a>
@@ -77,7 +98,12 @@ export function SummaryCard({
   }
 
   return (
-    <div className="flex flex-col rounded-2xl bg-surface-container-lowest p-md shadow-ambient ring-1 ring-outline-variant/15">
+    <div
+      className={cn(
+        "flex flex-col rounded-2xl p-md shadow-ambient ring-1 ring-outline-variant/15",
+        styles.card,
+      )}
+    >
       {content}
     </div>
   );

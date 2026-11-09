@@ -136,7 +136,7 @@ export default async function UserDetailPage({
         <Card>
           <CardHeader
             title="Riwayat Pengajuan"
-            description="Dibaca dari GET /api/travel. Menampilkan status dan tujuan pengajuan, bukan dokumen pendukung maupun nominal."
+            description="Status dan tujuan pengajuan perjalanan pengguna ini."
             action={
               <span className="text-caption text-tertiary">
                 {ownTravels.length} pengajuan
@@ -176,7 +176,7 @@ export default async function UserDetailPage({
           <Card>
             <CardHeader
               title="Status Akun"
-              description="DELETE /api/users/:id menonaktifkan akun tanpa menghapus riwayatnya."
+              description="Akun dinonaktifkan tanpa menghapus riwayat yang terkait."
             />
             <CardBody>
               <DeactivateUserButton user={user} />

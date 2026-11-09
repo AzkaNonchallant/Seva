@@ -36,8 +36,7 @@ export default function ForgotPasswordPage() {
             info
           </span>
           <p className="text-caption leading-relaxed text-on-surface-variant">
-            API_SPEC belum mendefinisikan endpoint reset password. Hubungi Super
-            Admin untuk mengatur ulang kredensial akun Anda.
+            Untuk bantuan mengatur ulang kredensial akun, hubungi Super Admin.
           </p>
         </div>
 

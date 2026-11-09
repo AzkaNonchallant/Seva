@@ -37,7 +37,7 @@ export default async function NewTravelPage() {
         profileHref="/employee/profile"
       />
 
-      <main className="flex max-w-3xl flex-col gap-md px-margin-mobile py-md md:px-md">
+      <main className="flex w-full max-w-7xl flex-col gap-md px-margin-mobile py-md md:px-md">
         <PageHeader
           title="Pengajuan Travel Baru"
           description="Pengajuan disimpan sebagai draft. Anda dapat mengedit, melampirkan dokumen, lalu mengirimnya ke atasan pada langkah berikutnya."

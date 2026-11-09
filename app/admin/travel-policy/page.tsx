@@ -60,7 +60,7 @@ export default async function TravelPolicyPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Travel Policy"
-          description="Aturan perjalanan dinas yang berlaku untuk seluruh perusahaan. Policy aktif dipakai form pengajuan employee melalui GET /api/travel/policies/applicable, yang menyaring berdasarkan jabatan dan tingkat tujuan."
+          description="Aturan perjalanan dinas yang berlaku untuk perusahaan dan digunakan saat membuat pengajuan."
         />
 
         <section

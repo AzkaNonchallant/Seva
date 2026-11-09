@@ -19,11 +19,11 @@ const DEMO_ACCOUNTS = [
   { label: "Super Admin", email: "super.admin@dinas.go.id" }, //perlu
   { label: "Admin", email: "admin@dinas.go.id" },
   { label: "Admin Perjalanan Dinas", email: "travel.admin@dinas.go.id" }, //perlu
-  { label: "Kepala Bagian", email: "kepala.bagian@sdm.dinas.go.id" },
-  { label: "Manajer", email: "manajer@sdm.dinas.go.id" }, //perlu
+  { label: "Kepala Bagian", email: "kepala.bagian@sdm.dinas.go.id" }, //3
+  { label: "Manajer", email: "manajer@sdm.dinas.go.id" }, //perlu //2
   { label: "Finance", email: "finance@dinas.go.id" },
-  { label: "HRD", email: "hrd@dinas.go.id" }, //perlu
-  { label: "Employee", email: "pegawai@sdm.dinas.go.id" }, //prlu
+  { label: "HRD", email: "hrd@dinas.go.id" }, //perlu //4
+  { label: "Employee", email: "pegawai@sdm.dinas.go.id" }, //prlu //1
 ];
 
 const DEMO_PASSWORD = "Password123!";

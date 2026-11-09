@@ -72,6 +72,7 @@ const REIMBURSEMENT_TONE: Record<
 > = {
   DRAFT: "neutral",
   SUBMITTED: "warning",
+  IN_REVIEW: "warning",
   APPROVED: "success",
   REJECTED: "error",
   PAID: "primary",
@@ -80,6 +81,7 @@ const REIMBURSEMENT_TONE: Record<
 const REIMBURSEMENT_LABEL: Record<ReimbursementStatus, string> = {
   DRAFT: "Draft",
   SUBMITTED: "Menunggu verifikasi",
+  IN_REVIEW: "Dalam verifikasi",
   APPROVED: "Disetujui",
   REJECTED: "Ditolak",
   PAID: "Dibayarkan",

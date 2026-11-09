@@ -11,7 +11,7 @@ export default async function AdminNotificationsPage() {
       areaLabel="Super Admin"
       homeHref="/admin/dashboard"
       profileHref="/admin/profile"
-      description="Pemberitahuan yang ditujukan untuk akun Anda. Sesuai API_SPEC bagian 6, notifikasi approval dan reimbursement hanya terlihat oleh pemiliknya masing-masing."
+      description="Pemberitahuan yang ditujukan untuk akun Anda."
     />
   );
 }

@@ -195,6 +195,22 @@
     box-shadow: 0 0 0 2px rgb(6 0 0 / 0.12);
   }
 
+  input[type="date"] {
+    min-height: 44px;
+    color-scheme: light;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.72;
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+
+  input[type="date"]:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
@@ -319,13 +335,19 @@
   }
 }
 
-/* The role shell lifts every screen onto one rounded panel beside the rail.
-   Pages already declare `min-h-screen`, which would add the panel's 16px top
-   and bottom padding to the scroll height, so on desktop the panel's child is
-   pinned to the space actually available. Unlayered on purpose: it has to win
-   over Tailwind's layered `min-h-screen` utility. */
+/* Keep the role panel's header compact: applying a viewport min-height to every
+   direct child made the header itself fill the screen and pushed dashboard
+   content below the fold. */
 @media (min-width: 1024px) {
-  .role-frame > * {
+  .role-frame > header {
+    min-height: 77px;
+  }
+
+  .role-frame > main {
+    min-height: calc(100vh - 109px);
+  }
+
+  .role-frame > :not(header):not(main) {
     min-height: calc(100vh - 32px);
   }
 }

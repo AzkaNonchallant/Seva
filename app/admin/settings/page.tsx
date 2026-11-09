@@ -18,7 +18,6 @@ export default async function SettingsPage() {
       homeHref="/admin/dashboard"
       title="Pengaturan Sistem"
       description="Preferensi tingkat perusahaan, seperti ambang persetujuan, mata uang default, dan masa berlaku sesi."
-      missingEndpoint="GET / PATCH /api/settings"
       plannedContent={[
         "Ambang nilai yang memaksa approval tambahan",
         "Masa berlaku sesi dan kebijakan kata sandi",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ApprovalTimeline } from "@/components/travel/approval-timeline";
+import { CompleteTravelButton } from "@/components/travel/complete-travel-button";
 import { BookingRow } from "@/components/booking/booking-row";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -41,6 +42,11 @@ export default async function TravelRequestDetailPage({
   ]);
 
   const canBook = travel.status === "APPROVED";
+  const endDate = new Date(travel.endDate);
+  const today = new Date();
+  endDate.setUTCHours(0, 0, 0, 0);
+  today.setUTCHours(0, 0, 0, 0);
+  const canComplete = canBook && endDate < today;
 
   return (
     <div className="min-h-screen">
@@ -73,6 +79,9 @@ export default async function TravelRequestDetailPage({
             </div>
 
             <div className="flex shrink-0 flex-col items-start gap-2 lg:items-end">
+              {canBook ? (
+                <CompleteTravelButton travelId={travel.id} canComplete={canComplete} />
+              ) : null}
               {canBook ? (
                 <LinkButton
                   href="/travel-admin/bookings/queue"

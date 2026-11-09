@@ -38,7 +38,7 @@ export default async function DepartmentsPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Departemen"
-          description="Struktur departemen PT Andrea. Dipakai sebagai filter pengajuan travel dan sebagai atribut pada setiap pengguna. Sumber data: /api/users/departments."
+          description="Struktur departemen perusahaan, digunakan pada pengajuan perjalanan dan informasi pengguna."
         />
 
         {!departments.ok ? (

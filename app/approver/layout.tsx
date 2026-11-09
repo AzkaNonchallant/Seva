@@ -1,5 +1,5 @@
 import { RoleShell } from "@/components/layout/role-shell";
-import { listPendingApprovals } from "@/lib/api/approval";
+import { listPendingApprovals, uniquePendingApprovals } from "@/lib/api/approval";
 import { requireRole } from "@/lib/auth";
 import { APPROVER_ROLES, ROLE_LABEL } from "@/lib/permissions";
 
@@ -25,7 +25,7 @@ export default async function ApproverLayout({
       href: "/approver/approvals",
       label: "Persetujuan",
       icon: "fact_check",
-      badge: pending.length,
+      badge: uniquePendingApprovals(pending).length,
     },
     { href: "/approver/notifications", label: "Notifikasi", icon: "notifications" },
     { href: "/approver/profile", label: "Profil", icon: "account_circle" },

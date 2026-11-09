@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header, PageHeader } from "@/components/layout/header";
 import { ExpenseItemList } from "@/components/reimbursement/expense-item-list";
 import { ReimbursementReport } from "@/components/reimbursement/reimbursement-report";
+import { FinanceVerificationForm } from "@/components/reimbursement/finance-verification-form";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { ReimbursementStatusBadge } from "@/components/ui/status-badge";
@@ -28,8 +29,22 @@ export default async function FinanceReimbursementDetailPage({ params }: { param
   const claim = result.data;
   return <>
     {header}
-    <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
-      <PageHeader title="Detail Reimbursement" description={`Travel #${claim.travelId}`} actions={<Link href="/finance/reimbursements" className="inline-flex min-h-11 items-center rounded-lg px-md font-semibold text-primary hover:bg-primary-fixed/30">Kembali ke daftar</Link>} />
+      <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
+        <PageHeader title="Detail Reimbursement" description={`Travel #${claim.travelId}`} actions={<Link href="/finance/reimbursements" className="inline-flex min-h-11 items-center rounded-lg px-md font-semibold text-primary hover:bg-primary-fixed/30">Kembali ke daftar</Link>} />
+      {(claim.status === "SUBMITTED" || claim.status === "IN_REVIEW") ? (
+        <Card>
+          <CardHeader
+            title="Verifikasi Finance"
+            description="Periksa bukti pengeluaran, tentukan nominal yang disetujui, lalu pilih keputusan."
+          />
+          <CardBody>
+            <FinanceVerificationForm
+              reimbursementId={claim.id}
+              totalAmount={claim.totalAmount}
+            />
+          </CardBody>
+        </Card>
+      ) : null}
       <ReimbursementReport reimbursement={claim} />
       <Card><CardHeader title="Rincian Pengeluaran" action={<ReimbursementStatusBadge status={claim.status} />} /><CardBody><ExpenseItemList reimbursementId={claim.id} items={claim.items ?? []} canDelete={false} /></CardBody></Card>
       <Card><CardHeader title="Status Pembayaran" /><CardBody className="grid grid-cols-1 gap-3 sm:grid-cols-2"><Info label="Diajukan" value={claim.submittedAt ? formatDate(claim.submittedAt) : "Belum diajukan"} /><Info label="Total" value={formatIDR(claim.totalAmount)} /><Info label="Disetujui" value={formatIDR(claim.approvedAmount)} /><Info label="Referensi jurnal" value={claim.externalJournalRef ?? "Belum tersedia"} /></CardBody></Card>

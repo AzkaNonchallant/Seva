@@ -306,6 +306,7 @@ export interface Delegation {
 export type ReimbursementStatus =
   | "DRAFT"
   | "SUBMITTED"
+  | "IN_REVIEW"
   | "APPROVED"
   | "REJECTED"
   | "PAID";

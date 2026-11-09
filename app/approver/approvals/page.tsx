@@ -3,7 +3,7 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
-import { listPendingApprovals } from "@/lib/api/approval";
+import { listPendingApprovals, uniquePendingApprovals } from "@/lib/api/approval";
 import { getUnreadCount } from "@/lib/api/notification";
 import { settle } from "@/lib/api/api";
 import { requireRole } from "@/lib/auth";
@@ -57,12 +57,7 @@ export default async function ApproverApprovalsPage() {
     );
   }
 
-  const rows = [...pending.data].sort((a, b) => {
-    const left = a.createdAt ?? "";
-    const right = b.createdAt ?? "";
-    if (left !== right) return left < right ? -1 : 1;
-    return a.level - b.level;
-  });
+  const rows = uniquePendingApprovals(pending.data);
 
   return (
     <>
@@ -71,7 +66,7 @@ export default async function ApproverApprovalsPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Persetujuan"
-          description="Antrean pengajuan yang menunggu keputusan Anda, dari yang paling lama masuk. Sumber data: GET /api/approvals/pending."
+          description="Antrean pengajuan yang menunggu keputusan Anda, dari yang paling lama masuk."
         />
 
         {rows.length ? (

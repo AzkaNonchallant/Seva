@@ -106,7 +106,7 @@ export default async function ReimbursementsPage({
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Reimbursement"
-          description="Laporan ganti biaya atas travel dinas Anda. Sumber data: GET /api/reimbursements, yang untuk role Employee hanya menampilkan reimbursement miliknya."
+          description="Laporan penggantian biaya untuk perjalanan dinas Anda."
         />
 
         <section
@@ -175,7 +175,30 @@ export default async function ReimbursementsPage({
               ))}
             </ul>
           </Card>
-        ) : null}
+        ) : (
+          <Card>
+            <EmptyState
+              icon="receipt_long"
+              title={
+                completed.length
+                  ? "Semua travel selesai sudah memiliki reimbursement"
+                  : "Belum ada travel yang bisa direimburse"
+              }
+              description="Reimbursement baru bisa dibuat dari travel berstatus Selesai yang belum pernah diajukan."
+              action={
+                <Link
+                  href="/employee/travel?status=COMPLETED"
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-primary px-md text-caption font-semibold text-primary transition-colors hover:bg-primary-fixed"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+                    flight_takeoff
+                  </span>
+                  Lihat travel selesai
+                </Link>
+              }
+            />
+          </Card>
+        )}
 
         <FilterTabs<ReimbursementStatus | "ALL">
           ariaLabel="Saring menurut status reimbursement"
@@ -266,5 +289,3 @@ function ReimbursementRow({ reimbursement }: { reimbursement: Reimbursement }) {
     </li>
   );
 }
-
-

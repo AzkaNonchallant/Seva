@@ -118,7 +118,7 @@ export default async function ReimbursementDetailPage({
               <Card>
                 <CardHeader
                   title="Tambah Item"
-                  description="POST /api/reimbursements/:id/items"
+                  description="Rincian biaya yang diajukan untuk perjalanan ini."
                 />
                 <CardBody>
                   <ReimbursementForm reimbursement={claim} />

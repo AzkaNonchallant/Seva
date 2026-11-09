@@ -3,20 +3,13 @@ import { Header, PageHeader } from "@/components/layout/header";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 
 /**
- * Placeholder for a screen whose API does not exist yet.
- *
- * API_SPEC section 9 lists audit logs as needing `GET /api/audit-logs` and notes
- * it was never built. Rather than fabricate an endpoint or leave the old
- * "outside implementation scope" text, this states which endpoint is missing and
- * what the screen would show — so the gap is visible in the product, not just in
- * a comment.
+ * Placeholder for a screen that is not available yet.
  */
 export function BackendRequiredNotice({
   areaLabel,
   homeHref,
   title,
   description,
-  missingEndpoint,
   plannedContent,
   backHref,
   backLabel,
@@ -25,8 +18,6 @@ export function BackendRequiredNotice({
   homeHref: string;
   title: string;
   description: string;
-  /** The call API_SPEC would have to publish first. */
-  missingEndpoint: string;
   plannedContent: string[];
   backHref: string;
   backLabel: string;
@@ -49,19 +40,16 @@ export function BackendRequiredNotice({
         <Card>
           <CardHeader
             title="Menunggu Dukungan Backend"
-            description="Layar ini belum dapat berfungsi penuh karena endpoint-nya belum ada di API_SPEC."
+            description="Fitur ini belum tersedia. Silakan kembali dan gunakan fitur lain yang tersedia."
           />
           <CardBody className="flex flex-col gap-md">
             <div className="rounded-xl border border-outline-variant/25 bg-surface-container-low p-md">
-              <p className="text-caption text-tertiary">Endpoint yang dibutuhkan</p>
-              <code className="mt-1 block font-mono text-body-md text-on-surface">
-                {missingEndpoint}
-              </code>
+              <p className="text-body-md text-on-surface-variant">Fitur ini sedang disiapkan.</p>
             </div>
 
             <div>
               <p className="text-label-md font-semibold text-on-surface">
-                Yang akan ditampilkan setelah endpoint tersedia
+                Informasi fitur
               </p>
               <ul className="mt-2 space-y-2">
                 {plannedContent.map((item) => (

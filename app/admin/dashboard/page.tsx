@@ -128,7 +128,7 @@ export default async function AdminDashboardPage() {
           <Card>
             <CardHeader
               title="Kondisi Pengajuan"
-              description="GET /api/reports/dashboard"
+              description="Ringkasan data aktivitas perusahaan"
             />
             <CardBody className="space-y-3">
               {travelReport ? (
@@ -166,7 +166,7 @@ export default async function AdminDashboardPage() {
                 <EmptyState
                   icon="insights"
                   title="Ringkasan belum tersedia"
-                  description="Endpoint /api/reports/dashboard tidak dapat dibaca saat ini."
+                  description="Ringkasan belum dapat dimuat saat ini. Coba lagi nanti."
                   compact
                 />
               )}

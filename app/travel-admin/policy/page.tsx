@@ -44,7 +44,7 @@ export default async function PolicyPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Travel Policy"
-          description="Referensi read-only dari GET /api/travel/policies. Admin Travel memakai ini saat menilai estimasi pengajuan sebelum mengalokasikan budget, tetapi perubahan policy hanya dapat dilakukan Super Admin."
+          description="Kebijakan yang digunakan sebagai acuan saat meninjau estimasi pengajuan. Perubahan kebijakan dikelola oleh Super Admin."
         />
 
         {policies.length ? (

@@ -36,7 +36,7 @@ export default async function ReportsPage() {
         <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
           <PageHeader
             title="Laporan Perjalanan Dinas"
-            description="Ringkasan dari GET /api/reports."
+            description="Ringkasan aktivitas perjalanan dinas."
           />
           <Card>
             <CardBody>
@@ -89,7 +89,7 @@ export default async function ReportsPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Laporan Perjalanan Dinas"
-          description="Ringkasan dari GET /api/reports. Seluruh angka berasal dari endpoint laporan di API_SPEC, bukan perhitungan di sisi antarmuka."
+          description="Ringkasan aktivitas perjalanan dinas berdasarkan data yang tercatat."
         />
 
         <section

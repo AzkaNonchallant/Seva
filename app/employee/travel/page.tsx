@@ -103,7 +103,7 @@ export default async function EmployeeTravelPage({
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Pengajuan Travel"
-          description="Seluruh pengajuan dinas milik Anda. Sumber data: GET /api/travel, yang untuk role Employee hanya mengembalikan pengajuan miliknya sendiri."
+          description="Seluruh pengajuan dinas yang telah Anda buat."
           actions={
             <Link
               href="/employee/travel/new"

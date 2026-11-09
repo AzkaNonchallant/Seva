@@ -36,7 +36,7 @@ export default async function ProfilePage() {
       <main className="flex max-w-3xl flex-col gap-md px-margin-mobile py-md md:px-md">
         <PageHeader
           title="Profil Saya"
-          description="Data akun yang dibaca dari GET /api/auth/me."
+          description="Informasi akun Anda."
         />
 
         <Card>
@@ -55,7 +55,7 @@ export default async function ProfilePage() {
                 <Badge tone="primary" icon="badge">
                   {ROLE_LABEL[fresh.role]}
                 </Badge>
-                <Badge tone="neutral">Role API: {fresh.role}</Badge>
+                <Badge tone="neutral">{fresh.role}</Badge>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default async function ProfilePage() {
         <Card>
           <CardHeader
             title="Cakupan Akses"
-            description="Hak yang diberikan oleh role ini di API_SPEC."
+          description="Hak akses yang tersedia untuk peran Anda."
           />
           <CardBody>
             <ul className="space-y-2">

@@ -83,7 +83,7 @@ export default async function BookingsPage({
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Kelola Booking"
-          description="Seluruh tiket dan hotel yang pernah dibuat untuk pengajuan dinas. Ubah status melalui PATCH /api/travel/bookings/:id/status — hanya Menunggu, Terkonfirmasi, dan Dibatalkan yang tersedia."
+          description="Seluruh tiket dan hotel yang pernah dibuat untuk pengajuan dinas. Status yang tersedia: Menunggu, Terkonfirmasi, dan Dibatalkan."
         />
 
         <section

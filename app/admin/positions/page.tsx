@@ -34,7 +34,7 @@ export default async function PositionsPage() {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Jabatan"
-          description="Daftar jabatan yang menentukan kebijakan perjalanan yang berlaku pada setiap pengguna. Sumber data: /api/users/positions."
+          description="Daftar jabatan yang menentukan kebijakan perjalanan yang berlaku pada setiap pengguna."
         />
 
         {!positions.ok ? (

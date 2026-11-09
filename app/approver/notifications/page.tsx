@@ -13,7 +13,7 @@ export default async function ApproverNotificationsPage() {
       areaLabel="Approver"
       homeHref="/approver/dashboard"
       profileHref="/approver/profile"
-      description="Pemberitahuan saat ada pengajuan dinas yang menunggu keputusan Anda. Sesuai API_SPEC bagian 6, notifikasi hanya terlihat oleh pemiliknya."
+      description="Pemberitahuan saat ada pengajuan dinas yang menunggu keputusan Anda."
     />
   );
 }
