@@ -46,12 +46,28 @@ export function formatNumber(value: number) {
 }
 
 function toDate(value: string | Date) {
-  return value instanceof Date ? value : new Date(`${value}T00:00:00`);
+  if (value instanceof Date) return value;
+
+  const raw = String(value ?? "").trim();
+  if (!raw) return new Date(Number.NaN);
+
+  // Date inputs use YYYY-MM-DD, while the API may return a full ISO timestamp.
+  // Appending T00:00:00 to the latter creates an invalid value such as
+  // 2026-10-21T00:00:00.000Z T00:00:00.
+  return /^\d{4}-\d{2}-\d{2}$/.test(raw)
+    ? new Date(`${raw}T00:00:00`)
+    : new Date(raw);
+}
+
+function isValidDate(value: Date) {
+  return !Number.isNaN(value.getTime());
 }
 
 export function formatDate(value: string | Date) {
   if (!value) return "—";
-  return toDate(value).toLocaleDateString("id-ID", {
+  const date = toDate(value);
+  if (!isValidDate(date)) return "—";
+  return date.toLocaleDateString("id-ID", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -62,6 +78,7 @@ export function formatDateRange(start: string | Date, end: string | Date) {
   if (!start || !end) return "—";
   const from = toDate(start);
   const to = toDate(end);
+  if (!isValidDate(from) || !isValidDate(to)) return "—";
   const sameMonth =
     from.getMonth() === to.getMonth() && from.getFullYear() === to.getFullYear();
 
@@ -72,7 +89,9 @@ export function formatDateRange(start: string | Date, end: string | Date) {
 
 export function formatDateTime(value: string) {
   if (!value) return "—";
-  return new Date(value).toLocaleString("id-ID", {
+  const date = new Date(value);
+  if (!isValidDate(date)) return "—";
+  return date.toLocaleString("id-ID", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -82,15 +101,20 @@ export function formatDateTime(value: string) {
 }
 
 export function daysUntil(value: string | Date) {
-  const target = toDate(value).getTime();
+  const targetDate = toDate(value);
+  if (!isValidDate(targetDate)) return 0;
+  const target = targetDate.getTime();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return Math.round((target - today.getTime()) / 86_400_000);
 }
 
 export function countDays(start: string | Date, end: string | Date) {
-  const from = toDate(start).getTime();
-  const to = toDate(end).getTime();
+  const fromDate = toDate(start);
+  const toDateValue = toDate(end);
+  if (!isValidDate(fromDate) || !isValidDate(toDateValue)) return 0;
+  const from = fromDate.getTime();
+  const to = toDateValue.getTime();
   return Math.max(1, Math.round((to - from) / 86_400_000) + 1);
 }
 

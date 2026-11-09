@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { RoleSelect } from "@/components/admin/role-select";
+import { CreateUserForm } from "@/components/admin/create-user-form";
 import { FilterTabs } from "@/components/data-table/filters";
 import { Header, PageHeader } from "@/components/layout/header";
 import { DataTable, TableFooter, type Column } from "@/components/data-table/data-table";
@@ -11,7 +12,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { SummaryCard } from "@/components/ui/summary-card";
 import { getUnreadCount } from "@/lib/api/notification";
-import { listUsers } from "@/lib/api/user";
+import { listDepartments, listPositions, listUsers } from "@/lib/api/user";
 import { settle } from "@/lib/api/api";
 import { requireSuperAdmin } from "@/lib/auth";
 import { departmentName, positionName } from "@/lib/api/user-format";
@@ -31,6 +32,7 @@ const ROLE_FILTERS: Array<{ value: Role | "ALL"; label: string }> = [
   { value: "HRD", label: "HRD" },
   { value: "FINANCE", label: "Finance" },
   { value: "ADMIN", label: "Admin Travel" },
+  { value: "TRAVEL_ADMIN", label: "Travel Admin" },
   { value: "SUPER_ADMIN", label: "Super Admin" },
 ];
 
@@ -54,9 +56,11 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   const query = typeof params.q === "string" ? params.q.trim().toLowerCase() : "";
   const page = Math.max(1, Number(params.page) || 1);
 
-  const [unread, all] = await Promise.all([
+  const [unread, all, departments, positions] = await Promise.all([
     getUnreadCount().catch(() => ({ count: 0 })),
     settle(listUsers()),
+    settle(listDepartments()),
+    settle(listPositions()),
   ]);
 
   if (!all.ok) {
@@ -172,7 +176,12 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
       <main className="flex flex-col gap-md px-margin-mobile py-md md:px-md lg:px-margin-desktop">
         <PageHeader
           title="Pengguna"
-          description="Seluruh akun PT Andrea beserta role, departemen, dan jabatan. Perubahan role memakai PATCH /api/users/:id/role dan hanya berlaku untuk Super Admin."
+          description="Kelola akun, akses role, departemen, dan jabatan seluruh pengguna."
+        />
+
+        <CreateUserForm
+          departments={departments.ok ? departments.data : []}
+          positions={positions.ok ? positions.data : []}
         />
 
         <section

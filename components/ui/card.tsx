@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Cards use 16px radius on a white surface with the soft ambient shadow. */
+/** Elevated cards use the documented 14px radius and micro elevation. */
 export function Card({
   className,
   children,
@@ -11,7 +11,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-surface-container-lowest shadow-ambient ring-1 ring-outline-variant/15",
+        "rounded-md bg-surface-container-lowest shadow-ambient",
         className,
       )}
     >

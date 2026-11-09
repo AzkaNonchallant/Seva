@@ -8,6 +8,7 @@ import {
   deleteTravel,
   deleteTravelDocument,
   submitTravel,
+  uploadTravelDocument,
   updateTravel,
   type CreateTravelInput,
 } from "@/lib/api/travel";
@@ -15,7 +16,7 @@ import { ApiError } from "@/lib/api/errors";
 import { requireRole } from "@/lib/auth";
 
 import type { ActionResult } from "./action-result";
-import type { TravelRequest } from "@/lib/api/types";
+import type { TravelDocument, TravelRequest } from "@/lib/api/types";
 
 /**
  * Server actions for the employee's own travel requests.
@@ -148,6 +149,34 @@ export async function deleteDocumentAction(
     const result = await deleteTravelDocument(documentId);
     revalidateEmployee(travelId);
     return { ok: true, data: result, message: "Dokumen dihapus." };
+  } catch (error) {
+    return fail(error);
+  }
+}
+
+export async function uploadTravelDocumentAction(
+  _prev: ActionResult<TravelDocument> | null,
+  formData: FormData,
+): Promise<ActionResult<TravelDocument>> {
+  await requireRole(["EMPLOYEE"]);
+
+  const travelId = Number(formData.get("travelId"));
+  const file = formData.get("file");
+
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "Pilih file PDF terlebih dahulu." };
+  }
+  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+    return { ok: false, message: "File harus berformat PDF." };
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    return { ok: false, message: "Ukuran PDF maksimal 10 MB." };
+  }
+
+  try {
+    const document = await uploadTravelDocument(travelId, file);
+    revalidateEmployee(travelId);
+    return { ok: true, data: document, message: "PDF berhasil diunggah ke dokumen travel." };
   } catch (error) {
     return fail(error);
   }

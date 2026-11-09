@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Header, PageHeader } from "@/components/layout/header";
 import { ExpenseItemList } from "@/components/reimbursement/expense-item-list";
 import { ReimbursementForm } from "@/components/reimbursement/reimbursement-form";
+import { ReimbursementDocumentUpload } from "@/components/reimbursement/reimbursement-document-upload";
+import { ReimbursementReport } from "@/components/reimbursement/reimbursement-report";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
@@ -120,6 +122,20 @@ export default async function ReimbursementDetailPage({
                 />
                 <CardBody>
                   <ReimbursementForm reimbursement={claim} />
+                </CardBody>
+              </Card>
+            ) : null}
+
+            <ReimbursementReport reimbursement={claim} canSaveToDocuments />
+
+            {claim.travel ? (
+              <Card>
+                <CardHeader
+                  title="Upload PDF Ringkasan"
+                  description="Simpan PDF ringkasan sebagai dokumen pada travel ini."
+                />
+                <CardBody>
+                  <ReimbursementDocumentUpload travelId={claim.travel.id} />
                 </CardBody>
               </Card>
             ) : null}

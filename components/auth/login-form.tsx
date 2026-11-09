@@ -16,14 +16,14 @@ import type { ActionResult } from "@/app/actions/action-result";
  * passwords are the backend's shared default.
  */
 const DEMO_ACCOUNTS = [
-  { label: "Super Admin", email: "super.admin@dinas.go.id" },
+  { label: "Super Admin", email: "super.admin@dinas.go.id" }, //perlu
   { label: "Admin", email: "admin@dinas.go.id" },
-  { label: "Admin Perjalanan Dinas", email: "travel.admin@dinas.go.id" },
+  { label: "Admin Perjalanan Dinas", email: "travel.admin@dinas.go.id" }, //perlu
   { label: "Kepala Bagian", email: "kepala.bagian@sdm.dinas.go.id" },
-  { label: "Manajer", email: "manajer@sdm.dinas.go.id" },
+  { label: "Manajer", email: "manajer@sdm.dinas.go.id" }, //perlu
   { label: "Finance", email: "finance@dinas.go.id" },
-  { label: "HRD", email: "hrd@dinas.go.id" },
-  { label: "Employee", email: "pegawai@sdm.dinas.go.id" },
+  { label: "HRD", email: "hrd@dinas.go.id" }, //perlu
+  { label: "Employee", email: "pegawai@sdm.dinas.go.id" }, //prlu
 ];
 
 const DEMO_PASSWORD = "Password123!";
