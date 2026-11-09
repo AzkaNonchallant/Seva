@@ -19,7 +19,7 @@ export function Header({
   profileHref?: string;
 }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-outline-variant/50 bg-white">
+    <header className="sticky top-0 z-30 border-b border-outline-variant/60 bg-surface-container-lowest lg:top-4 lg:rounded-t-[32px]">
       <div className="flex min-h-[77px] items-center justify-between gap-md px-margin-mobile md:px-md">
         <nav aria-label="Breadcrumb" className="min-w-0">
           <ol className="flex items-center gap-1 text-caption text-tertiary">
@@ -62,7 +62,7 @@ export function Header({
             {unreadCount > 0 ? (
               <span
                 className={cn(
-                  "absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-secondary-container",
+                  "absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-secondary",
                   "ring-2 ring-surface-container-lowest",
                 )}
               />
@@ -74,7 +74,7 @@ export function Header({
             className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
-              help_outline
+              account_circle
             </span>
           </Link>
         </div>

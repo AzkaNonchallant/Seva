@@ -1,38 +1,47 @@
 @import "tailwindcss";
 
-/* Navan-inspired design tokens from DESIGN.md. The semantic utility names stay
-   stable so every existing screen changes theme without changing its data flow. */
+/* Palette lifted from design/referensi.png: a lavender canvas, a floating
+   periwinkle rail, a deeper indigo for the active step, and a rose accent for
+   counts. The semantic utility names stay stable so every existing screen
+   changes theme without changing its data flow. */
 @theme {
-  --color-primary: #15002c;
-  --color-ink: #060000;
+  /* Deep indigo carries actions and text links; the lighter periwinkle is the
+     rail surface itself, so `brand` and `primary` stay distinct. */
+  --color-primary: #534698;
+  --color-brand: #7163ba;
+  --color-brand-deep: #534698;
+  --color-ink: #1b1730;
   --color-neutral-1: #c6c6d2;
   --color-neutral-2: #d1d5db;
   --color-on-primary: #ffffff;
-  --color-primary-container: #6307f8;
+  --color-primary-container: #7163ba;
   --color-on-primary-container: #ffffff;
-  --color-primary-fixed: #e1e2fe;
-  --color-primary-fixed-dim: #c185e5;
-  --color-on-primary-fixed: #15002c;
-  --color-on-primary-fixed-variant: #3b087f;
-  --color-inverse-primary: #c185e5;
+  --color-primary-fixed: #e7e4f5;
+  --color-primary-fixed-dim: #c9c3e6;
+  --color-on-primary-fixed: #241c45;
+  --color-on-primary-fixed-variant: #534698;
+  --color-inverse-primary: #d9d4ef;
 
-  --color-secondary: #6307f8;
+  /* Rose accent from the reference's activity cards. The 600 step is dark
+     enough for white type; the pale container carries dark rose text. */
+  --color-secondary: #c2185b;
+  --color-accent-pink: #ed5f8d;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #c185e5;
-  --color-on-secondary-container: #15002c;
-  --color-secondary-fixed: #e1e2fe;
-  --color-secondary-fixed-dim: #da9eff;
-  --color-on-secondary-fixed: #15002c;
-  --color-on-secondary-fixed-variant: #3b087f;
+  --color-secondary-container: #f9dde6;
+  --color-on-secondary-container: #791f3c;
+  --color-secondary-fixed: #fce7ee;
+  --color-secondary-fixed-dim: #f5b8cc;
+  --color-on-secondary-fixed: #5c1630;
+  --color-on-secondary-fixed-variant: #791f3c;
 
-  --color-tertiary: #5d5959;
+  --color-tertiary: #6b6880;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #a9a9bc;
-  --color-on-tertiary-container: #15002c;
-  --color-tertiary-fixed: #e1e2fe;
-  --color-tertiary-fixed-dim: #c6c6d2;
-  --color-on-tertiary-fixed: #15002c;
-  --color-on-tertiary-fixed-variant: #5d5959;
+  --color-tertiary-container: #ddd9ec;
+  --color-on-tertiary-container: #2a2445;
+  --color-tertiary-fixed: #efedf7;
+  --color-tertiary-fixed-dim: #d5d1e6;
+  --color-on-tertiary-fixed: #2a2445;
+  --color-on-tertiary-fixed-variant: #6b6880;
 
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
@@ -46,31 +55,32 @@
   --color-warning: #856404;
   --color-warning-container: #fff3cd;
 
-  --color-background: #ffffff;
-  --color-on-background: #060000;
+  --color-background: #eef0f7;
+  --color-on-background: #1b1730;
   --color-surface: #ffffff;
   --color-surface-bright: #ffffff;
-  --color-surface-dim: #d1d5db;
-  --color-surface-variant: #f1f1f9;
+  --color-surface-dim: #d5d9ea;
+  --color-surface-variant: #ecedf6;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f1f1f9;
-  --color-surface-container: #e8e7ef;
-  --color-surface-container-high: #e1e2fe;
-  --color-surface-container-highest: #d1d5db;
-  --color-on-surface: #060000;
-  --color-on-surface-variant: #5d5959;
-  --color-inverse-surface: #15002c;
-  --color-inverse-on-surface: #ffffff;
-  --color-outline: #a9a9bc;
-  --color-outline-variant: #d1d5db;
-  --color-surface-tint: #6307f8;
+  --color-surface-container-low: #f6f6fb;
+  --color-surface-container: #eeeff7;
+  --color-surface-container-high: #e4e6f2;
+  --color-surface-container-highest: #daddeb;
+  --color-on-surface: #1b1730;
+  --color-on-surface-variant: #5c5a70;
+  --color-inverse-surface: #2a2445;
+  --color-inverse-on-surface: #f4f2fb;
+  --color-outline: #a8a5bd;
+  --color-outline-variant: #dcdeea;
+  --color-surface-tint: #7163ba;
 
   /* Input fields use their own tint, slightly darker than surface-container */
-  --color-input: #ffffff;
+  --color-input: #f6f6fb;
 
-  /* Inter across marketing and data-dense dashboard views */
+  /* Inter across marketing and data-dense dashboard views. The reference sets
+     its headings in the same sans, so display drops the serif. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   /*
    * DESIGN.md gives 64px side margins on desktop and 24px on mobile. These
@@ -133,18 +143,20 @@
   --spacing-band: 44px;
   --spacing-gutter: 24px;
 
-  /* Small elements 8px, cards 16px, hero containers 24px */
-  --radius-sm: 8px;
-  --radius-DEFAULT: 8px;
-  --radius-md: 14px;
-  --radius-lg: 14px;
-  --radius-xl: 14px;
+  /* Small elements 10px, cards 16px, panels 24px. The reference's generous
+     corner radius is what makes the rail read as a floating tile. */
+  --radius-sm: 10px;
+  --radius-DEFAULT: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows are tinted with the primary blue, never pure black */
-  --shadow-ambient: 0 1px 12px rgb(0 0 0 / 0.13);
-  --shadow-float: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-nav: none;
+  /* Shadows carry the indigo tint from the rail instead of neutral black, so
+     elevation belongs to the same palette as the surface it lifts. */
+  --shadow-ambient: 0 8px 24px rgb(83 70 152 / 0.08);
+  --shadow-float: 0 24px 48px -16px rgb(83 70 152 / 0.28);
+  --shadow-nav: 0 18px 40px -12px rgb(83 70 152 / 0.45);
 }
 
 @layer base {
@@ -304,6 +316,17 @@
     .mobile-menu-overlay-out {
       animation: none !important;
     }
+  }
+}
+
+/* The role shell lifts every screen onto one rounded panel beside the rail.
+   Pages already declare `min-h-screen`, which would add the panel's 16px top
+   and bottom padding to the scroll height, so on desktop the panel's child is
+   pinned to the space actually available. Unlayered on purpose: it has to win
+   over Tailwind's layered `min-h-screen` utility. */
+@media (min-width: 1024px) {
+  .role-frame > * {
+    min-height: calc(100vh - 32px);
   }
 }
 
